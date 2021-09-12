@@ -1,12 +1,25 @@
-const express = require('express');
+
+// Require the framework and instantiate it
+const fastify = require('fastify')({ logger: true })
 const path = require('path');
 
-const app = express();
+fastify.register(require('fastify-static'), {
+  root: path.join(__dirname, 'src'),
+  wildcard: false
+})
 
-app.use('/static', express.static(path.resolve(__dirname, 'src', 'static')))
+// Declare a route
+fastify.get('/*', async (request, reply) => {
+  return reply.sendFile("index.html");
+})
 
-app.get('/*', (req, res) => {
-  res.sendFile(path.resolve(__dirname, 'src', 'index.html'));
-});
-
-app.listen(5068, () => console.log('Server running... @ port 5068', __dirname))
+// Run the server!
+const start = async () => {
+  try {
+    await fastify.listen(5068)
+  } catch (err) {
+    fastify.log.error(err)
+    process.exit(1)
+  }
+}
+start()

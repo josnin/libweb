@@ -1,4 +1,6 @@
 import HomeView from './views/HomeView.js';
+import CartView from './views/CartView.js';
+import CheckoutView from './views/CheckoutView.js';
 
 console.log('Load static js')
 
@@ -15,8 +17,8 @@ const router = async () => {
 
   const routes = [
     { path: "/", view: HomeView },
-    { path: "/cart", view: () => console.log('Cart page') },
-    { path: "/checkout", view: () => console.log('Checkout page') }
+    { path: "/cart", view: CartView},
+    { path: "/checkout", view: CheckoutView }
   ];
 
   const potentialMatches = routes.map(route => {
@@ -46,6 +48,7 @@ window.addEventListener('popstate', router);
 document.addEventListener('DOMContentLoaded', () => {
   document.addEventListener('click', e => {
     if (e.target.matches('[data-link]')) {
+      console.log('matches data link')
       e.preventDefault();
       navTo(e.target.href);
     }

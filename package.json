@@ -18,6 +18,7 @@
   },
   "homepage": "https://github.com/josnin/nojsframework#readme",
   "dependencies": {
-    "express": "^4.17.1"
+    "fastify": "^3.21.0",
+    "fastify-static": "^4.2.3"
   }
 }
