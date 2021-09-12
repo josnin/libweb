@@ -10,7 +10,7 @@ fastify.register(require('fastify-static'), {
 
 // Declare a route
 fastify.get('/*', async (request, reply) => {
-  return reply.sendFile("index.html");
+  return await reply.sendFile("index.html");
 })
 
 // Run the server!
