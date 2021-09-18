@@ -13,60 +13,12 @@
         <a href="/checkout" data-link>Checkout</a>
     </nav>
     <!--<div id="app"></div>-->
-    <my-counter count="10"></my-counter>
+    <parent-counter></parent-counter>
+    <my-counter count="10">This is a test??? ${this.count}</my-counter>
     <!--<script type="module" src="/static/js/index.js"></script>-->
-    <script>
-
-        class MyCounter extends HTMLElement {
-            constructor() {
-                super();
-                this.shadow = this.attachShadow({mode: 'open'});
-            };
-    
-            get count() {
-                return this.getAttribute('count');
-            }
-    
-            set count(val) {
-                this.setAttribute('count', val);
-            }
-    
-            static get observedAttributes() {
-                return ['count'];
-            }
-    
-            
-            attributeChangedCallback(prop, oldVal, newVal) {
-                if (prop === 'count') {
-                    this.render();
-                    let btn = this.shadow.querySelector("#btn");
-                    btn.addEventListener('click', this.inc.bind(this))
-                }
-            }
-    
-            inc() {
-                this.count++;
-            }
-        
-    
-            connectedCallback() {
-                this.render();
-                let btn = this.shadow.querySelector("#btn");
-                btn.addEventListener('click', this.inc.bind(this))
-            }
-    
-            render() {
-                this.shadow.innerHTML = `
-                    <h1>Counter</h1>
-                    ${this.count}
-                    <button id="btn">Increment</button>    
-                `
-            }
-    
-        }
-    
-        customElements.define('my-counter', MyCounter);
-    
-        </script>
+    <script type="module">
+      import "../static/js/components/my-counter.js";
+      import "../static/js/components/parent-counter.js";
+    </script> 
 </body>
 </html>
