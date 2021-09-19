@@ -7,18 +7,22 @@
     <link rel="stylesheet" href="/static/css/index.css">
 </head>
 <body>
-    <nav class="nav">
+    <!--<nav class="nav">
         <a href="/" data-link>Home</a>
         <a href="/cart" data-link>Cart</a>
         <a href="/checkout" data-link>Checkout</a>
     </nav>
-    <!--<div id="app"></div>-->
+    <div id="app"></div>
+    <script type="module" src="/static/js/index.js"></script>-->
+    <parent-event></parent-event>
     <parent-counter></parent-counter>
     <my-counter count="10">This is a test??? ${this.count}</my-counter>
-    <!--<script type="module" src="/static/js/index.js"></script>-->
     <script type="module">
       import "../static/js/components/my-counter.js";
       import "../static/js/components/parent-counter.js";
+      import "../static/js/components/parent-event.js";
+      import "../static/js/components/child-event.js";
+
     </script> 
 </body>
 </html>
