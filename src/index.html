@@ -14,15 +14,27 @@
     </nav>
     <div id="app"></div>
     <script type="module" src="/static/js/index.js"></script>-->
-    <parent-event></parent-event>
-    <parent-counter></parent-counter>
-    <my-counter count="10">This is a test??? ${this.count}</my-counter>
+
+    <!-- test child to parent event-->
+    <!--<parent-event></parent-event>-->
+    <!-- test child to parent event-->
+    
+    <!-- test counter event from parent -->
+    <!--<parent-counter></parent-counter>
+    <my-counter count="10"></my-counter>-->
+    <!-- test counter event from parent -->
+
+    <!-- test input data binding -->
+    <parent-databinding></parent-databinding>
+    <!-- test input data binding -->
+
     <script type="module">
       import "../static/js/components/my-counter.js";
       import "../static/js/components/parent-counter.js";
       import "../static/js/components/parent-event.js";
       import "../static/js/components/child-event.js";
-
+      import "../static/js/components/parent-databinding.js";
+      import "../static/js/components/child-databinding.js";
     </script> 
 </body>
 </html>
