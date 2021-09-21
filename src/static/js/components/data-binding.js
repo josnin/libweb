@@ -15,19 +15,19 @@ template.innerHTML = `
 class DataBinding extends HTMLElement {
     myresult = 'test1';
     myresult2 = 'This is a test';
-    attrs_with_bindings = [];
+
     constructor() {
       super();
       this.attachShadow({mode: 'open'})
       this.shadowRoot.appendChild(template.content.cloneNode(true));
 
-      this.addBinding('myresult');
+      this.addBinding('myresult'); //@Todo
       this.addBinding('myresult2');
 
     }
 
 
-    addBindAttr(refName) {
+    addDataBindAttr(refName) {
       // add data-bind attr to those with requires interpolation {{variables}}
       const elements = ['div', 'span'];
       elements.forEach(el1 => {
@@ -40,7 +40,7 @@ class DataBinding extends HTMLElement {
     }
     
 
-    interpolateInitial(refName, refData) {
+    replaceVariableInitial(refName, refData) {
       // initial replace {{variable}} with real value
       this.shadowRoot.querySelectorAll(`[data-bind="${refName}"]`).forEach(el => {
         console.log(`[data-bind="${refName}"]`,  refData, refName);
@@ -49,7 +49,7 @@ class DataBinding extends HTMLElement {
       })
     }
 
-    interpolateWhenEvent(refName, oldVal, newVal) {
+    replaceVariableOnEvent(refName, oldVal, newVal) {
       // when event happen replace {{variable}} with real value
       this.shadowRoot.querySelectorAll(`[data-bind="${refName}"]`).forEach(el => {
         el.innerHTML = el.innerHTML.replaceAll(`${oldVal}<!--{{${refName}}}-->`, `${newVal}<!--{{${refName}}}-->`)
@@ -58,18 +58,12 @@ class DataBinding extends HTMLElement {
 
     addBinding(refName) {
       // use to make the variable reactive
-
       let refData = this[refName];
-
-      this.addBindAttr(refName);
-      this.interpolateInitial(refName, refData);
+      this.addDataBindAttr(refName);
+      this.replaceVariableInitial(refName, refData);
 
       this.shadowRoot.querySelector(`[data-model="${refName}"]`).addEventListener('input', e => {
-        //this.shadowRoot.querySelector('[data-bind="child"]').value = e.target.value;
-        //this.shadowRoot.querySelector('[data-bind="myresult"]').textContent = e.target.value;
-        console.log('input', e.target.value)
-
-        this.interpolateWhenEvent(
+        this.replaceVariableOnEvent(
           refName,
           refData,
           e.target.value
