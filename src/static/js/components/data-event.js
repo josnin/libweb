@@ -20,24 +20,36 @@ class DataEvent extends HTMLElement {
     createEventListener(evt, el1) {
       const funcWithEvents = this.replaceEventAttr(evt, el1);
       funcWithEvents.forEach((f, ctr) => {
-        console.log(`[data-${evt}${ctr}="${f}"]`)
+        // data-${evt}${ctr}="${f}" >>> data-click0="alertMe()"
+
+        // converted event listener
         this.shadowRoot.querySelector(`[data-${evt}${ctr}="${f}"]`).addEventListener(`${evt}`, e => {
-          console.log(eval(`this.${f}`))
+          console.log(eval(`this.${f}`)) // execute function 
         })
+
       })
     }
 
     replaceEventAttr(evt, el1) {
+      // replace attrs (click) -> data-click0
+      // (input) -> data-input0
+
       const funcWithEvents = [];
       this.shadowRoot.querySelectorAll(`${el1}`).forEach(el => {
         if (el.attributes[0].name.includes(`${evt}`)) {
           const tempAttr = el.getAttribute(`(${evt})`);
+
+          // create final event attr
           el.setAttribute(
             `data-${evt}${funcWithEvents.length}`, tempAttr
           )
+          
+          // get all the functions to execute in event listener
           if (el.getAttribute(`(${evt})`)) {
             funcWithEvents.push(el.getAttribute(`(${evt})`))
           }
+
+          // remove once attributes has been replaced
           el.removeAttribute(`(${evt})`)
         }
       })
