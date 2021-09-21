@@ -4,20 +4,28 @@ template.innerHTML = `
   p { font-size: 34px; }
   </style>
   <p>My paragraph</p>
-  <input is="child-databinding" />
+  <input data-model="myresult2" />
+  <input data-model="myresult" />
   <span>{{myresult}} a</span>
   <span>{{myresult}} b</span>
-  <span>{{myresult}} 3rd span</span>
+  <div>This is the result {{myresult}} of 3rd span</div>
   <div>{{myresult2}}</div>
 `
 
-class ParentDataBinding extends HTMLElement {
+class DataBinding extends HTMLElement {
     myresult = 'test1';
     myresult2 = 'This is a test';
+    attrs_with_bindings = [];
     constructor() {
       super();
       this.attachShadow({mode: 'open'})
+      this.shadowRoot.appendChild(template.content.cloneNode(true));
+
+      this.addBinding('myresult');
+      this.addBinding('myresult2');
+
     }
+
 
     addBindAttr(refName) {
       const elements = ['div', 'span'];
@@ -29,6 +37,7 @@ class ParentDataBinding extends HTMLElement {
         })
       })
     }
+    
 
     interpolateInitial(refName, refData) {
       this.shadowRoot.querySelectorAll(`[data-bind="${refName}"]`).forEach(el => {
@@ -44,46 +53,27 @@ class ParentDataBinding extends HTMLElement {
       })
     }
 
-    binding(refName, refData) {
+    addBinding(refName) {
+      let refData = this[refName];
+
       this.addBindAttr(refName);
       this.interpolateInitial(refName, refData);
 
-      this.shadowRoot.addEventListener('change1', e => {
-          //this.shadowRoot.querySelector('[data-bind="child"]').value = e.target.value;
-          //this.shadowRoot.querySelector('[data-bind="myresult"]').textContent = e.target.value;
+      this.shadowRoot.querySelector(`[data-model="${refName}"]`).addEventListener('input', e => {
+        //this.shadowRoot.querySelector('[data-bind="child"]').value = e.target.value;
+        //this.shadowRoot.querySelector('[data-bind="myresult"]').textContent = e.target.value;
+        console.log('input', e.target.value)
 
-          this.interpolateWhenEvent(
-            refName,
-            refData,
-            e.detail
-          )
-          refData = e.detail;
+        this.interpolateWhenEvent(
+          refName,
+          refData,
+          e.target.value
+        )
+        refData = e.target.value;
       })
     }
     
 
-    connectedCallback() {
-      this.shadowRoot.appendChild(template.content.cloneNode(true));
-      
-      //  trigger from child
-      //this.shadowRoot.addEventListener('change1', e => {
-      //    this.myresult = e.detail;
-      //    this.shadowRoot.querySelector('[data-bind="myinput"]').textContent = this.myresult;
-      //    this.myinput = this.myresult;
-      //})
-
-      this.binding(
-        'myresult',
-        this.myresult
-      );
-      
-      this.binding(
-        'myresult2',
-        this.myresult2
-      );
-
-    }
-
 }
 
-customElements.define('parent-databinding', ParentDataBinding);
+customElements.define('data-binding', DataBinding);
