@@ -28,6 +28,7 @@ class DataBinding extends HTMLElement {
 
 
     addBindAttr(refName) {
+      // add data-bind attr to those with requires interpolation {{variables}}
       const elements = ['div', 'span'];
       elements.forEach(el1 => {
         this.shadowRoot.querySelectorAll(el1).forEach(el => {
@@ -40,6 +41,7 @@ class DataBinding extends HTMLElement {
     
 
     interpolateInitial(refName, refData) {
+      // initial replace {{variable}} with real value
       this.shadowRoot.querySelectorAll(`[data-bind="${refName}"]`).forEach(el => {
         console.log(`[data-bind="${refName}"]`,  refData, refName);
         el.innerHTML = el.innerHTML.replaceAll(`{{${refName}}}`, `${refData}<!--{{${refName}}}-->`)
@@ -48,12 +50,15 @@ class DataBinding extends HTMLElement {
     }
 
     interpolateWhenEvent(refName, oldVal, newVal) {
+      // when event happen replace {{variable}} with real value
       this.shadowRoot.querySelectorAll(`[data-bind="${refName}"]`).forEach(el => {
         el.innerHTML = el.innerHTML.replaceAll(`${oldVal}<!--{{${refName}}}-->`, `${newVal}<!--{{${refName}}}-->`)
       })
     }
 
     addBinding(refName) {
+      // use to make the variable reactive
+
       let refData = this[refName];
 
       this.addBindAttr(refName);
