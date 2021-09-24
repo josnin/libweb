@@ -6,6 +6,7 @@ template.innerHTML = `
 <div data-bind="username">{username} This is ates???</div>
 <div data-bind="username">{username} This is ates???</div>
 <div data-bind="username">{username} This is ates??? {username}</div>
+<div data-bind="username">{username} This is ates??? {username}</div>
 <button data-bind="username">Click me?</button>
 `
 
@@ -17,9 +18,9 @@ class DataBinding2Way extends HTMLElement {
       this.attachShadow({mode: 'open'})
       this.shadowRoot.appendChild(template.content.cloneNode(true));
 
-      this.testproxy = this.reactive(
-        { username:'whatever?'},
-      );
+//      this.testproxy = this.reactive(
+//        { username:'whatever?'},
+//      );
 
       // add even listener to simulate 
       let el1 = this.shadowRoot.querySelectorAll("[data-bind]");
@@ -37,15 +38,21 @@ class DataBinding2Way extends HTMLElement {
       });
       // add even listener to simulate 
 
-      this.replaceVariableOnLoad()
-
     }
 
     replaceVariableOnLoad() {
-      let el1 = this.shadowRoot.querySelectorAll("[data-bind]");
-      el1.forEach((el) => {
-        el.innerHTML = el.innerHTML.replaceAll(`{username}`, `${this.testproxy.username}<!--{username}-->`)
-      })
+      if (this.testproxy) {
+        console.log('clling here?')
+        let el1 = this.shadowRoot.querySelectorAll("[data-bind]");
+        el1.forEach((el) => {
+          el.innerHTML = el.innerHTML.replaceAll(`{username}`, `${this.testproxy.username}<!--{username}-->`)
+        })
+
+      }
+    }
+
+    connectedCallback() {
+      this.replaceVariableOnLoad()
     }
 
     reactive(obj) {
@@ -77,4 +84,18 @@ class DataBinding2Way extends HTMLElement {
 
 }
 
-customElements.define('data-binding-2way', DataBinding2Way);
+class DataBinding2Way1 extends DataBinding2Way {
+    constructor() {
+      super();
+
+      this.properties = this.reactive(
+        { 
+          username:'whatever????'
+        },
+      );
+    }
+
+
+}
+
+customElements.define('data-binding-2way', DataBinding2Way1);
