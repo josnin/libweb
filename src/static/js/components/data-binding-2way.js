@@ -6,7 +6,7 @@ template.innerHTML = `
 <div data-bind="username">{username} This is ates???</div>
 <div data-bind="username">{username} This is ates???</div>
 <div data-bind="username">{username} This is ates??? {username}</div>
-<div data-bind="username">{username} This is ates??? {username}</div>
+<div data-bind="username">{username} This is ates??? {lastname}</div>
 <button data-bind="username">Click me?</button>
 `
 
@@ -18,9 +18,6 @@ class DataBinding2Way extends HTMLElement {
       this.attachShadow({mode: 'open'})
       this.shadowRoot.appendChild(template.content.cloneNode(true));
 
-//      this.testproxy = this.reactive(
-//        { username:'whatever?'},
-//      );
 
       // add even listener to simulate 
       let el1 = this.shadowRoot.querySelectorAll("[data-bind]");
@@ -28,11 +25,11 @@ class DataBinding2Way extends HTMLElement {
         let propToBind = el.getAttribute("data-bind");
         if (el.type === "text") {
           el.addEventListener("input", (e) => {
-            this.testproxy[propToBind] = e.target.value;  
+            this.properties[propToBind] = e.target.value;  
           });
         } else {
          el.addEventListener("click", (e) => {
-            this.testproxy[propToBind] = 'default2'
+            this.properties[propToBind] = 'default2'
           });
         }
       });
@@ -41,11 +38,14 @@ class DataBinding2Way extends HTMLElement {
     }
 
     replaceVariableOnLoad() {
-      if (this.testproxy) {
-        console.log('clling here?')
+      if (this.properties) {
         let el1 = this.shadowRoot.querySelectorAll("[data-bind]");
         el1.forEach((el) => {
-          el.innerHTML = el.innerHTML.replaceAll(`{username}`, `${this.testproxy.username}<!--{username}-->`)
+          console.log(this.properties)
+          for (let [k, v] of Object.entries(this.properties)) {
+            // {username} > johnny<!--{username}-->
+            el.innerHTML = el.innerHTML.replaceAll(`{${k}}`, `${v}<!--{${k}}-->`)
+          }
         })
 
       }
@@ -70,7 +70,10 @@ class DataBinding2Way extends HTMLElement {
               } else if (!el.type) {
 
                 // interpolate
-                el.innerHTML = el.innerHTML.replaceAll(`${obj[prop]}<!--{username}-->`, `${value}<!--{username}-->`)
+                for (let [k, v] of Object.entries(this.properties)) {
+                  // {username} > johny<!--{username}-->
+                  el.innerHTML = el.innerHTML.replaceAll(`${obj[prop]}<!--{${k}}-->`, `${value}<!--{${k}}-->`)
+                }
               }
             }
           })
@@ -90,7 +93,8 @@ class DataBinding2Way1 extends DataBinding2Way {
 
       this.properties = this.reactive(
         { 
-          username:'whatever????'
+          username:'whatever????',
+          lastname: 'Javascript???',
         },
       );
     }
