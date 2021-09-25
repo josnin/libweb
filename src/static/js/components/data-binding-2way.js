@@ -3,9 +3,9 @@ template.innerHTML = `
 <div>
 <input data-bind="username" type="text" />
 </div> 
-<div data-bind="username">{username} This is ates???</div>
-<div data-bind="username">{username} This is ates???</div>
-<div data-bind="username">{username} This is ates??? {username}</div>
+<div>{username} XYZ</div>
+<div>{username} This is ates???</div>
+<div>{username} This is ates??? {username}</div>
 
 <!-- what if multiple data-bind??? -->
 <div data-bind="username">{username} This is ates??? {lastname}</div>
@@ -14,8 +14,7 @@ template.innerHTML = `
 
 import {
   makeReactive,
-  toHTML,
-  toSimulate
+  toSimulate,
 } from '../toJS.js';
 
 class DataBinding2Way extends HTMLElement {
@@ -24,23 +23,20 @@ class DataBinding2Way extends HTMLElement {
       super();
       this.attachShadow({mode: 'open'})
       this.shadowRoot.appendChild(template.content.cloneNode(true));
-      let el1 = this.shadowRoot.querySelectorAll("[data-bind]");
 
       this.properties = makeReactive(
-        { username: 'darling',
-          lastname: 'javasript',  },
-        el1,
+        {
+          username: 'darling',
+          lastname: 'javascript'
+        },
+        this.shadowRoot
       );
 
-      toHTML(
-        this.properties,
-        el1 
-      )
 
-      toSimulate(
-        this.properties,
-        el1
-      )
+      //toSimulate(
+      //  this.properties,
+      //  this.shadowRoot
+      //)
 
 
     }

@@ -1,6 +1,26 @@
 
-export const makeReactive = (obj, el1) => {
+export const addDataBindAttr = (prop, el2) => {
+    // add data-bind attr to those with requires interpolation {{variables}}
+    const elements = ['div', 'span'];
+    elements.forEach(el1 => {
+      el2.querySelectorAll(el1).forEach(el => {
+        for (let [k, v] of Object.entries(prop)) {
+            if (el.textContent.includes(k)) {
+                el.setAttribute('data-bind', k);
+            }
+        }
+      })
+    })
+  }
+
+export const makeReactive = (obj, el3) => {
     // react when there is a changes in value
+    addDataBindAttr(
+      obj,
+      el3
+    )
+
+    let el1 = el3.querySelectorAll("[data-bind]");
     const handler = {
       get: (obj, prop) => {
         return obj[prop] ;
@@ -21,12 +41,19 @@ export const makeReactive = (obj, el1) => {
         return true; 
       }
     }
+
+    toHTML(
+      obj,
+      el3
+    )
+
+
     return new Proxy(obj, handler);
 }
 
-export const toHTML = (prop, el1) => {
+export const toHTML = (prop, el3) => {
   if (prop) {
-    //let el1 = this.shadowRoot.querySelectorAll("[data-bind]");
+    let el1 = el3.querySelectorAll("[data-bind]");
     el1.forEach((el) => {
       for (let [k, v] of Object.entries(prop)) {
         // {username} > johnny<!--{username}-->
@@ -37,8 +64,9 @@ export const toHTML = (prop, el1) => {
   }
 }
 
-export const toSimulate = (prop, el1) => {
+export const toSimulate = (prop, el3) => {
   // add even listener to simulate 
+  let el1 = el3.querySelectorAll("[data-bind]");
   el1.forEach((el) => {
     let propToBind = el.getAttribute("data-bind");
     if (el.type === "text") {
@@ -58,5 +86,6 @@ export const toSimulate = (prop, el1) => {
 export default {
   makeReactive,
   toHTML,
-  toSimulate
+  toSimulate,
+  addDataBindAttr
 }
