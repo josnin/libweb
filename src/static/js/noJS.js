@@ -4,13 +4,13 @@ export class NoJS {
       this.self = shadowDom;
     }
 
-    makeEvent = (evt, el) => {
-      return makeEvent(
-        this.self,
-        evt,
-        el
-      )
-
+    makeEvent = () => {
+      ['button', 'input'].forEach(r => {
+        makeEvent(
+          this.self,
+          r
+        )
+      })
     }
 
     makeReactive = (prop) => {
@@ -106,44 +106,54 @@ export const toSimulate = (self, prop) => {
   // add even listener to simulate 
 }
 
-export const makeEvent = (self, evt, el1) => {
-      const fnEvents = replaceEventAttr(self.shadowRoot, evt, el1);
-      fnEvents.forEach((f, ctr) => {
+export const makeEvent = (self, el1) => {
+      const fnEvents = replaceEventAttr(self, el1);
+      fnEvents.forEach((fn) => {
         // data-${evt}${ctr}="${f}" >>> data-click0="alertMe()"
 
         // converted event listener
-        self.shadowRoot.querySelector(`[data-${evt}${ctr}="${f}"]`).addEventListener(`${evt}`, e => {
-          console.log(self.alertMe(1444))
-          //console.log(eval(`this.${f}`)) // execute function 
+        self.shadowRoot.querySelector(`${fn.query}`).addEventListener(`${fn.event}`, e => {
+          //self.alertMe(1444)
+          console.log(eval(`self.${fn.fn}`)) // execute function 
         })
 
       })
     }
 
-export const replaceEventAttr = (sr, evt, el1) => {
+export const replaceEventAttr = (self, el1) => {
       // replace attrs (click) -> data-click0
       // (input) -> data-input0
 
-      const funcWithEvents = [];
-      sr.querySelectorAll(`${el1}`).forEach(el => {
-        if (el.attributes[0].name.includes(`${evt}`)) {
-          const tempAttr = el.getAttribute(`(${evt})`);
+      const fnEvents = [];
+      self.shadowRoot.querySelectorAll(el1).forEach(el => {
+        console.log(el.attributes[0].name.startsWith('on'), el.attributes[0].name, el.attributes[0].value) 
+        if (el.attributes[0].name.startsWith('on')) {
+         // const tempAttr = el.getAttribute(`(${evt})`);
+         const attrName = el.attributes[0].name;
+         const attrVal = el.attributes[0].value;
+         const attrEvent = attrName.split('on')[1];
 
-          // create final event attr
-          el.setAttribute(
-            `data-${evt}${funcWithEvents.length}`, tempAttr
+         // // create final event attr
+         el.setAttribute(
+            `data-${attrName}${fnEvents.length}`, attrVal
           )
-          
-          // get all the functions to execute in event listener
-          if (el.getAttribute(`(${evt})`)) {
-            funcWithEvents.push(el.getAttribute(`(${evt})`))
+         // 
+         // // get all the functions to execute in event listener
+         // if (el.getAttribute(`(${evt})`)) {
+         //   funcWithEvents.push(el.getAttribute(`(${evt})`))
+         // }
+          let tmp = {
+            query: `[data-${attrName}${fnEvents.length}="${attrVal}"]`,
+            fn: attrVal,
+            event: attrEvent
           }
+          fnEvents.push(tmp)
 
           // remove once attributes has been replaced
-          el.removeAttribute(`(${evt})`)
+         // el.removeAttribute(`(${evt})`)
         }
       })
-      return funcWithEvents
+      return fnEvents;
     }
 
 
@@ -154,6 +164,5 @@ export default {
   makeEvent,
   toHTML,
   toSimulate,
-  replaceEventAttr,
   NoJS
 }
