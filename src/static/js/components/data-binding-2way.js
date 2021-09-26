@@ -1,4 +1,4 @@
-import {  NoJS } from '../noJS.js';
+import {  noJS, makeEvent } from '../noJS.js';
 
 
 const template = document.createElement('template');
@@ -13,7 +13,7 @@ template.innerHTML = `
 
 <div>{username} This is ates??? {lastname} {a}</div>
 <button onclick="alertMe(1)">Click me {lastname}?</button>
-<button onclick="alertMe(2)">Click me {lastname}?</button>
+<button onclick="alertXe(2)">Click me {lastname}?</button>
 `
 
 class Db extends HTMLElement {
@@ -22,7 +22,7 @@ class Db extends HTMLElement {
       this.attachShadow({mode: 'open'})
       this.shadowRoot.appendChild(template.content.cloneNode(true));
 
-      const nojs = new NoJS(this);
+      const nojs = new noJS(this);
 
       // create a reactive variable
       this.properties = nojs.makeReactive(
@@ -41,6 +41,7 @@ class Db extends HTMLElement {
     //  this.properties,
     //);
   }
+
 
   alertMe(x) {
     alert(x)

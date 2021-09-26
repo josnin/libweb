@@ -1,4 +1,4 @@
-export class NoJS {
+export class noJS {
 
     constructor(shadowDom) {
       this.self = shadowDom;
@@ -114,6 +114,7 @@ export const makeEvent = (self, el1) => {
         // converted event listener
         self.shadowRoot.querySelector(`${fn.query}`).addEventListener(`${fn.event}`, e => {
           //self.alertMe(1444)
+          console.log(self)
           console.log(eval(`self.${fn.fn}`)) // execute function 
         })
 
@@ -137,11 +138,7 @@ export const replaceEventAttr = (self, el1) => {
          el.setAttribute(
             `data-${attrName}${fnEvents.length}`, attrVal
           )
-         // 
-         // // get all the functions to execute in event listener
-         // if (el.getAttribute(`(${evt})`)) {
-         //   funcWithEvents.push(el.getAttribute(`(${evt})`))
-         // }
+
           let tmp = {
             query: `[data-${attrName}${fnEvents.length}="${attrVal}"]`,
             fn: attrVal,
@@ -164,5 +161,5 @@ export default {
   makeEvent,
   toHTML,
   toSimulate,
-  NoJS
+  noJS
 }
