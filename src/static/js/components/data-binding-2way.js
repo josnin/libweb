@@ -1,18 +1,15 @@
-import {  noJS, makeEvent } from '../noJS.js';
+import {  
+  noJS, 
+  toSimulate
+} from '../noJS.js';
 
 
 const template = document.createElement('template');
 template.innerHTML = `
-<div>
-<input data-bind="username" type="text" />
 <input data-bind="a" type="text" />
-</div> 
-<div>{username} XYZ</div>
-<div>{username} This is ates???</div>
-<div>{username} This is ates??? {username}</div>
-
+<div>{username} This is ates??? {username} {a}</div>
 <div>{username} This is ates??? {lastname} {a}</div>
-<button onclick="alertMe()">Click me {lastname}?</button>
+<button onclick="alertMe()">Click me {a}?</button>
 `
 
 class Db extends HTMLElement {
@@ -35,16 +32,16 @@ class Db extends HTMLElement {
       nojs.makeEvent();
 
 
-    //toSimulate(
-    //  this,
-    //  this.properties,
-    //);
+      //toSimulate(
+      //  this,
+      //  this.properties,
+      //);
   }
 
 
 
   alertMe() {
-    alert('i dont know??');
+    this.properties.a = 'Hollah?';
   }
 }
 

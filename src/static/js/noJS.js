@@ -5,7 +5,7 @@ export class noJS {
     }
 
     makeEvent = () => {
-      ['button', 'input'].forEach(r => {
+      ['button'].forEach(r => {
         makeEvent(
           this.self,
           r
@@ -52,7 +52,7 @@ export const makeReactive = (self, obj) => {
       },
       set: (obj, prop, value) => {
         el1.forEach((el) => {
-          if (el.value) {
+          if (el.type == 'text') {
             el.value = value;
           } else {
             // interpolate
