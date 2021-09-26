@@ -1,12 +1,13 @@
 
+
 export const addDataBindAttr = (prop, el2) => {
     // add data-bind attr to those with requires interpolation {{variables}}
-    const elements = ['div', 'span'];
+    const elements = ['div', 'span', 'button'];
     elements.forEach(el1 => {
       el2.querySelectorAll(el1).forEach(el => {
         for (let [k, v] of Object.entries(prop)) {
             if (el.textContent.includes(k)) {
-                el.setAttribute('data-bind', k);
+                el.setAttribute(`data-bind`, k);
             }
         }
       })
@@ -27,14 +28,12 @@ export const makeReactive = (obj, el3) => {
       },
       set: (obj, prop, value) => {
         el1.forEach((el) => {
-          if (el.getAttribute("data-bind") == prop) {
-            if (el.type && (el.type === "text" || el.type === "textarea")) {
-              el.value = value;
-            } else {
-              // interpolate
-              // {username} > johny<!--{username}-->
-              el.innerHTML = el.innerHTML.replaceAll(`${obj[prop]}<!--{${prop}}-->`, `${value}<!--{${prop}}-->`)
-            }
+          if (el.value) {
+            el.value = value;
+          } else {
+            // interpolate
+            // {username} > johny<!--{username}-->
+            el.innerHTML = el.innerHTML.replaceAll(`${obj[prop]}<!--{${prop}}-->`, `${value}<!--{${prop}}-->`)
           }
         })
         obj[prop] = value;
