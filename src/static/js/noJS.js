@@ -113,8 +113,6 @@ export const makeEvent = (self, el1) => {
 
         // converted event listener
         self.shadowRoot.querySelector(`${fn.query}`).addEventListener(`${fn.event}`, e => {
-          //self.alertMe(1444)
-          console.log(self)
           console.log(eval(`self.${fn.fn}`)) // execute function 
         })
 
@@ -127,7 +125,6 @@ export const replaceEventAttr = (self, el1) => {
 
       const fnEvents = [];
       self.shadowRoot.querySelectorAll(el1).forEach(el => {
-        console.log(el.attributes[0].name.startsWith('on'), el.attributes[0].name, el.attributes[0].value) 
         if (el.attributes[0].name.startsWith('on')) {
          // const tempAttr = el.getAttribute(`(${evt})`);
          const attrName = el.attributes[0].name;
@@ -137,17 +134,20 @@ export const replaceEventAttr = (self, el1) => {
          // // create final event attr
          el.setAttribute(
             `data-${attrName}${fnEvents.length}`, attrVal
-          )
+          );
 
           let tmp = {
             query: `[data-${attrName}${fnEvents.length}="${attrVal}"]`,
             fn: attrVal,
             event: attrEvent
-          }
-          fnEvents.push(tmp)
+          };
 
-          // remove once attributes has been replaced
-         // el.removeAttribute(`(${evt})`)
+          fnEvents.push(tmp);
+
+          // need to remove otherwise onclick will be recognized as an active event
+          // though it value function is not define in global?
+          el.removeAttribute(attrName); 
+
         }
       })
       return fnEvents;

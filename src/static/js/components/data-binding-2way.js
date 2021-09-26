@@ -12,8 +12,7 @@ template.innerHTML = `
 <div>{username} This is ates??? {username}</div>
 
 <div>{username} This is ates??? {lastname} {a}</div>
-<button onclick="alertMe(1)">Click me {lastname}?</button>
-<button onclick="alertXe(2)">Click me {lastname}?</button>
+<button onclick="alertMe()">Click me {lastname}?</button>
 `
 
 class Db extends HTMLElement {
@@ -43,8 +42,9 @@ class Db extends HTMLElement {
   }
 
 
-  alertMe(x) {
-    alert(x)
+
+  alertMe() {
+    alert('i dont know??');
   }
 }
 
