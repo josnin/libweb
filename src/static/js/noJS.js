@@ -5,13 +5,7 @@ export class noJS {
       this.self.attachShadow({mode: 'open'});
       this.self.shadowRoot.appendChild(template.content.cloneNode(true));
 
-      ['button'].forEach(r => {
-        makeEvent(
-          this.self,
-          r
-        )
-      })
-
+      makeEvent(this.self);
 
     }
 
@@ -44,15 +38,12 @@ export class noJS {
 
 export const addDataBindAttr = (self, prop) => {
     // add data-bind attr to those with requires interpolation {{variables}}
-    const elements = ['div', 'span', 'button'];
-    elements.forEach(el1 => {
-      self.shadowRoot.querySelectorAll(el1).forEach(el => {
+    self.shadowRoot.querySelectorAll('*').forEach(el => {
         for (let [k, v] of Object.entries(prop)) {
             if (el.textContent.includes(k)) {
                 el.setAttribute(`data-bind`, k);
             }
         }
-      })
     })
   }
 
@@ -85,8 +76,7 @@ export const makeReactive = (self, obj) => {
 
 export const toHTML = (self, prop) => {
   if (prop) {
-    let el1 = self.shadowRoot.querySelectorAll("[data-bind]");
-    el1.forEach((el) => {
+    self.shadowRoot.querySelectorAll('*').forEach(el => {
       for (let [k, v] of Object.entries(prop)) {
         // {username} > johnny<!--{username}-->
         el.innerHTML = el.innerHTML.replaceAll(`{${k}}`, `${v}<!--{${k}}-->`)
@@ -109,8 +99,8 @@ export const addDataBindListener = (self) => {
   // add any event data-bind listener
 }
 
-export const makeEvent = (self, el1) => {
-      const fnEvents = replaceEventAttr(self, el1);
+export const makeEvent = (self) => {
+      const fnEvents = replaceEventAttr(self);
       fnEvents.forEach((fn) => {
         // data-${evt}${ctr}="${f}" >>> data-click0="alertMe()"
 
@@ -122,13 +112,14 @@ export const makeEvent = (self, el1) => {
       })
     }
 
-export const replaceEventAttr = (self, el1) => {
+export const replaceEventAttr = (self) => {
       // replace attrs (click) -> data-click0
       // (input) -> data-input0
 
       const fnEvents = [];
-      self.shadowRoot.querySelectorAll(el1).forEach(el => {
-        if (el.attributes[0].name.startsWith('on')) {
+      self.shadowRoot.querySelectorAll('*').forEach(el => {
+        //console.log('replaceEventAttr', el.attributes[0].name)
+        if (el.attributes.length > 0 &&  el.attributes[0].name.startsWith('on')) {
          // const tempAttr = el.getAttribute(`(${evt})`);
          const attrName = el.attributes[0].name;
          const attrVal = el.attributes[0].value;
