@@ -5,6 +5,7 @@ export class noJS {
       this.self.attachShadow({mode: 'open'});
       this.self.shadowRoot.appendChild(template.content.cloneNode(true));
 
+      // create event listener?
       makeEvent(this.self);
 
     }
@@ -12,24 +13,26 @@ export class noJS {
 
     makeReactive = (prop) => {
 
+      // add data-bind attr, applies only for reactive variable
       addDataBindAttr(
         this.self,
         prop
       );
 
-      let properties = makeReactive(
+      // replace {variable}  into real value on load only
+      toHTML(
         this.self,
         prop
       );
 
-      toHTML(
-        this.self,
-        properties
-      );
-
+      // add data-bind listener and variable to react when there is an event
       addDataBindListener(this.self);
 
-      return properties;
+      // make variable reactive
+      return makeReactive(
+        this.self,
+        prop
+      );
 
     }
 
@@ -38,6 +41,7 @@ export class noJS {
 
 export const addDataBindAttr = (self, prop) => {
     // add data-bind attr to those with requires interpolation {{variables}}
+    // applies only for reactive variable?
     self.shadowRoot.querySelectorAll('*').forEach(el => {
         for (let [k, v] of Object.entries(prop)) {
             if (el.textContent.includes(k)) {
