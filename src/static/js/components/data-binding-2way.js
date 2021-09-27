@@ -1,6 +1,5 @@
 import {  
   noJS, 
-  toSimulate
 } from '../noJS.js';
 
 
@@ -15,10 +14,7 @@ template.innerHTML = `
 class Db extends HTMLElement {
   constructor() {
     super();
-      this.attachShadow({mode: 'open'})
-      this.shadowRoot.appendChild(template.content.cloneNode(true));
-
-      const nojs = new noJS(this);
+      const nojs = new noJS(this, template);
 
       // create a reactive variable
       this.properties = nojs.makeReactive(
@@ -28,14 +24,6 @@ class Db extends HTMLElement {
         }
       )
 
-      // create an event listeners 
-      nojs.makeEvent();
-
-
-      //toSimulate(
-      //  this,
-      //  this.properties,
-      //);
   }
 
 

@@ -1,19 +1,28 @@
 export class noJS {
 
-    constructor(shadowDom) {
+    constructor(shadowDom, template) {
       this.self = shadowDom;
-    }
+      this.self.attachShadow({mode: 'open'});
+      this.self.shadowRoot.appendChild(template.content.cloneNode(true));
 
-    makeEvent = () => {
       ['button'].forEach(r => {
         makeEvent(
           this.self,
           r
         )
       })
+
+
     }
 
+
     makeReactive = (prop) => {
+
+      addDataBindAttr(
+        this.self,
+        prop
+      )
+
       return makeReactive(
         this.self,
         prop
@@ -39,11 +48,6 @@ export const addDataBindAttr = (self, prop) => {
 
 export const makeReactive = (self, obj) => {
     // react when there is a changes in value
-    console.log(self)
-    addDataBindAttr(
-      self,
-      obj
-    )
 
     let el1 = self.shadowRoot.querySelectorAll("[data-bind]");
     const handler = {
@@ -70,6 +74,7 @@ export const makeReactive = (self, obj) => {
       obj
     )
 
+    addDataBindListener(self);
 
     return new Proxy(obj, handler);
 }
@@ -87,23 +92,17 @@ export const toHTML = (self, prop) => {
   }
 }
 
-export const toSimulate = (self, prop) => {
-  // add even listener to simulate 
+export const addDataBindListener = (self) => {
+  // add any event data-bind listener
   let el1 = self.shadowRoot.querySelectorAll("[data-bind]");
   el1.forEach((el) => {
-    let propToBind = el.getAttribute("data-bind");
     if (el.type === "text") {
       el.addEventListener("input", (e) => {
-        prop[propToBind] = e.target.value;  
-      });
-    } else {
-      el.addEventListener("click", (e) => {
-        //this.properties[propToBind] = 'default2'
-        alert(prop.lastname)
+        self.properties[e.target.getAttribute('data-bind')] = e.target.value;
       });
     }
   });
-  // add even listener to simulate 
+  // add any event data-bind listener
 }
 
 export const makeEvent = (self, el1) => {
@@ -160,6 +159,6 @@ export default {
   makeReactive,
   makeEvent,
   toHTML,
-  toSimulate,
+  addDataBindListener,
   noJS
 }
