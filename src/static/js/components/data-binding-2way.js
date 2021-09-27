@@ -5,13 +5,16 @@ import {
 
 const template = document.createElement('template');
 template.innerHTML = `
-<input data-bind="a" type="text" />
+<input id="a" data-bind="a" type="text" />
 <div>{username} This is ates??? {username} {a}</div>
 <div>{username} This is ates??? {lastname} {a}</div>
 <button onclick="alertMe()">Click me {a}?</button>
 `
 
 class Db extends HTMLElement {
+
+  lastname = 'i dont know??';
+
   constructor() {
     super();
       const nojs = new noJS(this, template);

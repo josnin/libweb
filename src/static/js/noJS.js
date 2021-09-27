@@ -5,6 +5,8 @@ export class noJS {
       this.self.attachShadow({mode: 'open'});
       this.self.shadowRoot.appendChild(template.content.cloneNode(true));
 
+      console.log(this.self);
+
       // create event listener?
       makeEvent(this.self);
 
@@ -47,6 +49,7 @@ export const addDataBindAttr = (self, prop) => {
             if (el.textContent.includes(k)) {
                 el.setAttribute(`data-bind`, k);
             }
+
         }
     })
   }
@@ -81,13 +84,34 @@ export const makeReactive = (self, obj) => {
 export const toHTML = (self, prop) => {
   if (prop) {
     self.shadowRoot.querySelectorAll('*').forEach(el => {
-      for (let [k, v] of Object.entries(prop)) {
-        // {username} > johnny<!--{username}-->
-        el.innerHTML = el.innerHTML.replaceAll(`{${k}}`, `${v}<!--{${k}}-->`)
-      }
+      replaceReactiveVar(el, prop);
+      replaceNonReactiveVar(self, el, prop); // @Todo what if no prop??
     })
-
   }
+}
+
+const replaceReactiveVar = (el, prop) => {
+  // replace with real value {username} > johnny, applies on reactive variable
+  for (let [k, v] of Object.entries(prop)) {
+    // {username} > johnny<!--{username}-->
+    el.innerHTML = el.innerHTML.replaceAll(`{${k}}`, `${v}<!--{${k}}-->`)
+  }
+}
+
+const replaceNonReactiveVar = (self, el, prop) => {
+  // replace with real value {username} > johnny, applies on non-reactive variable
+  el.textContent.split(' ').forEach(r => {
+
+    if (r.includes('{') && r.includes('}')) {
+      let tempProp = r.split('{')[1].split('}')[0];
+      
+      if (!prop.hasOwnProperty(tempProp)) {
+        console.log('go here?', tempProp, prop)
+        el.innerHTML = el.innerHTML.replaceAll(r, self[tempProp])
+      }
+
+    }
+  })
 }
 
 export const addDataBindListener = (self) => {
