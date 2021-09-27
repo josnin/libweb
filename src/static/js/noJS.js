@@ -21,12 +21,22 @@ export class noJS {
       addDataBindAttr(
         this.self,
         prop
-      )
+      );
 
-      return makeReactive(
+      let properties = makeReactive(
         this.self,
         prop
-      )
+      );
+
+      toHTML(
+        this.self,
+        properties
+      );
+
+      addDataBindListener(this.self);
+
+      return properties;
+
     }
 
 }
@@ -69,12 +79,6 @@ export const makeReactive = (self, obj) => {
       }
     }
 
-    toHTML(
-      self,
-      obj
-    )
-
-    addDataBindListener(self);
 
     return new Proxy(obj, handler);
 }
