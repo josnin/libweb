@@ -5,12 +5,12 @@ export class noJS {
       this.self.attachShadow({mode: 'open'});
       this.self.shadowRoot.appendChild(template.content.cloneNode(true));
 
+      // interpolate variable
+      toHTML(this.self);
+
+
       // create event listener?
       makeEvent(this.self);
-  
-      this.self.shadowRoot.querySelectorAll('*').forEach(el => {
-        replaceNonReactiveVar(this.self, el); 
-      })
 
     }
 
@@ -18,12 +18,9 @@ export class noJS {
     makeReactive = (prop) => {
 
       this.self.shadowRoot.querySelectorAll('*').forEach(el => {
-
-        // add data-bind attr, applies only for reactive variable
         addDataBindAttr(el, prop);
-
-        replaceReactiveVar(el, prop);
-
+        replaceReactiveVarHTML(el, prop);
+        replaceReactiveVarAttr(el, prop);
       })
 
       // add data-bind listener and variable to react when there is an event
@@ -72,13 +69,14 @@ const makeReactive = (self, obj) => {
   return new Proxy(obj, handler);
 }
 
-export const toHTML = (self, prop) => {
+export const toHTML = (self) => {
   self.shadowRoot.querySelectorAll('*').forEach(el => {
-    replaceReactiveVar(el, prop);
+    replaceNonReactiveVarHTML(self, el); 
+    replaceNonReactiveVarAttr(self, el);
   })
 };
 
-const replaceReactiveVar = (el, prop) => {
+const replaceReactiveVarHTML = (el, prop) => {
   // replace with real value {username} > johnny, applies on reactive variable
   for (let [k, v] of Object.entries(prop)) {
     // {username} > johnny<!--{username}-->
@@ -86,8 +84,26 @@ const replaceReactiveVar = (el, prop) => {
   };
 };
 
+const replaceReactiveVarAttr = (el, prop) => {
+  for (let [k, v] of Object.entries(el.attributes)) { 
+    for (let [k1, v1] of Object.entries(prop)) {
+      let fAttr = v.value.replaceAll(`{${k1}}`, `'${v1}'`);
+      el.setAttribute(v.name, fAttr);
+    }
+  }
+};
 
-const replaceNonReactiveVar = (self, el) => {
+const replaceNonReactiveVarAttr = (self, el) => {
+  for (let [k, v] of Object.entries(el.attributes)) { 
+    let tempProp = v.value.split('{')[1]?.split('}')[0]
+    if (self[tempProp] != undefined) {
+      let fAttr = v.value.replaceAll(`{${tempProp}}`, `'${self[tempProp]}'`);
+      el.setAttribute(v.name, fAttr);
+    }
+  }
+};
+
+const replaceNonReactiveVarHTML = (self, el) => {
   // replace with real value {username} > johnny, applies on non-reactive variable
   el.textContent.split(' ').forEach(r => {
     if (r.startsWith('{') && r.endsWith('}')) {

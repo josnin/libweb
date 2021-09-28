@@ -6,14 +6,14 @@ import {
 const template = document.createElement('template');
 template.innerHTML = `
 <input data-bind="a" type="text" /><span>{a} from span</span>
-<div data-ba="dfsd">{username} This is ates??? {username} <div>{a}</div> {a}</div>
+<div data-ba="dfsd" data-ba1="cloudy">{username} This is ates??? {username} <div>{a}</div> {a}</div>
 <div data-nc="ncv" >{username} This is ates??? {lastname} {a}</div>
-<button onclick="alertMe({a})">Click me {a}?</button>
+<button onclick="alertMe({lastname})">Click me {a}?</button>
 `
 
 class Db extends HTMLElement {
 
-  lastname = 'i dont know??';
+  lastname = 'now i know??';
 
   constructor() {
     super();
@@ -31,8 +31,9 @@ class Db extends HTMLElement {
 
 
 
-  alertMe() {
-    this.properties.a = 'Hollah?';
+  alertMe(x) {
+    alert(x);
+    //this.properties.a = 'Hollah?';
   }
 }
 
