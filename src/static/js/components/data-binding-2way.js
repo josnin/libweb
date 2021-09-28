@@ -5,10 +5,10 @@ import {
 
 const template = document.createElement('template');
 template.innerHTML = `
-<input id="a" data-bind="a" type="text" />
-<div>{username} This is ates??? {username} {a}</div>
-<div>{username} This is ates??? {lastname} {a}</div>
-<button onclick="alertMe()">Click me {a}?</button>
+<input data-bind="a" type="text" /><span>{a} from span</span>
+<div data-ba="dfsd">{username} This is ates??? {username} <div>{a}</div> {a}</div>
+<div data-nc="ncv" >{username} This is ates??? {lastname} {a}</div>
+<button onclick="alertMe({a})">Click me {a}?</button>
 `
 
 class Db extends HTMLElement {
