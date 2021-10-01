@@ -1,4 +1,5 @@
 
+
 export class noJS {
 
   constructor(shadowDom, template) {
@@ -10,7 +11,7 @@ export class noJS {
     toHTML(this.self);
 
     // create event listener?
-    //createEventListener(this.self);
+    createEventListener(this.self);
 
   }
 
@@ -88,18 +89,18 @@ export const toHTML = (self) => {
 };
 
 const updateVarAttrOnLoad = (self, element) => {
-  for (let [k, attr] of Object.entries(element.attributes)) { 
+  for (let [suffixID, attr] of Object.entries(element.attributes)) { 
     let variable = attr.value.split('{')[1]?.split('}')[0];
     if (self[variable] != undefined) {
-      let finalAttribute = attr.value.replaceAll(
-        `{${variable}}`, 
-        `'${self[variable]}'`
-      );
+      setAndRemoveAttr(
+        element,
+        attr.name,
+        attr.value,
+        suffixID,
+        variable,
+        self[variable]
+      )
 
-      element.setAttribute(
-        `data-${attr.name}`, 
-        `${finalAttribute};/* {${variable}} */`
-      );
     }
   }
 };
@@ -130,20 +131,43 @@ const updateReactiveVarHTMLOnLoad = (element, reactiveObj) => {
   };
 };
 
+const setAndRemoveAttr = (
+  element, 
+  attrName, 
+  attrVal,
+  suffixID, 
+  varName,
+  varValue
+) => {
+
+  let finalAttribute = attrVal.replaceAll(
+    `{${varName}}`, 
+    `'${varValue}'`
+  );
+
+  // data-click1 suffix counter to make use its unique event
+  element.setAttribute(
+    `data-${attrName.replace('@', 'on')}${suffixID}`,  
+    `${finalAttribute};/* {${varName}} */`
+  );
+
+  // remove @click attributes
+  element.removeAttribute(`${attrName}`);
+};
+
 const updateReactiveVarAttrOnLoad = (element, reactiveObj) => {
-  for (let [_, attr] of Object.entries(element.attributes)) { 
+  for (let [suffixID, attr] of Object.entries(element.attributes)) { 
     for (let [varName, varValue] of Object.entries(reactiveObj)) {
       // only applies for event attr
-      if (attr.name.startsWith('@')) { 
-        let finalAttribute = attr.value.replaceAll(
-          `{${varName}}`, 
-          `'${varValue}'`
-        );
-        console.log(finalAttribute, attr.name, attr.value)
-        element.setAttribute(
-          `data-${attr.name.replace('@', 'on')}`, 
-          `${finalAttribute};/* {${varName}} */`
-        );
+      if (attr.name.startsWith('@')) {  // @Todo use enum to define this
+        setAndRemoveAttr(
+          element,
+          attr.name,
+          attr.value,
+          suffixID,
+          varName,
+          varValue
+        )
       }
       // only applies for event attr
     }
@@ -213,6 +237,7 @@ const createEventListener = (self) => {
     //  console.log(eval(`self.${fn.fn}`)) // execute function 
     //}, true)
     // onclick will only execute the latest created event?
+    console.log('xxxx', fn.query)
     self.shadowRoot.querySelector(`${fn.query}`).onclick = (e) => {
       console.log(eval(`self.${fn.fn}`)) // execute function 
     };
