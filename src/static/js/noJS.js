@@ -10,7 +10,6 @@ export class noJS {
     // interpolate variable
     toHTML(this.self);
 
-    // create event listener?
     createEventListener(this.self);
 
   }
@@ -35,17 +34,6 @@ export class noJS {
 
 }
 
-
-//const addDataBindAttr = (element, variable) => {
-//  // add data-bind attr to those with requires interpolation {{variables}}
-//  // applies only for reactive variable?
-//  for (let [varName, _] of Object.entries(variable)) {
-//      if (element.textContent.includes(varName)) {
-//          element.setAttribute(`data-bind`, varName);
-//      }
-//  }
-//}
-
 const createReactive = (self, varObj) => {
   // react when there is a changes in value
   //const allElements = self.shadowRoot.querySelectorAll('[data-bind]');
@@ -62,11 +50,17 @@ const createReactive = (self, varObj) => {
           // interpolate
           // {username} > johny<!--{username}-->
           updateReactiveVarHTMLOnChange(
-            element, varObj, prop, value
+            element, 
+            varObj, 
+            prop, 
+            value
           );
           //el.innerHTML = el.innerHTML.replaceAll(`${obj[prop]}<!--{${prop}}-->`, `${value}<!--{${prop}}-->`)
           updateReactiveVarAttrOnChange(
-            element, varObj, prop, value
+            element, 
+            varObj, 
+            prop, 
+            value
           );
 
           createEventListener(self);
@@ -91,8 +85,8 @@ export const toHTML = (self) => {
 const updateVarAttrOnLoad = (self, element) => {
   for (let [suffixID, attr] of Object.entries(element.attributes)) { 
     let variable = attr.value.split('{')[1]?.split('}')[0];
-    if (self[variable] != undefined) {
-      setAndRemoveAttr(
+    if (attr.name.startsWith('@') && self[variable] != undefined) {
+      setAndRemoveEventAttr(
         element,
         attr.name,
         attr.value,
@@ -131,7 +125,7 @@ const updateReactiveVarHTMLOnLoad = (element, reactiveObj) => {
   };
 };
 
-const setAndRemoveAttr = (
+const setAndRemoveEventAttr = (
   element, 
   attrName, 
   attrVal,
@@ -160,7 +154,7 @@ const updateReactiveVarAttrOnLoad = (element, reactiveObj) => {
     for (let [varName, varValue] of Object.entries(reactiveObj)) {
       // only applies for event attr
       if (attr.name.startsWith('@')) {  // @Todo use enum to define this
-        setAndRemoveAttr(
+        setAndRemoveEventAttr(
           element,
           attr.name,
           attr.value,
@@ -228,7 +222,7 @@ const executeFunction = (self, fn) => {
 }
 
 const createEventListener = (self) => {
-  const fnEvents = updateEventAttr(self);
+  const fnEvents = getEventsAttrFn(self);
   fnEvents.forEach((fn) => {
     // converted event listener
     console.log(fn.query, fn.event);
@@ -237,14 +231,13 @@ const createEventListener = (self) => {
     //  console.log(eval(`self.${fn.fn}`)) // execute function 
     //}, true)
     // onclick will only execute the latest created event?
-    console.log('xxxx', fn.query)
     self.shadowRoot.querySelector(`${fn.query}`).onclick = (e) => {
       console.log(eval(`self.${fn.fn}`)) // execute function 
     };
   })
 }
 
-const updateEventAttr = (self) => {
+const getEventsAttrFn = (self) => {
   // replace attrs onclick -> data-onclick
   const fnEvents = [];
   const allElements = self.shadowRoot.querySelectorAll('*');
