@@ -9,7 +9,7 @@ export class noJS {
       toHTML(this.self);
 
       // create event listener?
-      makeEvent(this.self);
+      createEventListener(this.self);
 
     }
 
@@ -26,7 +26,7 @@ export class noJS {
       addDataBindListener(this.self);
 
       // create event listener?
-      makeEvent(this.self);
+      createEventListener(this.self);
 
       // make variable reactive
       return makeReactive(this.self, variable);
@@ -48,7 +48,7 @@ const addDataBindAttr = (element, variable) => {
 
 const makeReactive = (self, obj) => {
   // react when there is a changes in value
-  let elementWithDataBind = self.shadowRoot.querySelectorAll("[data-bind]");
+  const elementWithDataBind = self.shadowRoot.querySelectorAll("[data-bind]");
   const handler = {
     get: (obj, prop) => {
       return obj[prop] ;
@@ -63,7 +63,7 @@ const makeReactive = (self, obj) => {
           updateReactiveVariableHTMLOnChange(element, obj, prop, value);
           //el.innerHTML = el.innerHTML.replaceAll(`${obj[prop]}<!--{${prop}}-->`, `${value}<!--{${prop}}-->`)
           updateReactiveVariableAttrOnChange(element, obj, prop, value);
-          makeEvent(self);
+          createEventListener(self);
         }
       })
       obj[prop] = value;
@@ -151,7 +151,7 @@ const addDataBindListener = (self) => {
   // add any event data-bind listener
 }
 
-const makeEvent = (self) => {
+const createEventListener = (self) => {
   const fnEvents = updateEventAttr(self);
   fnEvents.forEach((fn) => {
     // converted event listener
