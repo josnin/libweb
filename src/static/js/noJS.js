@@ -83,40 +83,6 @@ export const toHTML = (self) => {
   })
 };
 
-const updateReactiveVariableHTMLOnLoad = (element, variable) => {
-  // replace with real value {username} > johnny, applies on reactive variable
-  for (let [key, value] of Object.entries(variable)) {
-    // {username} > johnny<!--{username}-->
-    element.innerHTML = element.innerHTML.replaceAll(`{${key}}`, `${value}<!--{${key}}-->`)
-  };
-};
-
-const updateReactiveVariableHTMLOnChange = (element, obj, prop, value) => {
-  element.innerHTML = element.innerHTML.replaceAll(`${obj[prop]}<!--{${prop}}-->`, `${value}<!--{${prop}}-->`)
-}
-
-const updateReactiveVariableAttrOnLoad = (element, variable) => {
-  for (let [_, attr] of Object.entries(element.attributes)) { 
-    for (let [varName, varKey] of Object.entries(variable)) {
-      if (attr.name.startsWith('on')) {
-        let finalAttribute = attr.value.replaceAll(`{${varName}}`, `'${varKey}'`);
-        console.log(finalAttribute, attr.name, attr.value)
-        element.setAttribute(`data-${attr.name}`, `${finalAttribute};/* {${varName}} */`);
-      }
-    }
-  }
-};
-
-const updateReactiveVariableAttrOnChange = (element, obj, prop, value) => {
-  for (let [_, attr] of Object.entries(element.attributes)) { 
-    if (attr.name.startsWith('data-on') && attr.value.includes(`{${prop}}`)) {
-      let finalAttribute = attr.value.replaceAll(`${obj[prop]}`, `${value}`);
-      console.log(finalAttribute);
-      element.setAttribute(`${attr.name}`, finalAttribute);
-    }
-  }
-};
-
 const updateVariableAttrOnLoad = (self, element) => {
   for (let [k, attr] of Object.entries(element.attributes)) { 
     let variable = attr.value.split('{')[1]?.split('}')[0];
@@ -139,13 +105,47 @@ const updateVariableHTMLOnLoad = (self, element) => {
   })
 }
 
+const updateReactiveVariableHTMLOnLoad = (element, reactiveObj) => {
+  // replace with real value {username} > johnny, applies on reactive variable
+  for (let [varName, varValue] of Object.entries(reactiveObj)) {
+    // {username} > johnny<!--{username}-->
+    element.innerHTML = element.innerHTML.replaceAll(`{${varName}}`, `${varValue}<!--{${varName}}-->`)
+  };
+};
+
+const updateReactiveVariableAttrOnLoad = (element, reactiveObj) => {
+  for (let [_, attr] of Object.entries(element.attributes)) { 
+    for (let [varName, varValue] of Object.entries(reactiveObj)) {
+      if (attr.name.startsWith('on')) {
+        let finalAttribute = attr.value.replaceAll(`{${varName}}`, `'${varValue}'`);
+        console.log(finalAttribute, attr.name, attr.value)
+        element.setAttribute(`data-${attr.name}`, `${finalAttribute};/* {${varName}} */`);
+      }
+    }
+  }
+};
+
+const updateReactiveVariableHTMLOnChange = (element, reactiveObj, varName, varValue) => {
+  element.innerHTML = element.innerHTML.replaceAll(`${reactiveObj[varName]}<!--{${varName}}-->`, `${varValue}<!--{${varName}}-->`)
+}
+
+const updateReactiveVariableAttrOnChange = (element, obj, prop, value) => {
+  for (let [_, attr] of Object.entries(element.attributes)) { 
+    if (attr.name.startsWith('data-on') && attr.value.includes(`{${prop}}`)) {
+      let finalAttribute = attr.value.replaceAll(`${obj[prop]}`, `${value}`);
+      console.log(finalAttribute);
+      element.setAttribute(`${attr.name}`, finalAttribute);
+    }
+  }
+};
+
+
 const addDataBindListener = (self) => {
   // add any event data-bind listener
   const elementWithDataBind = self.shadowRoot.querySelectorAll("[data-bind]");
   elementWithDataBind.forEach((element) => {
     if (element.type === "text") {
       element.addEventListener("input", (e) => {
-        console.log('adddd', e.target.getAttribute('data-bind'))
         self.reactive[e.target.getAttribute('data-bind')] = e.target.value;
       });
     }
