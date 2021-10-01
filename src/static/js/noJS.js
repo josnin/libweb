@@ -8,57 +8,62 @@ export class noJS {
       // interpolate variable
       toHTML(this.self);
 
-
       // create event listener?
       makeEvent(this.self);
 
     }
 
 
-    makeReactive = (prop) => {
-
-      this.self.shadowRoot.querySelectorAll('*').forEach(el => {
-        addDataBindAttr(el, prop);
-        replaceReactiveVarHTML(el, prop);
-        replaceReactiveVarAttr(el, prop);
+    makeReactive = (variable) => {
+      const allElements = this.self.shadowRoot.querySelectorAll('*');
+      allElements.forEach(element => {
+        addDataBindAttr(element, variable);
+        updateReactiveVariableHTMLOnLoad(element, variable);
+        updateReactiveVariableAttrOnLoad(element, variable);
       })
 
       // add data-bind listener and variable to react when there is an event
       addDataBindListener(this.self);
 
+      // create event listener?
+      makeEvent(this.self);
+
       // make variable reactive
-      return makeReactive(this.self, prop);
+      return makeReactive(this.self, variable);
 
     }
 
 }
 
 
-const addDataBindAttr = (el, prop) => {
+const addDataBindAttr = (element, variable) => {
   // add data-bind attr to those with requires interpolation {{variables}}
   // applies only for reactive variable?
-  for (let [k, v] of Object.entries(prop)) {
-      if (el.textContent.includes(k)) {
-          el.setAttribute(`data-bind`, k);
+  for (let [varName, _] of Object.entries(variable)) {
+      if (element.textContent.includes(varName)) {
+          element.setAttribute(`data-bind`, varName);
       }
   }
 }
 
 const makeReactive = (self, obj) => {
   // react when there is a changes in value
-  let el1 = self.shadowRoot.querySelectorAll("[data-bind]");
+  let elementWithDataBind = self.shadowRoot.querySelectorAll("[data-bind]");
   const handler = {
     get: (obj, prop) => {
       return obj[prop] ;
     },
     set: (obj, prop, value) => {
-      el1.forEach((el) => {
-        if (el.type == 'text') {
-          el.value = value;
+      elementWithDataBind.forEach((element) => {
+        if (element.type == 'text') {
+          element.value = value;
         } else {
           // interpolate
           // {username} > johny<!--{username}-->
-          el.innerHTML = el.innerHTML.replaceAll(`${obj[prop]}<!--{${prop}}-->`, `${value}<!--{${prop}}-->`)
+          updateReactiveVariableHTMLOnChange(element, obj, prop, value);
+          //el.innerHTML = el.innerHTML.replaceAll(`${obj[prop]}<!--{${prop}}-->`, `${value}<!--{${prop}}-->`)
+          updateReactiveVariableAttrOnChange(element, obj, prop, value);
+          makeEvent(self);
         }
       })
       obj[prop] = value;
@@ -70,46 +75,64 @@ const makeReactive = (self, obj) => {
 }
 
 export const toHTML = (self) => {
-  self.shadowRoot.querySelectorAll('*').forEach(el => {
-    replaceNonReactiveVarHTML(self, el); 
-    replaceNonReactiveVarAttr(self, el);
+  const element = self.shadowRoot.querySelectorAll('*');
+  element.forEach(el => {
+    updateVariableHTML(self, el);
+    updateVariableAttr(self, el);
   })
 };
 
-const replaceReactiveVarHTML = (el, prop) => {
+const updateReactiveVariableHTMLOnLoad = (element, variable) => {
   // replace with real value {username} > johnny, applies on reactive variable
-  for (let [k, v] of Object.entries(prop)) {
+  for (let [key, value] of Object.entries(variable)) {
     // {username} > johnny<!--{username}-->
-    el.innerHTML = el.innerHTML.replaceAll(`{${k}}`, `${v}<!--{${k}}-->`)
+    element.innerHTML = element.innerHTML.replaceAll(`{${key}}`, `${value}<!--{${key}}-->`)
   };
 };
 
-const replaceReactiveVarAttr = (el, prop) => {
-  for (let [k, v] of Object.entries(el.attributes)) { 
-    for (let [k1, v1] of Object.entries(prop)) {
-      let fAttr = v.value.replaceAll(`{${k1}}`, `'${v1}'`);
-      el.setAttribute(v.name, fAttr);
+const updateReactiveVariableHTMLOnChange = (element, obj, prop, value) => {
+  element.innerHTML = element.innerHTML.replaceAll(`${obj[prop]}<!--{${prop}}-->`, `${value}<!--{${prop}}-->`)
+}
+
+const updateReactiveVariableAttrOnLoad = (element, variable) => {
+  for (let [_, attr] of Object.entries(element.attributes)) { 
+    for (let [varName, varKey] of Object.entries(variable)) {
+      if (attr.name.startsWith('on')) {
+        let finalAttribute = attr.value.replaceAll(`{${varName}}`, `'${varKey}'`);
+        console.log(finalAttribute, attr.name, attr.value)
+        element.setAttribute(`data-${attr.name}`, `${finalAttribute};/* {${varName}} */`);
+      }
     }
   }
 };
 
-const replaceNonReactiveVarAttr = (self, el) => {
-  for (let [k, v] of Object.entries(el.attributes)) { 
-    let tempProp = v.value.split('{')[1]?.split('}')[0]
-    if (self[tempProp] != undefined) {
-      let fAttr = v.value.replaceAll(`{${tempProp}}`, `'${self[tempProp]}'`);
-      el.setAttribute(v.name, fAttr);
+const updateReactiveVariableAttrOnChange = (element, obj, prop, value) => {
+  for (let [_, attr] of Object.entries(element.attributes)) { 
+    if (attr.name.startsWith('data-on') && attr.value.includes(`{${prop}}`)) {
+      let finalAttribute = attr.value.replaceAll(`${obj[prop]}`, `${value}`);
+      console.log(finalAttribute);
+      element.setAttribute(`${attr.name}`, finalAttribute);
     }
   }
 };
 
-const replaceNonReactiveVarHTML = (self, el) => {
+const updateVariableAttr = (self, element) => {
+  for (let [k, attr] of Object.entries(element.attributes)) { 
+    let variable = attr.value.split('{')[1]?.split('}')[0];
+    if (self[variable] != undefined) {
+      let finalAttribute = attr.value.replaceAll(`{${variable}}`, `'${self[variable]}'`);
+      element.setAttribute(`data-${attr.name}`, `${finalAttribute};/* {${variable}} */`);
+    }
+  }
+};
+
+const updateVariableHTML = (self, element) => {
   // replace with real value {username} > johnny, applies on non-reactive variable
-  el.textContent.split(' ').forEach(r => {
-    if (r.startsWith('{') && r.endsWith('}')) {
-      let tempProp = r.split('{')[1].split('}')[0];
-      if (self[tempProp] != undefined) {
-        el.innerHTML = el.innerHTML.replaceAll(r, self[tempProp])
+  element.textContent.split(' ').forEach(text => {
+    if (text.startsWith('{') && text.endsWith('}')) {
+      let variable = text.split('{')[1].split('}')[0];
+      if (self[variable] != undefined) {
+        element.innerHTML = element.innerHTML.replaceAll(text, self[variable])
       }
     }
   })
@@ -117,11 +140,11 @@ const replaceNonReactiveVarHTML = (self, el) => {
 
 const addDataBindListener = (self) => {
   // add any event data-bind listener
-  let el1 = self.shadowRoot.querySelectorAll("[data-bind]");
-  el1.forEach((el) => {
-    if (el.type === "text") {
-      el.addEventListener("input", (e) => {
-        self.properties[e.target.getAttribute('data-bind')] = e.target.value;
+  const elementWithDataBind = self.shadowRoot.querySelectorAll("[data-bind]");
+  elementWithDataBind.forEach((element) => {
+    if (element.type === "text") {
+      element.addEventListener("input", (e) => {
+        self.reactive[e.target.getAttribute('data-bind')] = e.target.value;
       });
     }
   });
@@ -129,46 +152,35 @@ const addDataBindListener = (self) => {
 }
 
 const makeEvent = (self) => {
-  const fnEvents = replaceEventAttr(self);
+  const fnEvents = updateEventAttr(self);
   fnEvents.forEach((fn) => {
-    // data-${evt}${ctr}="${f}" >>> data-click0="alertMe()"
     // converted event listener
-    self.shadowRoot.querySelector(`${fn.query}`).addEventListener(`${fn.event}`, e => {
+    //self.shadowRoot.querySelector(`${fn.query}`).addEventListener(`${fn.event}`, e => {
+    //  console.log(eval(`self.${fn.fn}`)) // execute function 
+    //})
+    // onclick will only execute the latest created event?
+    self.shadowRoot.querySelector(`${fn.query}`).onclick = (e) => {
       console.log(eval(`self.${fn.fn}`)) // execute function 
-    })
-
+    };
   })
 }
 
-const replaceEventAttr = (self) => {
-  // replace attrs (click) -> data-click0
-  // (input) -> data-input0
+const updateEventAttr = (self) => {
+  // replace attrs onclick -> data-onclick
   const fnEvents = [];
-  self.shadowRoot.querySelectorAll('*').forEach(el => {
-    //console.log('replaceEventAttr', el.attributes[0].name)
-    if (el.attributes.length > 0 &&  el.attributes[0].name.startsWith('on')) {
-      // const tempAttr = el.getAttribute(`(${evt})`);
-      const attrName = el.attributes[0].name;
-      const attrVal = el.attributes[0].value;
-      const attrEvent = attrName.split('on')[1];
+  const allElements = self.shadowRoot.querySelectorAll('*');
 
-      // // create final event attr
-      el.setAttribute(
-        `data-${attrName}${fnEvents.length}`, attrVal
-      );
-
-      let tmp = {
-        query: `[data-${attrName}${fnEvents.length}="${attrVal}"]`,
-        fn: attrVal,
-        event: attrEvent
-      };
-
-      fnEvents.push(tmp);
-
-      // need to remove otherwise onclick will be recognized as an active event
-      // though it value function is not define in global?
-      el.removeAttribute(attrName); 
-
+  allElements.forEach(element => {
+    for (let [_, attr] of Object.entries(element.attributes)) { 
+      if (attr.name.startsWith('data-on')) {
+        let tmp = {
+          //query: `[data-${attrName}${fnEvents.length}="${attrVal}"]`,
+          query: `[${attr.name}]`,
+          fn: attr.value,
+          event: attr.name.split('data-on')[1]
+        };
+        fnEvents.push(tmp);
+      }
     }
   })
   return fnEvents;

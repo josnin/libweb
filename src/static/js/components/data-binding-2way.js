@@ -8,7 +8,7 @@ template.innerHTML = `
 <input data-bind="a" type="text" /><span>{a} from span</span>
 <div data-ba="dfsd" data-ba1="cloudy">{username} This is ates??? {username} <div>{a}</div> {a}</div>
 <div data-nc="ncv" >{username} This is ates??? {lastname} {a}</div>
-<button onclick="alertMe({lastname})">Click me {a}?</button>
+<button id="btn" onclick="alertMe({a})">Click me {a}?</button>
 `
 
 class Db extends HTMLElement {
@@ -20,7 +20,7 @@ class Db extends HTMLElement {
       const nojs = new noJS(this, template);
 
       // create a reactive variable
-      this.properties = nojs.makeReactive(
+      this.reactive = nojs.makeReactive(
         { 
           username: 'darling',
           a: 'javascript'
@@ -33,7 +33,7 @@ class Db extends HTMLElement {
 
   alertMe(x) {
     alert(x);
-    //this.properties.a = 'Hollah?';
+    //this.reactive.a = 'Hollah?';
   }
 }
 
