@@ -9,6 +9,7 @@ template.innerHTML = `
 <div data-ba="dfsd" data-ba1="cloudy">{username} This is ates??? {username} <div>{a}</div> {a}</div>
 <div data-nc="ncv" >{username} This is ates??? {lastname} {a}</div>
 <button id="btn" @click="alertMe({a})">Click me {a}?</button>
+<button onclick="this.changeValue()">Click me {a}?</button>
 `
 
 class Db extends HTMLElement {
@@ -30,10 +31,13 @@ class Db extends HTMLElement {
   }
 
 
+  changeValue(x) {
+    console.log(x)
+  }
 
   alertMe(x) {
     alert(x);
-    //this.reactive.a = 'Hollah?';
+   // this.reactive.a = 'Hollah?';
   }
 }
 
