@@ -116,11 +116,13 @@ const updateReactiveVariableHTMLOnLoad = (element, reactiveObj) => {
 const updateReactiveVariableAttrOnLoad = (element, reactiveObj) => {
   for (let [_, attr] of Object.entries(element.attributes)) { 
     for (let [varName, varValue] of Object.entries(reactiveObj)) {
-      if (attr.name.startsWith('on')) {
+      // only applies for event attr
+      if (attr.name.startsWith('@')) { 
         let finalAttribute = attr.value.replaceAll(`{${varName}}`, `'${varValue}'`);
         console.log(finalAttribute, attr.name, attr.value)
-        element.setAttribute(`data-${attr.name}`, `${finalAttribute};/* {${varName}} */`);
+        element.setAttribute(`data-${attr.name.replace('@', 'on')}`, `${finalAttribute};/* {${varName}} */`);
       }
+      // only applies for event attr
     }
   }
 };
