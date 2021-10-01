@@ -17,7 +17,7 @@ export class noJS {
     makeReactive = (variable) => {
       const allElements = this.self.shadowRoot.querySelectorAll('*');
       allElements.forEach(element => {
-        addDataBindAttr(element, variable);
+        //addDataBindAttr(element, variable);
         updateReactiveVariableHTMLOnLoad(element, variable);
         updateReactiveVariableAttrOnLoad(element, variable);
       })
@@ -36,25 +36,26 @@ export class noJS {
 }
 
 
-const addDataBindAttr = (element, variable) => {
-  // add data-bind attr to those with requires interpolation {{variables}}
-  // applies only for reactive variable?
-  for (let [varName, _] of Object.entries(variable)) {
-      if (element.textContent.includes(varName)) {
-          element.setAttribute(`data-bind`, varName);
-      }
-  }
-}
+//const addDataBindAttr = (element, variable) => {
+//  // add data-bind attr to those with requires interpolation {{variables}}
+//  // applies only for reactive variable?
+//  for (let [varName, _] of Object.entries(variable)) {
+//      if (element.textContent.includes(varName)) {
+//          element.setAttribute(`data-bind`, varName);
+//      }
+//  }
+//}
 
 const makeReactive = (self, obj) => {
   // react when there is a changes in value
-  const elementWithDataBind = self.shadowRoot.querySelectorAll("[data-bind]");
+  //const allElements = self.shadowRoot.querySelectorAll('[data-bind]');
+  const allElements = self.shadowRoot.querySelectorAll("*");
   const handler = {
     get: (obj, prop) => {
       return obj[prop] ;
     },
     set: (obj, prop, value) => {
-      elementWithDataBind.forEach((element) => {
+      allElements.forEach((element) => {
         if (element.type == 'text') {
           element.value = value;
         } else {
@@ -75,10 +76,10 @@ const makeReactive = (self, obj) => {
 }
 
 export const toHTML = (self) => {
-  const element = self.shadowRoot.querySelectorAll('*');
-  element.forEach(el => {
-    updateVariableHTML(self, el);
-    updateVariableAttr(self, el);
+  const allElements = self.shadowRoot.querySelectorAll('*');
+  allElements.forEach(element => {
+    updateVariableHTMLOnLoad(self, element);
+    updateVariableAttrOnLoad(self, element);
   })
 };
 
@@ -116,7 +117,7 @@ const updateReactiveVariableAttrOnChange = (element, obj, prop, value) => {
   }
 };
 
-const updateVariableAttr = (self, element) => {
+const updateVariableAttrOnLoad = (self, element) => {
   for (let [k, attr] of Object.entries(element.attributes)) { 
     let variable = attr.value.split('{')[1]?.split('}')[0];
     if (self[variable] != undefined) {
@@ -126,7 +127,7 @@ const updateVariableAttr = (self, element) => {
   }
 };
 
-const updateVariableHTML = (self, element) => {
+const updateVariableHTMLOnLoad = (self, element) => {
   // replace with real value {username} > johnny, applies on non-reactive variable
   element.textContent.split(' ').forEach(text => {
     if (text.startsWith('{') && text.endsWith('}')) {
@@ -144,6 +145,7 @@ const addDataBindListener = (self) => {
   elementWithDataBind.forEach((element) => {
     if (element.type === "text") {
       element.addEventListener("input", (e) => {
+        console.log('adddd', e.target.getAttribute('data-bind'))
         self.reactive[e.target.getAttribute('data-bind')] = e.target.value;
       });
     }
