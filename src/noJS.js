@@ -1,17 +1,7 @@
-import { 
-  stripParenthesis, 
-  getFunctionArgs 
-} from './utils.js';
 
-import {
-  createEventListener,
-} from './events.js';
-
-import {
-  createReactive,
-  updateReactiveVarHTMLOnLoad,
-  updateReactiveVarAttrOnLoad
-} from './reactive.js';
+import events from './events.js';
+import reactive from './reactive.js';
+import utils from './utils.js';
 
 export class noJS {
 
@@ -23,7 +13,7 @@ export class noJS {
     // interpolate variable
     toHTML(this.self);
 
-    createEventListener(this.self);
+    events.createEventListener(this.self);
 
   }
 
@@ -32,19 +22,19 @@ export class noJS {
     const allElements = this.self.shadowRoot.querySelectorAll('*');
     allElements.forEach(element => {
       //addDataBindAttr(element, variable);
-      updateReactiveVarHTMLOnLoad(element, varObj);
-      updateReactiveVarAttrOnLoad(element, varObj);
+      reactive.updateReactiveVarHTMLOnLoad(element, varObj);
+      reactive.updateReactiveVarAttrOnLoad(element, varObj);
     })
 
     // add data-bind listener and variable to react when there is an event
     addDataBindListener(this.self);
-    //createEventListener(this.self);
+    //events.createEventListener(this.self);
 
     // make variable reactive
-    return createReactive(
+    return reactive.createReactive(
       this.self, 
       varObj, 
-      createEventListener
+      events.createEventListener
     );
 
   }
@@ -61,36 +51,9 @@ export const toHTML = (self) => {
 };
 
 
-const updateEventFunctionArgs = (self, attrName, attrVal) => {
-  if (attrName.startsWith('@')) {
-    console.log(attrVal)
-    console.log(getFunctionArgs(attrVal));
-    const functionArgs = stripParenthesis(
-      getFunctionArgs(attrVal)
-    );
-    const finalArgs = [];
-    const commentArgs = [];
-    functionArgs.split(',').forEach(e => {
-      let arg = e.trim();
-      if (self[arg] != undefined) {
-        finalArgs.push(self[arg]);
-        commentArgs.push(arg);
-      } else {
-        console.warn(`This function "${attrVal}" unable to update args`);
-        return
-      }
-    })
-    let tmp = finalArgs.map(r => `'${r}'`).join(','); //@Todo how about numeric??
-    tmp = `(${tmp})/*${commentArgs.join(',')}*/`;
-    const result = attrVal.replaceAll(/\((.+)\)/g, `${tmp}`);
-    console.log(result, attrVal)
-    return result
-  }
-};
-
 const updateVarAttrOnLoad = (self, element) => {
   for (let [suffixID, attr] of Object.entries(element.attributes)) { 
-    let updatedFnArgs = updateEventFunctionArgs(self, 
+    let updatedFnArgs = utils.updateEventFunctionArgs(self, 
       attr.name, 
       attr.value
     );
