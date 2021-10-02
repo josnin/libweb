@@ -141,7 +141,7 @@ const setAndRemoveEventAttr = (
 
   // data-click1 suffix counter to make use its unique event
   element.setAttribute(
-    `data-${attrName.replace('@', 'on')}${suffixID}`,  
+    `data-${attrName.replace('@', 'on')}-id${suffixID}`,  
     `${finalAttribute};/* {${varName}} */`
   );
 
@@ -217,21 +217,16 @@ const addDataBindListener = (self) => {
   // add any event data-bind listener
 }
 
-const executeFunction = (self, fn) => {
-  console.log(eval(`self.${fn.fn}`)) // execute function 
-}
-
 const createEventListener = (self) => {
   const fnEvents = getEventsAttrFn(self);
   fnEvents.forEach((fn) => {
     // converted event listener
-    console.log(fn.query, fn.event);
-    //self.shadowRoot.querySelector(`${fn.query}`).removeEventListener(`${fn.event}`, executeFunction(self, fn))
     //self.shadowRoot.querySelector(`${fn.query}`).addEventListener(`${fn.event}`, e => {
     //  console.log(eval(`self.${fn.fn}`)) // execute function 
     //}, true)
-    // onclick will only execute the latest created event?
-    self.shadowRoot.querySelector(`${fn.query}`).onclick = (e) => {
+
+    // use this approach to overwrite all listener instead of addEventListener
+    self.shadowRoot.querySelector(`${fn.query}`)[`${fn.event}`] = (e) => {
       console.log(eval(`self.${fn.fn}`)) // execute function 
     };
   })
@@ -248,8 +243,8 @@ const getEventsAttrFn = (self) => {
         let tmp = {
           //query: `[data-${attrName}${fnEvents.length}="${attrVal}"]`,
           query: `[${attr.name}]`,
-          fn: attr.value,
-          event: attr.name.split('data-on')[1]
+          fn: attr.value, // alertMe('johnny')
+          event: attr.name.split('-')[1] // data-onclick-id1 --> onclick
         };
         fnEvents.push(tmp);
       }
