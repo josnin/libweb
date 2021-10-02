@@ -23,8 +23,8 @@ export class noJS {
     const allElements = this.self.shadowRoot.querySelectorAll('*');
     allElements.forEach(element => {
       //addDataBindAttr(element, variable);
-      reactive.updateReactiveVarHTMLOnLoad(element, varObj);
-      reactive.updateReactiveVarAttrOnLoad(element, varObj);
+      reactive.updateVarHTMLOnLoad(element, varObj);
+      reactive.updateVarAttrOnLoad(element, varObj);
     })
 
     // add data-bind listener and variable to react when there is an event

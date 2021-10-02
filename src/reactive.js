@@ -14,14 +14,14 @@ export const createReactive = (self, varObj, createEventListener) => {
         } else {
           // interpolate
           // {username} > johny<!--{username}-->
-          updateReactiveVarHTMLOnChange(
+          updateVarHTMLOnChange(
             element, 
             varObj, 
             prop, 
             value
           );
           //el.innerHTML = el.innerHTML.replaceAll(`${obj[prop]}<!--{${prop}}-->`, `${value}<!--{${prop}}-->`)
-          updateReactiveVarAttrOnChange(
+          updateVarAttrOnChange(
             element, 
             varObj, 
             prop, 
@@ -39,7 +39,7 @@ export const createReactive = (self, varObj, createEventListener) => {
   return new Proxy(varObj, handler);
 }
 
-export const updateReactiveVarHTMLOnLoad = (element, reactiveObj) => {
+export const updateVarHTMLOnLoad = (element, reactiveObj) => {
   // replace with real value {username} > johnny, applies on reactive variable
   for (let [varName, varValue] of Object.entries(reactiveObj)) {
     // {username} > johnny<!--{username}-->
@@ -50,7 +50,7 @@ export const updateReactiveVarHTMLOnLoad = (element, reactiveObj) => {
   };
 };
 
-export const updateReactiveVarAttrOnLoad = (element, reactiveObj) => {
+export const updateVarAttrOnLoad = (element, reactiveObj) => {
   for (let [suffixID, attr] of Object.entries(element.attributes)) { 
     for (let [varName, varValue] of Object.entries(reactiveObj)) {
       // only applies for event attr
@@ -82,7 +82,7 @@ export const updateReactiveVarAttrOnLoad = (element, reactiveObj) => {
   }
 };
 
-const updateReactiveVarHTMLOnChange = (
+const updateVarHTMLOnChange = (
   element, 
   reactiveObj, 
   varName, 
@@ -94,7 +94,7 @@ const updateReactiveVarHTMLOnChange = (
   );
 }
 
-const updateReactiveVarAttrOnChange = (
+const updateVarAttrOnChange = (
   element, 
   obj, 
   prop, 
@@ -119,6 +119,6 @@ const updateReactiveVarAttrOnChange = (
 
 export default {
   createReactive,
-  updateReactiveVarHTMLOnLoad,
-  updateReactiveVarAttrOnLoad
+  updateVarHTMLOnLoad,
+  updateVarAttrOnLoad
 }
