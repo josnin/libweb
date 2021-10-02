@@ -2,6 +2,7 @@
 import events from './events.js';
 import reactive from './reactive.js';
 import utils from './utils.js';
+import bindings from './bindings.js';
 
 export class noJS {
 
@@ -27,7 +28,7 @@ export class noJS {
     })
 
     // add data-bind listener and variable to react when there is an event
-    addDataBindListener(this.self);
+    bindings.addDataBindListener(this.self);
     //events.createEventListener(this.self);
 
     // make variable reactive
@@ -85,22 +86,6 @@ const updateVarHTMLOnLoad = (self, element) => {
       }
     }
   })
-}
-
-
-
-
-const addDataBindListener = (self) => {
-  // add any event data-bind listener
-  const elementWithDataBind = self.shadowRoot.querySelectorAll("[data-bind]");
-  elementWithDataBind.forEach((element) => {
-    if (element.type === "text") {
-      element.addEventListener("input", (e) => {
-        self.reactive[e.target.getAttribute('data-bind')] = e.target.value;
-      });
-    }
-  });
-  // add any event data-bind listener
 }
 
 
