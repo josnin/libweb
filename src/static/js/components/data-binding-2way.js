@@ -6,9 +6,10 @@ import {
 const template = document.createElement('template');
 template.innerHTML = `
 <input data-bind="a" type="text" /><span>{a} from span</span>
-<div data-ba="dfsd" data-ba1="cloudy">{username} This is ates??? {username} <div>{a}</div> {a}</div>
-<div data-nc="ncv" >{username} This is ates??? {lastname} {a}</div>
-<button id="btn" @click="alertMe(a)">Click me {a}?</button>
+<div data-ba="dfsd" data-ba1="cloudy">username->{username} This is ates??? a->{a} {a}</div>
+<div data-ba="dfsd" data-ba1="cloudy">username->{username} This is ates??? a->{a} {a}</div>
+<div data-ba="dfsd" data-ba1="cloudy">username->{username} This is ates??? a->{a} {a}</div>
+<div data-ba="dfsd" data-ba1="cloudy">username->{username} This is ates??? a->{a} {a}</div>
 <button @click="alertMe(firstname, lastname)">Click me {a}?</button>
 `
 

@@ -3,6 +3,7 @@ import events from './events.js';
 import reactive from './reactive.js';
 import utils from './utils.js';
 import bindings from './bindings.js';
+import template from './template.js';
 
 export class noJS {
 
@@ -23,8 +24,15 @@ export class noJS {
     const allElements = this.self.shadowRoot.querySelectorAll('*');
     allElements.forEach(element => {
       //addDataBindAttr(element, variable);
-      reactive.updateVarHTMLOnLoad(element, varObj);
-      reactive.updateVarAttrOnLoad(element, varObj);
+      //reactive.updateVarHTMLOnLoad(element, varObj);
+      template.updateVarHTMLOnLoad(self, element, varObj);
+      template.updateVarAttrOnLoad(
+        self, 
+        element,
+        utils.updateEventFunctionArgs,
+        varObj,
+      );
+      //reactive.updateVarAttrOnLoad(element, varObj);
     })
 
     // add data-bind listener and variable to react when there is an event
@@ -35,7 +43,9 @@ export class noJS {
     return reactive.createReactive(
       this.self, 
       varObj, 
-      events.createEventListener
+      events.createEventListener,
+      template.updateVarHTMLOnChange,
+      template.updateVarAttrOnChange
     );
 
   }
@@ -46,47 +56,16 @@ export class noJS {
 export const toHTML = (self) => {
   const allElements = self.shadowRoot.querySelectorAll('*');
   allElements.forEach(element => {
-    updateVarHTMLOnLoad(self, element);
-    updateVarAttrOnLoad(self, element);
-  })
-};
-
-
-const updateVarAttrOnLoad = (self, element) => {
-  for (let [suffixID, attr] of Object.entries(element.attributes)) { 
-    let updatedFnArgs = utils.updateEventFunctionArgs(self, 
-      attr.name, 
-      attr.value
+    template.updateVarHTMLOnLoad(self, element, {});
+    template.updateVarAttrOnLoad(
+      self, 
+      element,
+      utils.updateEventFunctionArgs,
+      {}
     );
-
-    if (updatedFnArgs) {
-      // data-onclick-id1 suffix counter to make use its unique event
-      element.setAttribute(
-        `data-${attr.name.replace('@', 'on')}-id${suffixID}`,  
-        updatedFnArgs
-      );
-
-      // remove @click attributes
-      element.removeAttribute(`${attr.name}`);
-
-    }
-  }
+  })
 };
 
-const updateVarHTMLOnLoad = (self, element) => {
-  // replace with real value {username} > johnny, applies on non-reactive variable
-  element.textContent.split(' ').forEach(text => {
-    if (text.startsWith('{') && text.endsWith('}')) {
-      let variable = text.split('{')[1].split('}')[0];
-      if (self[variable] != undefined) {
-        element.innerHTML = element.innerHTML.replaceAll(
-          text, 
-          self[variable]
-        )
-      }
-    }
-  })
-}
 
 
 export default {
