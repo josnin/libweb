@@ -13,7 +13,7 @@ export const updateVarAttrOnLoad = (
       reactiveObj
     );
 
-    if (updatedFnArgs != undefined) {
+    if (updatedFnArgs) {
       // data-onclick-id1 suffix counter to make use its unique event
       element.setAttribute(
         `data-${attr.name.replace('@', 'on')}-id${suffixID}`,  
