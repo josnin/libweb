@@ -14,9 +14,9 @@ export const updateVarAttrOnLoad = (
     );
 
     if (updatedFnArgs) {
-      // data-onclick-id1 suffix counter to make use its unique event
+      // data-onclick-1232345245345 suffix timestamp to make sure its unique event
       element.setAttribute(
-        `data-${attr.name.replace('@', 'on')}-id${suffixID}`,  
+        `data-${attr.name.replace('@', 'on')}-${Date.now()}`,  
         updatedFnArgs
       );
 
