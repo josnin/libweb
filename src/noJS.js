@@ -25,9 +25,9 @@ export class noJS {
     allElements.forEach(element => {
       //addDataBindAttr(element, variable);
       //reactive.updateVarHTMLOnLoad(element, varObj);
-      template.updateVarHTMLOnLoad(self, element, varObj);
+      template.updateVarHTMLOnLoad(this.self, element, varObj);
       template.updateVarAttrOnLoad(
-        self, 
+        this.self, 
         element,
         utils.updateEventFunctionArgs,
         varObj,
@@ -37,7 +37,7 @@ export class noJS {
 
     // add data-bind listener and variable to react when there is an event
     bindings.addDataBindListener(this.self);
-    //events.createEventListener(this.self);
+    events.createEventListener(this.self);
 
     // make variable reactive
     return reactive.createReactive(

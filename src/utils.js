@@ -19,28 +19,35 @@ export const stripBraces = (value) => {
 };
 
 export const updateEventFunctionArgs = (self, attrName, attrVal, reactiveObj) => {
-  if (attrName.startsWith('@')) {
+  if (attrName.startsWith('@') || attrName.startsWith('data-on')) {
     const functionArgs = stripParenthesis(
       getFunctionArgs(attrVal)
     );
     const finalArgs = [];
     const commentArgs = [];
+    let argsUpdateOk = true;
     functionArgs.split(',').forEach(e => {
       let arg = e.trim();
-      commentArgs.push(arg);
+      console.log(self[arg], arg, reactiveObj)
       if (self[arg] != undefined) {
         finalArgs.push(self[arg]);
+        commentArgs.push(arg);
       } else if(reactiveObj[arg] != undefined) {
         finalArgs.push(reactiveObj[arg]);
+        commentArgs.push(arg);
       } else {
-        console.warn(`This function "${attrVal}" unable to update args`);
+        console.warn(`This function "${attrVal}" unable to update args ${arg}`);
+        argsUpdateOk = false;
         return
       }
     })
-    let tmp = finalArgs.map(r => `'${r}'`).join(','); //@Todo how about numeric??
-    tmp = `(${tmp})/*${commentArgs.join(',')}*/`;
-    const result = attrVal.replaceAll(/\((.+)\)/g, `${tmp}`);
-    return result
+
+    if (argsUpdateOk) {
+      let tmp = finalArgs.map(r => `'${r}'`).join(','); //@Todo how about numeric??
+      tmp = `(${tmp})/*${commentArgs.join(',')}*/`;
+      const result = attrVal.replaceAll(/\((.+)\)/g, `${tmp}`);
+      return result;
+    }
   }
 };
 

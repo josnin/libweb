@@ -13,7 +13,7 @@ export const updateVarAttrOnLoad = (
       reactiveObj
     );
 
-    if (updatedFnArgs) {
+    if (updatedFnArgs != undefined) {
       // data-onclick-id1 suffix counter to make use its unique event
       element.setAttribute(
         `data-${attr.name.replace('@', 'on')}-id${suffixID}`,  
@@ -40,12 +40,10 @@ export const updateVarHTMLOnLoad = (self, element, reactiveObj) => {
          result = reactiveObj[cleanHtmlVar];
       }
       if (result) {
-        console.log(htmlVar, result, element.innerHTML)
         element.innerHTML = element.innerHTML.replaceAll(
           htmlVar, 
-          `${result}<!--${cleanHtmlVar}-->` //@Todo distorted when same variable is define more than once
+          `${result}<!--${cleanHtmlVar}-->` 
         )
-        console.log(element.innerHTML)
       }
     }
   })
@@ -73,6 +71,7 @@ export const updateVarAttrOnChange = (
     if (attr.name.startsWith('data-on') && 
         attr.value.includes(`{${prop}}`)
     ) {
+      console.log(attr.value);
       let finalAttribute = attr.value.replaceAll(
         `${obj[prop]}`, 
         `${value}`

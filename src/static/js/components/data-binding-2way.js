@@ -6,17 +6,14 @@ import {
 const template = document.createElement('template');
 template.innerHTML = `
 <input data-bind="a" type="text" /><span>{a} from span</span>
-<div data-ba="dfsd" data-ba1="cloudy">username->{username} This is ates??? a->{a} {a}</div>
-<div data-ba="dfsd" data-ba1="cloudy">username->{username} This is ates??? a->{a} {a}</div>
-<div data-ba="dfsd" data-ba1="cloudy">username->{username} This is ates??? a->{a} {a}</div>
-<div data-ba="dfsd" data-ba1="cloudy">username->{username} This is ates??? a->{a} {a}</div>
-<button @click="alertMe(firstname, lastname)">Click me {a}?</button>
+<div data-ba="dfsd" data-ba1="cloudy">username:{username} This is ates?{a}?? {a} {a}</div>
+<button @click="alertMe(firstname, username)">Click me {a}?</button>
 `
 
 class Db extends HTMLElement {
 
   lastname = 'now i know??';
-  firstname = 'johnny';
+  firstname = 'johnny 456';
 
   constructor() {
     super();
