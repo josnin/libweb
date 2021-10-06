@@ -7,8 +7,8 @@ const template = document.createElement('template');
 template.innerHTML = `
 <input data-bind="a" type="text" /><span>{a} from span</span>
 <div data-ba="dfsd" data-ba1="cloudy">username:{username} This is ates?{a}?? {a} {a}</div>
-<button @click="alertMe(firstname, username)">Click me {a}?</button>
-<button @click="alertMe(firstname, lastname)">Click me lastname {a}?</button>
+<button @click="alertMe({firstname}, {username})">Click me {a}?</button>
+<button @click="alertMe({firstname}, 123)">Click me lastname {a}?</button>
 `
 
 class Db extends HTMLElement {

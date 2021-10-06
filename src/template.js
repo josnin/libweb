@@ -6,7 +6,7 @@ export const updateVarAttrOnLoad = (
     updateEventFunctionArgs,
     reactiveObj
 ) => {
-  for (let [suffixID, attr] of Object.entries(element.attributes)) { 
+  for (let [_, attr] of Object.entries(element.attributes)) { 
     let updatedFnArgs = updateEventFunctionArgs(self, 
       attr.name, 
       attr.value,
@@ -30,9 +30,9 @@ export const updateVarAttrOnLoad = (
 export const updateVarHTMLOnLoad = (self, element, reactiveObj) => {
   // replace with real value {username} > johnny,
   element.innerHTML.split(' ').forEach(text => {
-    if (utils.getHTMLVar(text)) {
-      const htmlVar = utils.getHTMLVar(text)[0];
-      const cleanHtmlVar = utils.stripBraces(text);
+    if (utils.getVar(text)) {
+      const htmlVar = utils.getVar(text)[0];
+      const cleanHtmlVar = utils.strip(text, '{', '}');
       let result = null;
       if (self[cleanHtmlVar] != undefined) {
         result = self[cleanHtmlVar];

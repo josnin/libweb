@@ -9,41 +9,80 @@ export const getFunctionArgs = (value) => {
 };
 
 // extract {variable}
-export const getHTMLVar = (value) => {
+export const getVar = (value) => {
   return value.match(/\{.+\}/g);
 };
 
 // {variable} -> variable
-export const stripBraces = (value) => {
-  return value.split('{')[1].split('}')[0];
+export const strip = (value, start, end) => {
+  return value.split(start)[1].split(end)[0];
+};
+
+
+// surround args value with quote
+export const addQuote = (value) => {
+  const result = value.map(r => {
+
+    if (!parseInt(r) && r.startsWith("'")) {
+      return r;
+    }
+
+    if (!parseInt(r)) {
+      return `'${r}'`; // add quote
+    }
+    return r;
+  });
+
+  return result;
 };
 
 export const updateEventFunctionArgs = (self, attrName, attrVal, reactiveObj) => {
-  if (attrName.startsWith('@') || attrName.startsWith('data-on')) {
-    const functionArgs = stripParenthesis(
-      getFunctionArgs(attrVal)
+  if (attrName.startsWith('@')) {
+    const functionArgs = strip(
+      getFunctionArgs(attrVal)[0],
+      '(', ')'
     );
     const finalArgs = [];
     const commentArgs = [];
     let argsUpdateOk = true;
     functionArgs.split(',').forEach(e => {
-      let arg = e.trim();
-      console.log(self[arg], arg, reactiveObj)
-      if (self[arg] != undefined) {
-        finalArgs.push(self[arg]);
-        commentArgs.push(arg);
-      } else if(reactiveObj[arg] != undefined) {
-        finalArgs.push(reactiveObj[arg]);
-        commentArgs.push(arg);
+      let arg = '';
+      let cleanArg = '';
+      if (getVar(e) != undefined) {
+        arg = getVar(e)[0];
+        cleanArg = strip(arg, '{', '}');
       } else {
-        console.warn(`This function "${attrVal}" unable to update args ${arg}`);
+        arg = e.trim()
+        cleanArg = e.trim();
+      }
+
+      //console.log(self[arg], arg, reactiveObj)
+      if(parseInt(cleanArg)) {
+        console.warn(`numeric args ${cleanArg} not req. to parse in function ${attrVal}`);
+        finalArgs.push(parseInt(cleanArg));
+        commentArgs.push(parseInt(arg));
+      } else if (cleanArg.startsWith("'")) {
+        // skip string args & numeric
+        console.warn(`string args ${cleanArg} not req. to parse in function ${attrVal}`);
+        finalArgs.push(cleanArg); // if string remove "'1234'"
+        commentArgs.push(arg);
+        //console.log(arg);
+      } else if (self[cleanArg] != undefined) {
+        finalArgs.push(self[cleanArg]);
+        commentArgs.push(arg);
+      } else if(reactiveObj[cleanArg] != undefined) {
+        finalArgs.push(reactiveObj[cleanArg]);
+        commentArgs.push(arg);
+      } else if(self[cleanArg] == undefined || reactiveObj[cleanArg] == undefined) {
+        console.warn(`args ${cleanArg} unable to parse in function ${attrVal}`);
         argsUpdateOk = false;
         return
       }
+
     })
 
     if (argsUpdateOk) {
-      let tmp = finalArgs.map(r => `'${r}'`).join(','); //@Todo how about numeric??
+      let tmp = addQuote(finalArgs);
       tmp = `(${tmp})/*${commentArgs.join(',')}*/`;
       const result = attrVal.replaceAll(/\((.+)\)/g, `${tmp}`);
       return result;
@@ -55,8 +94,8 @@ export const updateEventFunctionArgs = (self, attrName, attrVal, reactiveObj) =>
 
 export default {
   stripParenthesis,
-  stripBraces,
+  strip,
   getFunctionArgs,
   updateEventFunctionArgs,
-  getHTMLVar
+  getVar
 }
