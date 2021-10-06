@@ -5,9 +5,9 @@ import {
 
 const template = document.createElement('template');
 template.innerHTML = `
-<input data-bind="a" type="text" /><span>{a} from span</span>
+<input data-bind="username" type="text" /><span>{a} from span</span>
 <div data-ba="dfsd" data-ba1="cloudy">username:{username} This is ates?{a}?? {a} {a}</div>
-<button @click="alertMe({firstname}, {username})">Click me {a}?</button>
+<button @click="alertMe({firstname}, {username})">Click me {username}?</button>
 <button @click="alertMe({firstname}, 123)">Click me lastname {a}?</button>
 `
 

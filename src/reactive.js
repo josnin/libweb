@@ -29,7 +29,6 @@ export const createReactive = (
           //el.innerHTML = el.innerHTML.replaceAll(`${obj[prop]}<!--{${prop}}-->`, `${value}<!--{${prop}}-->`)
           updateVarAttrOnChange(
             element, 
-            varObj, 
             prop, 
             value
           );

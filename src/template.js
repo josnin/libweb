@@ -1,4 +1,4 @@
-import utils from "./utils.js";
+import utils, { getArgLocation } from "./utils.js";
 
 export const updateVarAttrOnLoad = (
     self, 
@@ -31,18 +31,18 @@ export const updateVarHTMLOnLoad = (self, element, reactiveObj) => {
   // replace with real value {username} > johnny,
   element.innerHTML.split(' ').forEach(text => {
     if (utils.getVar(text)) {
-      const htmlVar = utils.getVar(text)[0];
-      const cleanHtmlVar = utils.strip(text, '{', '}');
+      const var1 = utils.getVar(text)[0];
+      const cleanVar = utils.strip(text, '{', '}');
       let result = null;
-      if (self[cleanHtmlVar] != undefined) {
-        result = self[cleanHtmlVar];
-      } else if(reactiveObj[cleanHtmlVar] != undefined) { // applies for reactive variable
-         result = reactiveObj[cleanHtmlVar];
+      if (self[cleanVar] != undefined) {
+        result = self[cleanVar];
+      } else if(reactiveObj[cleanVar] != undefined) { // applies for reactive variable
+         result = reactiveObj[cleanVar];
       }
       if (result) {
         element.innerHTML = element.innerHTML.replaceAll(
-          htmlVar, 
-          `${result}<!--${cleanHtmlVar}-->` 
+          var1, 
+          `${result}<!--${cleanVar}-->` 
         )
       }
     }
@@ -63,18 +63,25 @@ export const updateVarHTMLOnChange = (
 
 export const updateVarAttrOnChange = (
   element, 
-  obj, 
   prop, 
   value
 ) => {
   for (let [_, attr] of Object.entries(element.attributes)) { 
     if (attr.name.startsWith('data-on') && 
-        attr.value.includes(`{${prop}}`)
+        attr.value.includes(`{${prop}}`) // make sure to only update those with changes
     ) {
-      console.log(attr.value);
+
+      const argLocation = utils.getArgLocation(attr.value, prop);
+      const oldArgs = utils.getOldArgs(attr.value);
+      const newArgs = utils.getNewArgs(
+        oldArgs, 
+        argLocation, 
+        value
+      )
+
       let finalAttribute = attr.value.replaceAll(
-        `${obj[prop]}`, 
-        `${value}`
+        `${oldArgs}`, 
+        `${newArgs}`
       );
       element.setAttribute(
         `${attr.name}`, 

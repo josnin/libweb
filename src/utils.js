@@ -90,6 +90,43 @@ export const updateEventFunctionArgs = (self, attrName, attrVal, reactiveObj) =>
   }
 };
 
+export const getArgLocation = (attrVal, prop) => {
+  // get Args location
+  let result = undefined;
+  const commentArgs = strip(attrVal, '/*', '*/');
+  commentArgs.split(',').forEach( (val, index) => {
+    if (prop == strip(val, '{', '}')) {
+      result = index;
+    }
+  })
+  return result;
+  // get Args location
+}
+
+export const getOldArgs = (attrVal) => {
+  const result = strip(
+    getFunctionArgs(attrVal)[0],
+    '(', ')'
+  );
+  return result;
+}
+
+export const getNewArgs = (oldArgs, argLocation, newVal) => {
+  // get Value to update
+  let result = [];
+  oldArgs.split(',').forEach((val, index) => {
+    if (index == argLocation) {
+      result.push(newVal); // new value @Todo missing quote 
+    } else {
+      result.push(val);
+    }
+  })
+
+  return result;
+  // get Value to update
+
+}
+
 
 
 export default {
@@ -97,5 +134,8 @@ export default {
   strip,
   getFunctionArgs,
   updateEventFunctionArgs,
-  getVar
+  getVar,
+  getArgLocation,
+  getOldArgs,
+  getNewArgs
 }
