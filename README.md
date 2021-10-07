@@ -18,14 +18,14 @@ class DataBindingComponent extends HTMLElement {
 
   constructor() {
     super();
-      const nojs = new noJS(this, template);
+    const nojs = new noJS(this, template);
 
-      // create a reactive variable
-      this.reactive = nojs.makeReactive(
-        { 
-          username: 'darling',        
-        }
-      )
+    // create a reactive variable
+    this.reactive = nojs.makeReactive(
+      { 
+        username: 'darling',        
+      }
+    )
   }
  
 }
