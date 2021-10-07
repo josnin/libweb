@@ -29,7 +29,6 @@ export class noJS {
       template.updateVarAttrOnLoad(
         this.self, 
         element,
-        utils.updateEventFunctionArgs,
         varObj,
       );
       //reactive.updateVarAttrOnLoad(element, varObj);
@@ -60,7 +59,6 @@ export const toHTML = (self) => {
     template.updateVarAttrOnLoad(
       self, 
       element,
-      utils.updateEventFunctionArgs,
       {}
     );
   })
