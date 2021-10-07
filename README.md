@@ -12,7 +12,7 @@ import {
 const template = document.createElement('template');
 template.innerHTML = `
 <input data-bind="username" type="text" />
-<div>Hello {username}</div>
+<div>Hello {username}</div>`
 
 class DataBindingComponent extends HTMLElement { 
 
@@ -47,7 +47,7 @@ import {
 
 const template = document.createElement('template');
 template.innerHTML = `
-<button @click="alertMe({firstname})">Click Sample event</button>
+<button @click="alertMe({firstname})">Click Sample event</button>`
 
 class SampleEventComponent extends HTMLElement { 
 
