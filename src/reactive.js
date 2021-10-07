@@ -15,10 +15,11 @@ export const createReactive = (
     },
     set: (varObj, prop, value) => {
       allElements.forEach((element) => {
-        if (element.type == 'text') {
+        if (element.type == 'text' && 
+        element.dataset.bind == prop) {
+          // make sure to update only that match with data-binding
           element.value = value;
         } else {
-          // interpolate
           // {username} > johny<!--{username}-->
           updateVarHTMLOnChange(
             element, 
@@ -26,7 +27,7 @@ export const createReactive = (
             prop, 
             value
           );
-          //el.innerHTML = el.innerHTML.replaceAll(`${obj[prop]}<!--{${prop}}-->`, `${value}<!--{${prop}}-->`)
+
           updateVarAttrOnChange(
             element, 
             prop, 
