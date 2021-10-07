@@ -111,7 +111,7 @@ const updateEventFunctionArgs = (self, attrName, attrVal, reactiveObj) => {
     })
 
     if (argsUpdateOk) {
-      let tmp = utils.addQuote(finalArgs);
+      let tmp = utils.addQuoteItems(finalArgs);
       tmp = `(${tmp})/*${commentArgs.join(',')}*/`;
       const result = attrVal.replaceAll(/\((.+)\)/g, `${tmp}`);
       return result;
@@ -141,12 +141,13 @@ const getOldArgs = (attrVal) => {
   return result;
 }
 
+
 const getNewArgs = (oldArgs, argLocation, newVal) => {
   // get Value to update
   let result = [];
   oldArgs.split(',').forEach((val, index) => {
     if (index == argLocation) {
-      result.push(newVal); // new value @Todo missing quote 
+      result.push(utils.addQuote(newVal));
     } else {
       result.push(val);
     }

@@ -10,18 +10,18 @@ export const strip = (value, start, end) => {
 };
 
 
-// surround args value with quote
-export const addQuote = (value) => {
+export const addQuote = (val) => {
+  if (isNaN(val)) {
+    return `'${val}'`;
+  } else {
+    return val;
+  }
+}
+
+// surround args multiple value with quote
+export const addQuoteItems = (value) => {
   const result = value.map(r => {
-
-    if (!parseInt(r) && r.startsWith("'")) {
-      return r;
-    }
-
-    if (!parseInt(r)) {
-      return `'${r}'`; // add quote
-    }
-    return r;
+    return addQuote(r);
   });
 
   return result;
@@ -33,5 +33,6 @@ export const addQuote = (value) => {
 export default {
   stripParenthesis,
   strip,
-  addQuote
+  addQuote,
+  addQuoteItems
 }
