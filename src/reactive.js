@@ -3,7 +3,7 @@ export const createReactive = (
   self, 
   varObj, 
   events,
-  template1,
+  templates,
 ) => {
   // react when there is a changes in value
   //const allElements = self.shadowRoot.querySelectorAll('[data-bind]');
