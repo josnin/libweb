@@ -193,9 +193,21 @@ const getVar = (value) => {
   return value.match(/\{.+\}/g);
 };
 
+export const updateTemplate = (self, obj) => {
+    // interpolate variable
+    const allElements = self.shadowRoot.querySelectorAll('*');
+    allElements.forEach(element => {
+      updateVarHTMLOnLoad(self, element, obj);
+      updateVarAttrOnLoad(
+        self, 
+        element,
+        obj
+      );
+    })
+};
+
 export default {
-  updateVarHTMLOnLoad,
-  updateVarAttrOnLoad,
+  updateTemplate,
   updateVarHTMLOnChange,
   updateVarAttrOnChange
 }

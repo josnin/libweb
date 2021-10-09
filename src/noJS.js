@@ -1,9 +1,8 @@
 
 import events from './events.js';
 import reactive from './reactive.js';
-import utils from './utils.js';
 import bindings from './bindings.js';
-import template from './template.js';
+import template1 from './template.js';
 
 export class noJS {
 
@@ -12,57 +11,31 @@ export class noJS {
     this.self.attachShadow({mode: 'open'});
     this.self.shadowRoot.appendChild(template.content.cloneNode(true));
 
-    // interpolate variable
-    toHTML(this.self);
-
+    template1.updateTemplate(this.self, {});
     events.createEventListener(this.self);
 
   }
 
 
   makeReactive = (varObj) => {
-    const allElements = this.self.shadowRoot.querySelectorAll('*');
-    allElements.forEach(element => {
-      //addDataBindAttr(element, variable);
-      //reactive.updateVarHTMLOnLoad(element, varObj);
-      template.updateVarHTMLOnLoad(this.self, element, varObj);
-      template.updateVarAttrOnLoad(
-        this.self, 
-        element,
-        varObj,
-      );
-      //reactive.updateVarAttrOnLoad(element, varObj);
-    })
+    template1.updateTemplate(this.self, varObj);
+    events.createEventListener(this.self);
 
     // add data-bind listener and variable to react when there is an event
     bindings.addDataBindListener(this.self);
-    events.createEventListener(this.self);
 
     // make variable reactive
     return reactive.createReactive(
       this.self, 
       varObj, 
       events.createEventListener,
-      template.updateVarHTMLOnChange,
-      template.updateVarAttrOnChange
+      template1.updateVarHTMLOnChange,
+      template1.updateVarAttrOnChange
     );
 
   }
 
 }
-
-
-export const toHTML = (self) => {
-  const allElements = self.shadowRoot.querySelectorAll('*');
-  allElements.forEach(element => {
-    template.updateVarHTMLOnLoad(self, element, {});
-    template.updateVarAttrOnLoad(
-      self, 
-      element,
-      {}
-    );
-  })
-};
 
 
 
