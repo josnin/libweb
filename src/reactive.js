@@ -2,9 +2,8 @@
 export const createReactive = (
   self, 
   varObj, 
-  createEventListener,
-  updateVarHTMLOnChange,
-  updateVarAttrOnChange
+  events,
+  template1,
 ) => {
   // react when there is a changes in value
   //const allElements = self.shadowRoot.querySelectorAll('[data-bind]');
@@ -21,20 +20,20 @@ export const createReactive = (
           element.value = value;
         } else {
           // {username} > johny<!--{username}-->
-          updateVarHTMLOnChange(
+          template1.updateVarHTMLOnChange(
             element, 
             varObj, 
             prop, 
             value
           );
 
-          updateVarAttrOnChange(
+          template1.updateVarAttrOnChange(
             element, 
             prop, 
             value
           );
 
-          createEventListener(self);
+          events.createEventListener(self);
         }
       })
       varObj[prop] = value;

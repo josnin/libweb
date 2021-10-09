@@ -28,9 +28,8 @@ export class noJS {
     return reactive.createReactive(
       this.self, 
       varObj, 
-      events.createEventListener,
-      template1.updateVarHTMLOnChange,
-      template1.updateVarAttrOnChange
+      events,
+      template1,
     );
 
   }
