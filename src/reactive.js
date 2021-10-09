@@ -20,14 +20,14 @@ export const createReactive = (
           element.value = value;
         } else {
           // {username} > johny<!--{username}-->
-          template1.updateVarHTMLOnChange(
+          templates.updateVarHTMLOnChange(
             element, 
             varObj, 
             prop, 
             value
           );
 
-          template1.updateVarAttrOnChange(
+          templates.updateVarAttrOnChange(
             element, 
             prop, 
             value

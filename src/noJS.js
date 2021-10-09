@@ -2,7 +2,7 @@
 import events from './events.js';
 import reactive from './reactive.js';
 import bindings from './bindings.js';
-import template1 from './template.js';
+import templates from './template.js';
 
 export class noJS {
 
@@ -11,14 +11,14 @@ export class noJS {
     this.self.attachShadow({mode: 'open'});
     this.self.shadowRoot.appendChild(template.content.cloneNode(true));
 
-    template1.updateTemplate(this.self, {});
+    templates.updateTemplate(this.self, {});
     events.createEventListener(this.self);
 
   }
 
 
   makeReactive = (varObj) => {
-    template1.updateTemplate(this.self, varObj);
+    templates.updateTemplate(this.self, varObj);
     events.createEventListener(this.self);
 
     // add data-bind listener and variable to react when there is an event
@@ -29,7 +29,7 @@ export class noJS {
       this.self, 
       varObj, 
       events,
-      template1,
+      templates,
     );
 
   }
