@@ -13,9 +13,9 @@ export const updateVarAttrOnLoad = (
     );
 
     if (updatedFnArgs) {
-      // data-onclick-1232345245345 suffix timestamp to make sure its unique event
+      // data-onclick-kuqrlat7 suffix hash timestamp to make sure its unique event
       element.setAttribute(
-        `data-${attr.name.replace('@', 'on')}-${Date.now()}`,  
+        `data-${attr.name.replace('@', 'on')}-${(+new Date).toString(36)}`,  
         updatedFnArgs
       );
 
