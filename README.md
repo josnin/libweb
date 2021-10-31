@@ -71,3 +71,14 @@ customElements.define('sample-event', SampleEventComponent);
 ```html
 <sample-event></sample-event>
 ```
+
+## Installation 
+```
+npm install
+```
+
+## How to run development server? 
+```
+cd /home/{username}/nojsframework/
+npm start
+```
