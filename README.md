@@ -82,3 +82,13 @@ npm install
 cd /home/{username}/nojsframework/
 npm start
 ```
+
+
+### Help
+
+Need help? Open an issue in: [ISSUES](https://github.com/josnin/nojsframework/issues)
+
+
+### Contributing
+Want to improve and add feature? Fork the repo, add your changes and send a pull request.
+
