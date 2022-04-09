@@ -1,6 +1,6 @@
 import {  
-  noJS, 
-} from '../../../noJS.js';
+  libweb, 
+} from '../../../libweb.js';
 
 
 const template = document.createElement('template');
@@ -18,10 +18,10 @@ class Db extends HTMLElement {
 
   constructor() {
     super();
-      const nojs = new noJS(this, template);
+      const lw = new libweb(this, template);
 
       // create a reactive variable
-      this.reactive = nojs.makeReactive(
+      this.reactive = lw.makeReactive(
         { 
           username: 'darling',
           a: 'javascript'
