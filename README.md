@@ -1,12 +1,17 @@
-# noJS framework
-Create [Web Components](https://developer.mozilla.org/en-US/docs/Web/Web_Components) w/ Template syntax similar with modern Frontend framework
+# libweb is a library for building [Web Components](https://developer.mozilla.org/en-US/docs/Web/Web_Components)
+
+* Template syntax similar with modern Frontend framework
+* Data binding
+* Event handling
+* No Virtual DOM
+
 
 ## Data Binding
 ### JS
 ```js
 import {  
-  noJS
-} from 'noJS.js';
+  libweb
+} from 'libweb.js';
 
 
 const template = document.createElement('template');
@@ -18,10 +23,10 @@ class DataBindingComponent extends HTMLElement {
 
   constructor() {
     super();
-    const nojs = new noJS(this, template);
+    const lw = new libweb(this, template);
 
     // create a reactive variable
-    this.reactive = nojs.makeReactive(
+    this.reactive = lw.makeReactive(
       { 
         username: 'darling',        
       }
@@ -41,8 +46,8 @@ customElements.define('sample-binding', DataBindingComponent);
 ## Create Events
 ```js
 import {  
-  noJS
-} from 'noJS.js';
+  libweb
+} from 'libweb.js';
 
 
 const template = document.createElement('template');
@@ -55,7 +60,7 @@ class SampleEventComponent extends HTMLElement {
 
   constructor() {
     super();
-    const nojs = new noJS(this, template);    
+    const lw = new libweb(this, template);    
   }
   
   alertMe(arg) {
