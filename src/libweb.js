@@ -4,7 +4,7 @@ import reactive from './reactive.js';
 import bindings from './bindings.js';
 import templates from './template.js';
 
-export class LibWeb {
+export class LibW {
 
   constructor(shadowDom, template) {
     this.self = shadowDom;
@@ -39,5 +39,5 @@ export class LibWeb {
 
 
 export default {
-  LibWeb
+  LibW
 }

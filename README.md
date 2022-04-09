@@ -10,7 +10,7 @@
 ### JS
 ```js
 import {  
-  LibWeb
+  LibW
 } from 'libweb.js';
 
 
@@ -23,7 +23,7 @@ class DataBindingComponent extends HTMLElement {
 
   constructor() {
     super();
-    const lw = new LibWeb(this, template);
+    const lw = new LibW(this, template);
 
     // create a reactive variable
     this.reactive = lw.makeReactive(
@@ -46,7 +46,7 @@ customElements.define('sample-binding', DataBindingComponent);
 ## Create Events
 ```js
 import {  
-  LibWeb
+  LibW
 } from 'libweb.js';
 
 
@@ -60,7 +60,7 @@ class SampleEventComponent extends HTMLElement {
 
   constructor() {
     super();
-    const lw = new LibWeb(this, template);    
+    const lw = new LibW(this, template);    
   }
   
   alertMe(arg) {

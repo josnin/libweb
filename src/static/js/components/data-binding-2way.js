@@ -1,5 +1,5 @@
 import {  
-  LibWeb
+  LibW
 } from '../../../libweb.js';
 
 
@@ -18,7 +18,7 @@ class Db extends HTMLElement {
 
   constructor() {
     super();
-      const lw = new LibWeb(this, template);
+      const lw = new LibW(this, template);
 
       // create a reactive variable
       this.reactive = lw.makeReactive(
