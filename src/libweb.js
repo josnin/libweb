@@ -4,7 +4,7 @@ import reactive from './reactive.js';
 import bindings from './bindings.js';
 import templates from './template.js';
 
-export class noJS {
+export class Libweb {
 
   constructor(shadowDom, template) {
     this.self = shadowDom;
@@ -39,5 +39,5 @@ export class noJS {
 
 
 export default {
-  noJS
+  Libweb
 }
