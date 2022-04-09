@@ -10,7 +10,7 @@
 ### JS
 ```js
 import {  
-  libweb
+  LibWeb
 } from 'libweb.js';
 
 
@@ -23,7 +23,7 @@ class DataBindingComponent extends HTMLElement {
 
   constructor() {
     super();
-    const lw = new libweb(this, template);
+    const lw = new LibWeb(this, template);
 
     // create a reactive variable
     this.reactive = lw.makeReactive(
@@ -46,7 +46,7 @@ customElements.define('sample-binding', DataBindingComponent);
 ## Create Events
 ```js
 import {  
-  libweb
+  LibWeb
 } from 'libweb.js';
 
 
@@ -60,7 +60,7 @@ class SampleEventComponent extends HTMLElement {
 
   constructor() {
     super();
-    const lw = new libweb(this, template);    
+    const lw = new LibWeb(this, template);    
   }
   
   alertMe(arg) {
@@ -84,14 +84,14 @@ npm install
 
 ## How to run development server? 
 ```
-cd /home/{username}/nojsframework/
+cd ~/Documents/libweb/
 npm start
 ```
 
 
 ### Help
 
-Need help? Open an issue in: [ISSUES](https://github.com/josnin/nojsframework/issues)
+Need help? Open an issue in: [ISSUES](https://github.com/josnin/libweb/issues)
 
 
 ### Contributing
