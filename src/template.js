@@ -3,7 +3,7 @@ import utils from "./utils.js";
 export const updateVarAttrOnLoad = (
     self, 
     element,
-    reactiveObj
+    reactiveObj,
 ) => {
   for (let [_, attr] of Object.entries(element.attributes)) { 
     let updatedFnArgs = updateEventFunctionArgs(self, 
@@ -32,11 +32,14 @@ export const updateVarHTMLOnLoad = (self, element, reactiveObj) => {
     if (getVar(text)) {
       const var1 = getVar(text)[0];
       const cleanVar = utils.strip(text, '{', '}');
+      const cmpAttr = Array.from(self.attributes).find(e => e.name === cleanVar);
       let result = null;
-      if (self[cleanVar] != undefined) {
+      if (self[cleanVar] != undefined) { // applies to shadow var only
         result = self[cleanVar];
       } else if(reactiveObj[cleanVar] != undefined) { // applies for reactive variable
          result = reactiveObj[cleanVar];
+      } else if (cmpAttr) { // applies to component var
+        result = cmpAttr.value;
       }
       if (result) {
         element.innerHTML = element.innerHTML.replaceAll(
