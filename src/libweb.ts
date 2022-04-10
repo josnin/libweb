@@ -1,6 +1,6 @@
 
 import events from './events';
-import reactive from './reactive.js';
+import reactive from './reactive';
 import bindings from './bindings';
 import templates from './template';
 
