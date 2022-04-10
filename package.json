@@ -1,25 +1,31 @@
 {
-  "name": "nojsframework",
+  "name": "libweb",
   "version": "1.0.0",
-  "description": "Exploring SPA by not using any JS framework",
+  "description": "libweb is a library for building Web Components",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "tsc -p tsconfig.json",
+    "start": "node index.js"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/josnin/nojsframework.git"
+    "url": "git+https://github.com/josnin/libweb.git"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/josnin/nojsframework/issues"
+    "url": "https://github.com/josnin/libweb/issues"
   },
-  "homepage": "https://github.com/josnin/nojsframework#readme",
+  "homepage": "https://github.com/josnin/libweb#readme",
   "dependencies": {
     "esbuild": "^0.12.27",
     "fastify": "^3.21.0",
     "fastify-static": "^4.2.3"
+  },
+  "devDependencies": {
+    "@types/node": "^17.0.23",
+    "typescript": "^4.6.3"
   }
 }

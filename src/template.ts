@@ -1,9 +1,9 @@
-import utils from "./utils.js";
+import utils from "./utils";
 
 export const updateVarAttrOnLoad = (
-    self, 
-    element,
-    reactiveObj,
+    self: HTMLElement, 
+    element: HTMLElement,
+    reactiveObj: any,
 ) => {
   for (let [_, attr] of Object.entries(element.attributes)) { 
     let updatedFnArgs = updateEventFunctionArgs(self, 
@@ -26,13 +26,13 @@ export const updateVarAttrOnLoad = (
   }
 };
 
-export const updateVarHTMLOnLoad = (self, element, reactiveObj) => {
+export const updateVarHTMLOnLoad = (self: any, element: HTMLElement, reactiveObj: any) => {
   // replace with real value {username} > johnny,
   element.innerHTML.split(' ').forEach(text => {
     if (getVar(text)) {
       const var1 = getVar(text)[0];
-      const cleanVar = utils.strip(text, '{', '}');
-      const cmpAttr = Array.from(self.attributes).find(e => e.name === cleanVar);
+      const cleanVar: string = utils.strip(text, '{', '}');
+      const cmpAttr: any = Array.from(self.attributes).find((e: any) => e.name === cleanVar);
       let result = null;
       if (self[cleanVar] != undefined) { // applies to shadow var only
         result = self[cleanVar];
@@ -52,10 +52,10 @@ export const updateVarHTMLOnLoad = (self, element, reactiveObj) => {
 }
 
 export const updateVarHTMLOnChange = (
-  element, 
-  reactiveObj, 
-  varName, 
-  varValue
+  element: HTMLElement, 
+  reactiveObj: any, 
+  varName: string, 
+  varValue: string
 ) => {
   element.innerHTML = element.innerHTML.replaceAll(
     `${reactiveObj[varName]}<!--${varName}-->`, 
@@ -64,20 +64,20 @@ export const updateVarHTMLOnChange = (
 }
 
 // extrac (variable1, variable2)
-const getFunctionArgs = (value) => {
-  return value.match(/\(.+\)/g);
+const getFunctionArgs = (value: string) => {
+  return value.match(/\(.+\)/g)!;
 };
 
-const updateEventFunctionArgs = (self, attrName, attrVal, reactiveObj) => {
+const updateEventFunctionArgs = (self: any, attrName: string, attrVal: string, reactiveObj: any) => {
   if (attrName.startsWith('@')) {
     const functionArgs = utils.strip(
       getFunctionArgs(attrVal)[0],
       '(', ')'
     );
-    const finalArgs = [];
-    const commentArgs = [];
+    const finalArgs: any = [];
+    const commentArgs: any = [];
     let argsUpdateOk = true;
-    functionArgs.split(',').forEach(e => {
+    functionArgs.split(',').forEach((e: any) => {
       let arg = '';
       let cleanArg = '';
       if (getVar(e) != undefined) {
@@ -114,7 +114,7 @@ const updateEventFunctionArgs = (self, attrName, attrVal, reactiveObj) => {
     })
 
     if (argsUpdateOk) {
-      let tmp = utils.addQuoteItems(finalArgs);
+      let tmp: any = utils.addQuoteItems(finalArgs);
       tmp = `(${tmp})/*${commentArgs.join(',')}*/`;
       const result = attrVal.replaceAll(/\((.+)\)/g, `${tmp}`);
       return result;
@@ -123,11 +123,11 @@ const updateEventFunctionArgs = (self, attrName, attrVal, reactiveObj) => {
 };
 
 
-const getArgLocation = (attrVal, prop) => {
+const getArgLocation = (attrVal: string, prop: string) => {
   // get Args location
   let result = undefined;
   const commentArgs = utils.strip(attrVal, '/*', '*/');
-  commentArgs.split(',').forEach( (val, index) => {
+  commentArgs.split(',').forEach( (val: string, index: number) => {
     if (prop == utils.strip(val, '{', '}')) {
       result = index;
     }
@@ -136,7 +136,7 @@ const getArgLocation = (attrVal, prop) => {
   // get Args location
 }
 
-const getOldArgs = (attrVal) => {
+const getOldArgs = (attrVal: string) => {
   const result = utils.strip(
     getFunctionArgs(attrVal)[0],
     '(', ')'
@@ -145,11 +145,11 @@ const getOldArgs = (attrVal) => {
 }
 
 
-const getNewArgs = (oldArgs, argLocation, newVal) => {
+const getNewArgs = (oldArgs: string, argLocation: number, newVal: string) => {
   // get Value to update
-  let result = [];
-  oldArgs.split(',').forEach((val, index) => {
-    if (index == argLocation) {
+  let result: any = [];
+  oldArgs.split(',').forEach((val: string, index: number) => {
+    if (index === argLocation) {
       result.push(utils.addQuote(newVal));
     } else {
       result.push(val);
@@ -162,16 +162,16 @@ const getNewArgs = (oldArgs, argLocation, newVal) => {
 }
 
 export const updateVarAttrOnChange = (
-  element, 
-  prop, 
-  value
+  element: HTMLElement, 
+  prop: string, 
+  value: string
 ) => {
   for (let [_, attr] of Object.entries(element.attributes)) { 
     if (attr.name.startsWith('data-on') && 
         attr.value.includes(`{${prop}}`) // make sure to only update those with changes
     ) {
 
-      const argLocation = getArgLocation(attr.value, prop);
+      const argLocation: any = getArgLocation(attr.value, prop);
       const oldArgs = getOldArgs(attr.value);
       const newArgs = getNewArgs(
         oldArgs, 
@@ -192,13 +192,13 @@ export const updateVarAttrOnChange = (
 };
 
 // extract {variable}
-const getVar = (value) => {
-  return value.match(/\{.+\}/g);
+const getVar = (value: string) => {
+  return value.match(/\{.+\}/g)!;
 };
 
-export const updateTemplate = (self, obj) => {
+export const updateTemplate = (self: any, obj: any) => {
     // interpolate variable
-    const allElements = self.shadowRoot.querySelectorAll('*');
+    const allElements = <HTMLElement[]>self.shadowRoot.querySelectorAll('*');
     allElements.forEach(element => {
       updateVarHTMLOnLoad(self, element, obj);
       updateVarAttrOnLoad(

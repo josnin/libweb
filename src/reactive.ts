@@ -1,19 +1,19 @@
 
 export const createReactive = (
-  self, 
-  varObj, 
-  events,
-  templates,
+  self: any, 
+  varObj: any, 
+  events: any,
+  templates: any,
 ) => {
   // react when there is a changes in value
   //const allElements = self.shadowRoot.querySelectorAll('[data-bind]');
   const allElements = self.shadowRoot.querySelectorAll("*");
   const handler = {
-    get: (varObj, prop) => {
+    get: (varObj: any, prop: string) => {
       return varObj[prop] ;
     },
-    set: (varObj, prop, value) => {
-      allElements.forEach((element) => {
+    set: (varObj: any, prop: string, value: string) => {
+      allElements.forEach((element: any) => {
         if (element.type == 'text' && 
         element.dataset.bind == prop) {
           // make sure to update only that match with data-binding

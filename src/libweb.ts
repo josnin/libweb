@@ -1,12 +1,14 @@
 
-import events from './events.js';
+import events from './events';
 import reactive from './reactive.js';
-import bindings from './bindings.js';
-import templates from './template.js';
+import bindings from './bindings';
+import templates from './template';
 
 export class LibWeb {
 
-  constructor(shadowDom, template) {
+  self: any;
+
+  constructor(shadowDom: any, template: any) {
     this.self = shadowDom;
     this.self.attachShadow({mode: 'open'});
     this.self.shadowRoot.appendChild(template.content.cloneNode(true));
@@ -17,7 +19,7 @@ export class LibWeb {
   }
 
 
-  makeReactive = (varObj) => {
+  makeReactive = (varObj: any) => {
     templates.updateTemplate(this.self, varObj);
     events.createEventListener(this.self);
 

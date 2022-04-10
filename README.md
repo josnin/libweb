@@ -11,7 +11,7 @@
 ```js
 import {  
   LibWeb
-} from 'libweb.js';
+} from 'libweb';
 
 
 const template = document.createElement('template');
@@ -47,7 +47,7 @@ customElements.define('sample-binding', DataBindingComponent);
 ```js
 import {  
   LibWeb
-} from 'libweb.js';
+} from 'libweb';
 
 
 const template = document.createElement('template');
