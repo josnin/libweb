@@ -1,20 +1,20 @@
 import {  
   LibWeb
-} from '../../../libweb.js';
+} from './libweb.js';
 
 
 const template = document.createElement('template');
 template.innerHTML = `
-<input data-bind="username" type="text" /><span>{a} from span</span>
-<div data-ba="dfsd" data-ba1="cloudy">username:{username} This is ates?{a}?? {a} {a}</div>
-<button @click="alertMe({firstname}, {username})">Click me {username}?</button>
-<button @click="alertMe({firstname}, 123)">Click me lastname {a}?</button>
+<input data-bind="username" type="text" />
+<div data-ba="dfsd" data-ba1="cloudy">{abc} {myattr} {a} language {a}</div>
+<button @click="alertMe({firstname}, {username})">Click me {username}? {myattr}</button>
 `
 
 class Db extends HTMLElement {
 
-  lastname = 'now i know??';
-  firstname = 'johnny 456';
+  lastname: string = 'now i know??';
+  firstname: string = 'johnny 456';
+  reactive: any;
 
   constructor() {
     super();
@@ -24,18 +24,19 @@ class Db extends HTMLElement {
       this.reactive = lw.makeReactive(
         { 
           username: 'darling',
-          a: 'javascript'
+          a: 'javascript',
+          b: 'dd'
         }
       )
 
   }
 
 
-  changeValue(x) {
+  changeValue(x: string) {
     console.log(x)
   }
 
-  alertMe(last, first) {
+  alertMe(last: string, first: string) {
     console.log(last, first)
     alert(`${last}  ${first}`);
     this.reactive.a = 'Hollah?';

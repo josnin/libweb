@@ -1,8 +1,8 @@
 
-import events from './events';
-import reactive from './reactive';
-import bindings from './bindings';
-import templates from './template';
+import events from './events.js';
+import reactive from './reactive.js';
+import bindings from './bindings.js';
+import templates from './template.js';
 
 export class LibWeb {
 
