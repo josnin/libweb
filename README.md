@@ -11,7 +11,7 @@
 ```js
 import {  
   LibWeb
-} from 'libweb';
+} from 'libweb.js';
 
 
 const template = document.createElement('template');
@@ -20,6 +20,8 @@ template.innerHTML = `
 <div>Hello {username}</div>`
 
 class DataBindingComponent extends HTMLElement { 
+
+  reactive: any;
 
   constructor() {
     super();
@@ -47,7 +49,7 @@ customElements.define('sample-binding', DataBindingComponent);
 ```js
 import {  
   LibWeb
-} from 'libweb';
+} from 'libweb.js';
 
 
 const template = document.createElement('template');
