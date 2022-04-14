@@ -11,7 +11,7 @@ export const strip = (value: string, start: string, end: string) => {
 
 
 export const addQuote = (val: any) => {
-  if (isNaN(val)) {
+  if (isNaN(val) && !val.startsWith("'")) {
     return `'${val}'`;
   } else {
     return val;
@@ -19,8 +19,8 @@ export const addQuote = (val: any) => {
 }
 
 // surround args multiple value with quote
-export const addQuoteItems = (value: string[]) => {
-  const result = value.map((r: string) => {
+export const addQuoteItems = (value: any[]) => {
+  const result = value.map((r: any) => {
     return addQuote(r);
   });
 

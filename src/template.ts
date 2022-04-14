@@ -128,7 +128,7 @@ const getArgLocation = (attrVal: string, prop: string) => {
   let result = undefined;
   const commentArgs = utils.strip(attrVal, '/*', '*/');
   commentArgs.split(',').forEach( (val: string, index: number) => {
-    if (prop == utils.strip(val, '{', '}')) {
+    if (val.startsWith('{') && val.endsWith('}') && prop == utils.strip(val, '{', '}')) {
       result = index;
     }
   })
