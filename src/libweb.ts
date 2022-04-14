@@ -11,7 +11,11 @@ export class LibWeb {
   constructor(shadowDom: any, template: any) {
     this.self = shadowDom;
     this.self.attachShadow({mode: 'open'});
-    this.self.shadowRoot.appendChild(template.content.cloneNode(true));
+    if (typeof(template) === 'object') {
+      this.self.shadowRoot.appendChild(template.content.cloneNode(true));
+    } else {
+      this.self.shadowRoot.innerHTML = template;
+    }
 
     templates.updateTemplate(this.self, {});
     events.createEventListener(this.self);
