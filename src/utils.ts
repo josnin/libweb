@@ -1,6 +1,6 @@
 // (variable) -> variable
 export const stripParenthesis = (value: string) => {
-  return value[0].replace(/[()]/g, ''); 
+  return value[0].replace(/[()]/g, '');
 };
 
 
@@ -11,12 +11,12 @@ export const strip = (value: string, start: string, end: string) => {
 
 
 export const addQuote = (val: any) => {
-  if (isNaN(val) && !val.startsWith("'")) {
+  if (isNaN(val) && !val.startsWith('\'')) {
     return `'${val}'`;
   } else {
     return val;
   }
-}
+};
 
 // surround args multiple value with quote
 export const addQuoteItems = (value: any[]) => {
@@ -35,4 +35,4 @@ export default {
   strip,
   addQuote,
   addQuoteItems
-}
+};
