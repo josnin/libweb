@@ -8,8 +8,8 @@ export const createEventListener = (self: any) => {
     //}, true)
 
     // use this approach to overwrite all listener instead of addEventListener
-    self.shadowRoot.querySelector(`${fn.query}`)[`${fn.event}`] = (e: any) => {
-      console.log(eval(`self.${fn.fn}`)) // execute function 
+    self.shadowRoot.querySelector(`${fn.query}`)[`${fn.event}`] = ($event: any) => {
+      eval(`self.${fn.fn.replaceAll("'$event'", "$event")}`) // execute function 
     };
   })
 }
@@ -23,7 +23,6 @@ export const getEventsAttrFn = (self: any) => {
     for (let [_, attr] of Object.entries(element.attributes)) { 
       if (attr.name.startsWith('data-on')) {
         let tmp = {
-          //query: `[data-${attrName}${fnEvents.length}="${attrVal}"]`,
           query: `[${attr.name}]`,
           fn: attr.value, // alertMe('johnny')
           event: attr.name.split('-')[1] // data-onclick-id1 --> onclick

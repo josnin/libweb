@@ -90,23 +90,20 @@ const updateEventFunctionArgs = (self: any, attrName: string, attrVal: string, r
 
       //console.log(self[arg], arg, reactiveObj)
       if(parseInt(cleanArg)) {
-        console.warn(`numeric args ${cleanArg} not req. to parse in function ${attrVal}`);
         finalArgs.push(parseInt(cleanArg));
         commentArgs.push(parseInt(arg));
-      } else if (cleanArg.startsWith("'")) {
-        // skip string args & numeric
-        console.warn(`string args ${cleanArg} not req. to parse in function ${attrVal}`);
+      } else if (cleanArg.startsWith("'") || cleanArg === '$event') {
+        // handling str args or $event args
         finalArgs.push(cleanArg); // if string remove "'1234'"
         commentArgs.push(arg);
-        //console.log(arg);
-      } else if (self[cleanArg] != undefined) {
+      } else if (self[cleanArg] !== undefined) {
         finalArgs.push(self[cleanArg]);
         commentArgs.push(arg);
-      } else if(reactiveObj[cleanArg] != undefined) {
+      } else if(reactiveObj[cleanArg] !== undefined) {
         finalArgs.push(reactiveObj[cleanArg]);
         commentArgs.push(arg);
-      } else if(self[cleanArg] == undefined || reactiveObj[cleanArg] == undefined) {
-        console.warn(`args ${cleanArg} unable to parse in function ${attrVal}`);
+      } else if(self[cleanArg] === undefined && reactiveObj[cleanArg] === undefined) {
+        console.warn(`event args ${cleanArg} unable to parse ${attrVal}`);
         argsUpdateOk = false;
         return
       }
@@ -198,8 +195,8 @@ const getVar = (value: string) => {
 
 export const updateTemplate = (self: any, obj: any) => {
     // interpolate variable
-    const allElements = <HTMLElement[]>self.shadowRoot.querySelectorAll('*');
-    allElements.forEach(element => {
+    const allElements = self.shadowRoot.querySelectorAll('*');
+    allElements.forEach( (element: HTMLElement) => {
       updateVarHTMLOnLoad(self, element, obj);
       updateVarAttrOnLoad(
         self, 
