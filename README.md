@@ -39,8 +39,7 @@ import {
 class EventComponent extends LWElement { 
 
   firstname = 'Johny'; // non reactive variable
-  template.innerHTML = `
-    <button @click="alertMe({firstname})">Click Sample event</button>`
+  template = `<button @click="alertMe({firstname})">Click Sample event</button>`
 
   alertMe(arg) {
    alert(`Hello ${arg}`);
