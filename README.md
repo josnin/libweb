@@ -36,7 +36,7 @@ import {
 } from 'libweb.js';
 
 
-class EventComponent extends HTMLElement { 
+class EventComponent extends LWElement { 
 
   firstname = 'Johny'; // non reactive variable
   template.innerHTML = `
