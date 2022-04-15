@@ -35,8 +35,8 @@ export const updateVarHTMLOnLoad = (self: any, element: HTMLElement) => {
       let result = null;
       if (self[cleanVar] != undefined) { // applies to shadow var only
         result = self[cleanVar];
-      } else if (self.reactive[cleanVar] != undefined) { // applies for reactive variable
-         result = self.reactive[cleanVar];
+      } else if (self.__reactive[cleanVar] != undefined) { // applies for reactive variable
+         result = self.__reactive[cleanVar];
       } else if (cmpAttr) { // applies to component var
         result = cmpAttr.value;
       }
@@ -98,10 +98,10 @@ const updateEventFunctionArgs = (self: any, attrName: string, attrVal: string) =
       } else if (self[cleanArg] !== undefined) {
         finalArgs.push(self[cleanArg]);
         commentArgs.push(arg);
-      } else if (self.reactive[cleanArg] !== undefined) {
-        finalArgs.push(self.reactive[cleanArg]);
+      } else if (self.__reactive[cleanArg] !== undefined) {
+        finalArgs.push(self.__reactive[cleanArg]);
         commentArgs.push(arg);
-      } else if (self[cleanArg] === undefined && self.reactive[cleanArg] === undefined) {
+      } else if (self[cleanArg] === undefined && self.__reactive[cleanArg] === undefined) {
         console.warn(`event args ${cleanArg} unable to parse ${attrVal}`);
         argsUpdateOk = false;
         return;

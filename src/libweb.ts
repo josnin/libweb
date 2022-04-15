@@ -16,7 +16,7 @@ export class LibWeb {
     templates.updateTemplate(this.self);
     events.createEventListener(this.self);
 
-    this.self.reactive = this.makeReactive(this.self.reactive);
+    this.self.__reactive = this.makeReactive(this.self.__reactive);
 
   }
 
@@ -40,15 +40,15 @@ export class LibWeb {
 
 export class LWElement extends HTMLElement {
 
-  reactive: any; // { username: 'darling' }
-  template: any;
+  __reactive: any; // { username: 'darling' }
+  __template: any;
 
   constructor() {
     super();
   }
 
   connectedCallback() {
-    const lw = new LibWeb(this, this.template);
+    const lw = new LibWeb(this, this.__template);
   }
 
 }

@@ -9,14 +9,12 @@
 ## Data Binding
 ### JS
 ```js
-import {  
-  LWElement
-} from 'libweb.js';
+import { LWElement } from 'libweb.js';
 
 class BindingComponent extends LWElement { 
 
-  reactive = { username: 'darling' };
-  template = `<input data-bind="username" type="text" />
+  __reactive = { username: 'darling' };
+  __template = `<input data-bind="username" type="text" />
               <div>Hello {username}</div>`
 
 }
@@ -31,15 +29,12 @@ customElements.define('sample-binding', BindingComponent);
 
 ## Create Events
 ```js
-import {  
-  LWElement
-} from 'libweb.js';
-
+import { LWElement } from 'libweb.js';
 
 class EventComponent extends LWElement { 
 
   firstname = 'Johny'; // non reactive variable
-  template = `<button @click="alertMe({firstname})">Click Sample event</button>`
+  __template.innerHTML = `<button @click="alertMe({firstname})">Click Sample event</button>`
 
   alertMe(arg) {
    alert(`Hello ${arg}`);

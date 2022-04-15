@@ -5,7 +5,7 @@ export const addDataBindListener = (self: any) => {
   elementWithDataBind.forEach((element: any) => {
     if (element.type === "text") {
       element.addEventListener("input", (e: any) => {
-        self.reactive[e.target.getAttribute('data-bind')] = e.target.value;
+        self.__reactive[e.target.getAttribute('data-bind')] = e.target.value;
       });
     }
   });
