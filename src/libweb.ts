@@ -42,6 +42,7 @@ export class LWElement extends HTMLElement {
 
   __reactive: any; // { username: 'darling' }
   __template: any;
+  __styles: any;
 
   constructor() {
     super();
