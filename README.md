@@ -34,7 +34,7 @@ import { LWElement } from 'libweb.js';
 class EventComponent extends LWElement { 
 
   firstname = 'Johny'; // non reactive variable
-  __template.innerHTML = `<button @click="alertMe({firstname})">Click Sample event</button>`
+  __template = `<button @click="alertMe({firstname})">Click Sample event</button>`
 
   alertMe(arg) {
    alert(`Hello ${arg}`);
