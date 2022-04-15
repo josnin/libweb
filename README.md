@@ -5,6 +5,14 @@
 * Event handling
 * No Virtual DOM
 
+## Use directly in browser
+
+```html 
+
+<!-- latest version -->
+<script src="https://josnin.sgp1.digitaloceanspaces.com/libweb/dist/libweb.js"></script>
+
+```
 
 ## Data Binding
 ### JS
