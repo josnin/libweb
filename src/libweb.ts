@@ -7,17 +7,11 @@ import templates from './template.js';
 export class LibWeb {
 
   self: any;
-  reactive: any; // { username: 'darling' }
 
   constructor(shadowDom: any, template: any) {
     this.self = shadowDom;
     this.self.attachShadow({mode: 'open'});
-    if (typeof(template) === 'object') {
-      this.self.shadowRoot.appendChild(template.content.cloneNode(true));
-    } else {
-      this.self.shadowRoot.innerHTML = template;
-    }
-    // if self.template?
+    this.self.shadowRoot.innerHTML = template; // inject
 
     templates.updateTemplate(this.self);
     events.createEventListener(this.self);
@@ -44,8 +38,23 @@ export class LibWeb {
 
 }
 
+export class LWElement extends HTMLElement {
+
+  reactive: any; // { username: 'darling' }
+  template: any;
+
+  constructor() {
+    super();
+  }
+
+  connectedCallback() {
+    const lw = new LibWeb(this, this.template);
+  }
+
+}
 
 
 export default {
-  LibWeb
+  LibWeb,
+  LWElement
 }

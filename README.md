@@ -1,6 +1,6 @@
 # libweb is a library for building [Web Components](https://developer.mozilla.org/en-US/docs/Web/Web_Components)
 
-* Template syntax similar with modern Frontend framework
+* Template syntax
 * Data binding
 * Event handling
 * No Virtual DOM
@@ -10,34 +10,18 @@
 ### JS
 ```js
 import {  
-  LibWeb
+  LWElement
 } from 'libweb.js';
 
+class BindingComponent extends LWElement { 
 
-const template = document.createElement('template');
-template.innerHTML = `
-<input data-bind="username" type="text" />
-<div>Hello {username}</div>`
+  reactive = { username: 'darling' };
+  template = `<input data-bind="username" type="text" />
+              <div>Hello {username}</div>`
 
-class DataBindingComponent extends HTMLElement { 
-
-  reactive: any;
-
-  constructor() {
-    super();
-    const lw = new LibWeb(this, template);
-
-    // create a reactive variable
-    this.reactive = lw.makeReactive(
-      { 
-        username: 'darling',        
-      }
-    )
-  }
- 
 }
 
-customElements.define('sample-binding', DataBindingComponent);
+customElements.define('sample-binding', BindingComponent);
 
 ```
 ### index.html
@@ -48,30 +32,23 @@ customElements.define('sample-binding', DataBindingComponent);
 ## Create Events
 ```js
 import {  
-  LibWeb
+  LWElement
 } from 'libweb.js';
 
 
-const template = document.createElement('template');
-template.innerHTML = `
-<button @click="alertMe({firstname})">Click Sample event</button>`
-
-class SampleEventComponent extends HTMLElement { 
+class EventComponent extends HTMLElement { 
 
   firstname = 'Johny'; // non reactive variable
+  template.innerHTML = `
+    <button @click="alertMe({firstname})">Click Sample event</button>`
 
-  constructor() {
-    super();
-    const lw = new LibWeb(this, template);    
-  }
-  
   alertMe(arg) {
    alert(`Hello ${arg}`);
   }
  
 }
 
-customElements.define('sample-event', SampleEventComponent);
+customElements.define('sample-event', EventComponent);
 
 ```
 ### index.html

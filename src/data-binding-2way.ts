@@ -1,46 +1,30 @@
 import {  
-  LibWeb
+  LWElement
 } from './libweb.js';
 
-
-const template = document.createElement('template');
-template.innerHTML = `
-<input data-bind="username" type="text" />
-<div data-ba="dfsd" data-ba1="cloudy">{abc} {myattr} {a} language {a}</div>
-<button @click="alertMe({firstname}, {username})">Click me {username}? {myattr}</button>
-`
-
-class Db extends HTMLElement {
+class SampleEl extends LWElement {
 
   lastname: string = 'now i know??';
   firstname: string = 'johnny 456';
-  reactive: any;
 
-  constructor() {
-    super();
-      const lw = new LibWeb(this, template);
-
-      // create a reactive variable
-      this.reactive = lw.makeReactive(
-        { 
-          username: 'darling',
-          a: 'javascript',
-          b: 'dd'
-        }
-      )
-
+  // create a reactive variable
+  reactive = { 
+    username: 'darling',
+    a: 'javascript',
+    b: 'dd'
   }
 
+  template = `
+    <input data-bind="username" type="text" />
+    <div data-ba="dfsd" data-ba1="cloudy">{abc} {myattr} {a} language {a}</div>
+    <button @click="alertMe({firstname}, {username})">Click me {username}? {myattr}</button>
+    `
 
-  changeValue(x: string) {
-    console.log(x)
+  alertMe2(aa: any, bb: any) {
+    this.reactive.a = aa;
+    alert(bb)
   }
 
-  alertMe(last: string, first: string) {
-    console.log(last, first)
-    alert(`${last}  ${first}`);
-    this.reactive.a = 'Hollah?';
-  }
 }
 
-customElements.define('data-binding-2way', Db);
+customElements.define('data-binding-2way', SampleEl);
