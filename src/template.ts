@@ -4,13 +4,11 @@ import { settings } from './enums.js';
 export const updateVarAttrOnLoad = (
     self: HTMLElement,
     element: HTMLElement,
-    reactiveObj: any,
 ) => {
   for (const [_, attr] of Object.entries(element.attributes)) {
     const updatedFnArgs = updateEventFunctionArgs(self,
       attr.name,
       attr.value,
-      reactiveObj
     );
 
     if (updatedFnArgs) {
@@ -27,7 +25,7 @@ export const updateVarAttrOnLoad = (
   }
 };
 
-export const updateVarHTMLOnLoad = (self: any, element: HTMLElement, reactiveObj: any) => {
+export const updateVarHTMLOnLoad = (self: any, element: HTMLElement) => {
   // replace with real value {username} > johnny,
   element.innerHTML.split(' ').forEach(text => {
     if (getVar(text)) {
@@ -37,8 +35,8 @@ export const updateVarHTMLOnLoad = (self: any, element: HTMLElement, reactiveObj
       let result = null;
       if (self[cleanVar] != undefined) { // applies to shadow var only
         result = self[cleanVar];
-      } else if (reactiveObj[cleanVar] != undefined) { // applies for reactive variable
-         result = reactiveObj[cleanVar];
+      } else if (self.reactive[cleanVar] != undefined) { // applies for reactive variable
+         result = self.reactive[cleanVar];
       } else if (cmpAttr) { // applies to component var
         result = cmpAttr.value;
       }
@@ -69,7 +67,7 @@ const getFunctionArgs = (value: string) => {
   return value.match(/\(.+\)/g)!;
 };
 
-const updateEventFunctionArgs = (self: any, attrName: string, attrVal: string, reactiveObj: any) => {
+const updateEventFunctionArgs = (self: any, attrName: string, attrVal: string) => {
   if (attrName.startsWith(settings.ATTR_PREFIX)) {
     const functionArgs = utils.strip(
       getFunctionArgs(attrVal)[0],
@@ -100,10 +98,10 @@ const updateEventFunctionArgs = (self: any, attrName: string, attrVal: string, r
       } else if (self[cleanArg] !== undefined) {
         finalArgs.push(self[cleanArg]);
         commentArgs.push(arg);
-      } else if (reactiveObj[cleanArg] !== undefined) {
-        finalArgs.push(reactiveObj[cleanArg]);
+      } else if (self.reactive[cleanArg] !== undefined) {
+        finalArgs.push(self.reactive[cleanArg]);
         commentArgs.push(arg);
-      } else if (self[cleanArg] === undefined && reactiveObj[cleanArg] === undefined) {
+      } else if (self[cleanArg] === undefined && self.reactive[cleanArg] === undefined) {
         console.warn(`event args ${cleanArg} unable to parse ${attrVal}`);
         argsUpdateOk = false;
         return;
@@ -194,16 +192,12 @@ const getVar = (value: string) => {
   return value.match(/\{.+\}/g)!;
 };
 
-export const updateTemplate = (self: any, obj: any) => {
+export const updateTemplate = (self: any) => {
     // interpolate variable
     const allElements = self.shadowRoot.querySelectorAll('*');
     allElements.forEach( (element: HTMLElement) => {
-      updateVarHTMLOnLoad(self, element, obj);
-      updateVarAttrOnLoad(
-        self,
-        element,
-        obj
-      );
+      updateVarHTMLOnLoad(self, element);
+      updateVarAttrOnLoad(self, element);
     });
 };
 

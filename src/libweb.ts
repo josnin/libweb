@@ -7,6 +7,7 @@ import templates from './template.js';
 export class LibWeb {
 
   self: any;
+  reactive: any; // { username: 'darling' }
 
   constructor(shadowDom: any, template: any) {
     this.self = shadowDom;
@@ -16,16 +17,17 @@ export class LibWeb {
     } else {
       this.self.shadowRoot.innerHTML = template;
     }
+    // if self.template?
 
-    templates.updateTemplate(this.self, {});
+    templates.updateTemplate(this.self);
     events.createEventListener(this.self);
+
+    this.self.reactive = this.makeReactive(this.self.reactive);
 
   }
 
 
   makeReactive = (varObj: any) => {
-    templates.updateTemplate(this.self, varObj);
-    events.createEventListener(this.self);
 
     // add data-bind listener and variable to react when there is an event
     bindings.addDataBindListener(this.self);
