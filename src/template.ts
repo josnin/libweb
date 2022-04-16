@@ -1,6 +1,7 @@
 import utils from './utils.js';
 import { settings } from './enums.js';
 import { Directives } from './directives.js';
+import { Parsers } from './parsers.js';
 
 export const updateVarAttrOnLoad = (
     self: HTMLElement,
@@ -197,10 +198,14 @@ export const updateTemplate = (self: any) => {
     // interpolate variable
     const allElements = self.shadowRoot.querySelectorAll('*');
     allElements.forEach( (el: any) => {
-      const d = new Directives(self, el);
-      el = d.apply();
-      updateVarHTMLOnLoad(self, el);
-      updateVarAttrOnLoad(self, el);
+      const directive = new Directives(self, el);
+      el = directive.apply();
+
+      const parser = new Parsers(self, el);
+      parser.apply();
+
+      //updateVarHTMLOnLoad(self, el);
+      //updateVarAttrOnLoad(self, el);
     });
 };
 

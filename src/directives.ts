@@ -1,10 +1,10 @@
-import { If } from './directives/if.directives.js';
+import { If } from './directives/if.directive.js';
 
 export class Directives {
 
   el: any;
   self: any;
-  registry = [If];
+  declare = [If];
 
   constructor(self:any, el: any) {
     this.el = el;
@@ -12,7 +12,7 @@ export class Directives {
   }
 
   apply() {
-    this.registry.forEach(d => {
+    this.declare.forEach(d => {
       this.el = d(this.self, this.el);
     })
     return this.el;

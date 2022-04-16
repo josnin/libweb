@@ -27,6 +27,11 @@ export const addQuoteItems = (value: any[]) => {
   return result;
 };
 
+// extract {variable}
+export const getVar = (value: string) => {
+  return value.match(/\{.+\}/g)!;
+};
+
 
 
 
@@ -34,5 +39,6 @@ export default {
   stripParenthesis,
   strip,
   addQuote,
-  addQuoteItems
+  addQuoteItems,
+  getVar
 };
