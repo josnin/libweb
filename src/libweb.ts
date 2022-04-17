@@ -23,9 +23,6 @@ export class LibWeb {
 
   makeReactive = (varObj: any) => {
 
-    // add data-bind listener and variable to react when there is an event
-    bindings.addDataBindListener(this.self);
-
     // make variable reactive
     return reactive.createReactive(
       this.self, 

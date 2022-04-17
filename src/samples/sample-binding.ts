@@ -1,4 +1,4 @@
-import { LWElement } from './libweb.js';
+import { LWElement } from '../libweb.js';
 
 class BindingComponent extends LWElement { 
 

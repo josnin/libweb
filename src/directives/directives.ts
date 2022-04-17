@@ -1,10 +1,11 @@
-import { If } from './directives/if.directive.js';
+import { ifDirective } from './if.directive.js';
+import { bindDirective } from './bind.directive.js';
 
 export class Directives {
 
   el: any;
   self: any;
-  declare = [If];
+  declare = [ifDirective, bindDirective];
 
   constructor(self:any, el: any) {
     this.el = el;

@@ -1,5 +1,5 @@
-import { htmlParser } from './parsers/html.parser.js';
-import { attrParser } from './parsers/attr.parser.js';
+import { htmlParser } from './html.parser.js';
+import { attrParser } from './attr.parser.js';
 
 export class Parsers {
 

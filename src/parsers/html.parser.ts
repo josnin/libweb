@@ -3,7 +3,6 @@ import { settings } from '../enums.js';
 
 export const htmlParser = (self: any, element: HTMLElement) => {
   // replace with real value {username} > johnny,
-  debugger;
   element.innerHTML.split(' ').forEach(text => {
     if (getVar(text)) {
       const var1 = getVar(text)[0];
