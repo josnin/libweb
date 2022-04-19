@@ -1,9 +1,36 @@
+import { htmlReactive } from './html.reactive.js';
+import { attrReactive } from './attr.reactive.js';
+
+export class Reactives {
+
+  el: any;
+  self: any;
+  prop: any;
+  value: any;
+  declare = [
+    htmlReactive, 
+    attrReactive,
+  ];
+
+  constructor(self:any, el: any, prop: any, val: any) {
+    this.el = el;
+    this.self = self;
+    this.prop = prop;
+    this.value = val;
+  }
+
+  apply() {
+    this.declare.forEach(d => {
+      d(this.self, this.el, this.prop, this.value);
+    })
+  }
+}
+
 
 export const createReactive = (
   self: any,
   varObj: any,
   events: any,
-  templates: any,
 ) => {
   // react when there is a changes in value
   // const allElements = self.shadowRoot.querySelectorAll('[data-bind]');
@@ -20,18 +47,14 @@ export const createReactive = (
           element.value = value;
         } else {
           // {username} > johny<!--{username}-->
-          templates.updateVarHTMLOnChange(
+          const reactive = new Reactives(
+            self,
             element,
-            varObj,
             prop,
             value
-          );
+          )
 
-          templates.updateVarAttrOnChange(
-            element,
-            prop,
-            value
-          );
+          reactive.apply()
 
           events.createEventListener(self);
         }
@@ -47,4 +70,5 @@ export const createReactive = (
 
 export default {
   createReactive,
+  Reactives
 };

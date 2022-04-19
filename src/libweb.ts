@@ -1,7 +1,6 @@
 
 import events from './events.js';
-import reactive from './reactive.js';
-import templates from './template.js';
+import reactive from './reactives/reactive.js';
 import { Directives } from './directives/directives.js';
 import { Parsers } from './parsers/parsers.js';
 
@@ -38,7 +37,6 @@ export class LibWeb {
       this.self, 
       varObj, 
       events,
-      templates,
     );
 
   }
