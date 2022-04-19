@@ -1,8 +1,9 @@
 
 import events from './events.js';
 import reactive from './reactive.js';
-import bindings from './bindings.js';
 import templates from './template.js';
+import { Directives } from './directives/directives.js';
+import { Parsers } from './parsers/parsers.js';
 
 export class LibWeb {
 
@@ -13,7 +14,16 @@ export class LibWeb {
     this.self.attachShadow({mode: 'open'});
     this.self.shadowRoot.innerHTML = template; // inject
 
-    templates.updateTemplate(this.self);
+    const allElements = this.self.shadowRoot.querySelectorAll('*');
+    allElements.forEach( (el: any) => {
+      const parser = new Parsers(this.self, el);
+      parser.apply();
+
+      const directive = new Directives(this.self, el);
+      el = directive.apply();
+
+    });
+
     events.createEventListener(this.self);
 
     this.self.__reactive = this.makeReactive(this.self.__reactive);

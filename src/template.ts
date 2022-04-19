@@ -91,21 +91,7 @@ export const updateVarAttrOnChange = (
 };
 
 
-export const updateTemplate = (self: any) => {
-    // interpolate variable
-    const allElements = self.shadowRoot.querySelectorAll('*');
-    allElements.forEach( (el: any) => {
-      const directive = new Directives(self, el);
-      el = directive.apply();
-
-      const parser = new Parsers(self, el);
-      parser.apply();
-
-    });
-};
-
 export default {
-  updateTemplate,
   updateVarHTMLOnChange,
   updateVarAttrOnChange
 };
