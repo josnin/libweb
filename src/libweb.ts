@@ -16,10 +16,10 @@ export class LibWeb {
     const allElements = this.self.shadowRoot.querySelectorAll('*');
     allElements.forEach( (el: any) => {
       const parser = new Parsers(this.self, el);
-      parser.apply();
+      parser.applyOnce();
 
       const directive = new Directives(this.self, el);
-      el = directive.apply();
+      el = directive.applyOnce();
 
     });
 
@@ -32,16 +32,41 @@ export class LibWeb {
 
   makeReactive = (varObj: any) => {
 
-    // make variable reactive
-    return reactive.createReactive(
-      this.self, 
-      varObj, 
-      events,
-    );
+    // react when there is a changes in value
+    // const allElements = self.shadowRoot.querySelectorAll('[data-bind]');
+    const allElements = this.self.shadowRoot.querySelectorAll('*');
+    const handler = {
+      get: (varObj: any, prop: string) => {
+        return varObj[prop] ;
+      },
+      set: (varObj: any, prop: string, value: string) => {
+        allElements.forEach((element: any) => {
+          if (element.type === 'text' &&
+          element.dataset.bind === prop) {
+            // make sure to update only that match with data-binding
+            element.value = value;
+          } else {
+            // {username} > johny<!--{username}-->
+            const parser = new Parsers(this.self, element, prop, value);
+            parser.applyReactive();
+
+            const directive = new Directives(this.self, element, prop, value);
+            element = directive.applyReactive();
+
+            events.createEventListener(this.self);
+          }
+        });
+        varObj[prop] = value;
+        return true;
+      }
+    };
+
+    return new Proxy(varObj, handler);
 
   }
 
 }
+
 
 export class LWElement extends HTMLElement {
 

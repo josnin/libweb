@@ -4,17 +4,26 @@ import { bindDirective } from './bind.directive.js';
 export class Directives {
 
   el: any;
-  self: any;
-  declare = [ifDirective, bindDirective];
+  args: any[];
+  once = [ifDirective, bindDirective];
+  reactive = [ifDirective];
 
-  constructor(self:any, el: any) {
-    this.el = el;
-    this.self = self;
+  constructor(...args: any[]) {
+    this.args = args;
   }
 
-  apply() {
-    this.declare.forEach(d => {
-      this.el = d(this.self, this.el);
+  applyOnce() {
+    const [self, el, prop, val] = this.args;
+    this.once.forEach(d => {
+      this.el = d(self, el, prop, val);
+    })
+    return this.el;
+  }
+
+  applyReactive() {
+    const [self, el, prop, val] = this.args;
+    this.reactive.forEach(d => {
+      this.el = d(self, el, prop, val);
     })
     return this.el;
   }

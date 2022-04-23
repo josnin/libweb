@@ -9,4 +9,5 @@ export const htmlReactive = (
     `${self.__reactive[varName]}<!--${varName}-->`,
     `${varValue}<!--${varName}-->`
   );
+  return element;
 };

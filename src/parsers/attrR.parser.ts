@@ -75,4 +75,5 @@ export const attrReactive = (
       );
     }
   }
+  return element;
 };
