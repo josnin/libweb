@@ -1,6 +1,5 @@
 
 import events from './events.js';
-import reactive from './reactives/reactive.js';
 import { Directives } from './directives/directives.js';
 import { Parsers } from './parsers/parsers.js';
 
@@ -41,11 +40,6 @@ export class LibWeb {
       },
       set: (varObj: any, prop: string, value: string) => {
         allElements.forEach((element: any) => {
-          if (element.type === 'text' &&
-          element.dataset.bind === prop) {
-            // make sure to update only that match with data-binding
-            element.value = value;
-          } else {
             // {username} > johny<!--{username}-->
             const parser = new Parsers(this.self, element, prop, value);
             parser.applyReactive();
@@ -54,7 +48,6 @@ export class LibWeb {
             element = directive.applyReactive();
 
             events.createEventListener(this.self);
-          }
         });
         varObj[prop] = value;
         return true;

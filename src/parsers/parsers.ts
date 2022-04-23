@@ -2,12 +2,13 @@ import { htmlParser } from './html.parser.js';
 import { attrParser } from './attr.parser.js';
 import { htmlReactive  } from './htmlR.parser.js';
 import { attrReactive  } from './attrR.parser.js';
+import { inputValueReactive } from './inputValueR.parser.js';
 
 export class Parsers {
 
   args: any[];
   once = [htmlParser, attrParser];
-  reactive = [htmlReactive, attrReactive]
+  reactive = [inputValueReactive, htmlReactive, attrReactive]
 
   constructor(...args: any[]) {
     this.args = args;
