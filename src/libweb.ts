@@ -1,5 +1,4 @@
 
-import events from './events.js';
 import { Directives } from './directives/directives.js';
 import { Parsers } from './parsers/parsers.js';
 
