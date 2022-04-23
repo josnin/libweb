@@ -1,7 +1,7 @@
 import { getVar, strip } from '../utils.js';
 import { settings } from '../enums.js';
 
-export const htmlParser = (self: any, element: HTMLElement) => {
+export const htmlVarParser = (self: any, element: HTMLElement) => {
   // replace with real value {username} > johnny,
   element.innerHTML.split(' ').forEach(text => {
     if (getVar(text)) {

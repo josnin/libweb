@@ -46,14 +46,14 @@ const getNewArgs = (oldArgs: string, argLocation: number, newVal: string) => {
 
 };
 
-export const attrReactive = (
+export const attrEvtReactive = (
   self: any,
   element: HTMLElement,
   prop: string,
   value: string
 ) => {
   for (const [_, attr] of Object.entries(element.attributes)) {
-    if (attr.name.startsWith('data-on') &&
+    if (attr.name.startsWith(settings.ATTR_PREFIX) &&
         attr.value.includes(`{${prop}}`) // make sure to only update those with changes
     ) {
 

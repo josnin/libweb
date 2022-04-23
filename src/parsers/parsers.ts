@@ -1,14 +1,15 @@
-import { htmlParser } from './html.parser.js';
-import { attrParser } from './attr.parser.js';
-import { htmlReactive  } from './htmlR.parser.js';
-import { attrReactive  } from './attrR.parser.js';
-import { inputValueReactive } from './inputValueR.parser.js';
+import  { htmlVarParser } from './html-var.parser.js';
+import { attrEvtParser } from './attr-evt.parser.js';
+import { evtListenerParser } from './evt-listener.parser.js';
+import { htmlVarReactive } from './html-var-r.parser.js';
+import { attrEvtReactive } from './attr-evt-r.parser.js';
+import { inputValReactive } from './input-val-r.parser.js';
 
 export class Parsers {
 
   args: any[];
-  once = [htmlParser, attrParser];
-  reactive = [inputValueReactive, htmlReactive, attrReactive]
+  once = [htmlVarParser, attrEvtParser, evtListenerParser];
+  reactive = [inputValReactive, htmlVarReactive, attrEvtReactive]
 
   constructor(...args: any[]) {
     this.args = args;

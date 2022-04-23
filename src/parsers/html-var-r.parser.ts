@@ -1,5 +1,5 @@
 
-export const htmlReactive = (
+export const htmlVarReactive = (
   self: any,
   element: HTMLElement,
   varName: string,

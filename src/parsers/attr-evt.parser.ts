@@ -57,7 +57,7 @@ const updateEventFunctionArgs = (self: any, attrName: string, attrVal: string) =
   }
 };
 
-export const attrParser = (
+export const attrEvtParser = (
     self: HTMLElement,
     element: HTMLElement,
 ) => {
@@ -69,13 +69,17 @@ export const attrParser = (
 
     if (updatedFnArgs) {
       // data-onclick-kuqrlat7 suffix hash timestamp to make sure its unique event
+      //element.setAttribute(
+      //  `data-${attr.name.replace(settings.ATTR_PREFIX, 'on')}-${(+new Date).toString(36)}`,
+      //  updatedFnArgs
+      //);
       element.setAttribute(
-        `data-${attr.name.replace(settings.ATTR_PREFIX, 'on')}-${(+new Date).toString(36)}`,
+        attr.name,
         updatedFnArgs
       );
 
       // remove @click attributes
-      element.removeAttribute(`${attr.name}`);
+      //element.removeAttribute(`${attr.name}`);
 
     }
   }

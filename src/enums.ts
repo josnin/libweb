@@ -1,6 +1,6 @@
 
 export const settings = {
-  ATTR_PREFIX: '@',
-  ATTR_REPLACE: 'data-on',
+  ATTR_PREFIX: '__',
+  ATTR_REPLACE: 'on',
   VAR_PARSE: { start: '{', end: '}' },
 };

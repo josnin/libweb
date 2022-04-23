@@ -22,8 +22,6 @@ export class LibWeb {
 
     });
 
-    events.createEventListener(this.self);
-
     this.self.__reactive = this.makeReactive(this.self.__reactive);
 
   }
@@ -47,7 +45,6 @@ export class LibWeb {
             const directive = new Directives(this.self, element, prop, value);
             element = directive.applyReactive();
 
-            events.createEventListener(this.self);
         });
         varObj[prop] = value;
         return true;
