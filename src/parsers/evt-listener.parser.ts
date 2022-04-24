@@ -4,6 +4,7 @@ export const evtListenerParser = (self: any, el: any) => {
   Array.from(el.attributes).map( (e: any) => {
       if (e.name.startsWith(settings.ATTR_PREFIX)) {
         el[e.name.replace(settings.ATTR_PREFIX, 'on')] = ($event: any) => {
+          // @todo eval is not good to use?
           try {
             // exec normal func
             eval(`self.${e.value.replaceAll('\'$event\'', '$event')}`); 
