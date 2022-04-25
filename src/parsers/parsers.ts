@@ -1,6 +1,5 @@
 import  { htmlVarParser } from './html-var.parser.js';
 import { attrEvtParser } from './attr-evt.parser.js';
-import { evtListenerParser } from './evt-listener.parser.js';
 import { htmlVarReactive } from './html-var-r.parser.js';
 import { attrEvtReactive } from './attr-evt-r.parser.js';
 import { inputValReactive } from './input-val-r.parser.js';
@@ -8,7 +7,7 @@ import { inputValReactive } from './input-val-r.parser.js';
 export class Parsers {
 
   args: any[];
-  once = [htmlVarParser, attrEvtParser, evtListenerParser];
+  once = [htmlVarParser, attrEvtParser];
   reactive = [inputValReactive, htmlVarReactive, attrEvtReactive]
 
   constructor(...args: any[]) {
