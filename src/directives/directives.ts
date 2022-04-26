@@ -1,11 +1,12 @@
 import { ifDirective } from './if.directive.js';
 import { bindDirective } from './bind.directive.js';
+import { eventDirective } from './event.directive.js';
 
 export class Directives {
 
   el: any;
   args: any[];
-  once = [ifDirective, bindDirective];
+  once = [ifDirective, bindDirective, eventDirective];
   reactive = [ifDirective];
 
   constructor(...args: any[]) {
