@@ -57,7 +57,7 @@ const updateEventFunctionArgs = (self: any, attrName: string, attrVal: string) =
   }
 };
 
-export const attrEvtParser = (
+export const attrParser = (
     self: HTMLElement,
     element: HTMLElement,
 ) => {

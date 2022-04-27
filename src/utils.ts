@@ -5,8 +5,8 @@ export const stripParenthesis = (value: string) => {
 
 
 // {variable} -> variable
-export const strip = (value: string, start: string, end: string) => {
-  return value.split(start)[1].split(end)[0];
+export const strip = (val: string, start: string, end: string) => {
+  return val.replace(start,'').replace(end,'').trim();
 };
 
 
@@ -28,10 +28,14 @@ export const addQuoteItems = (value: any[]) => {
 };
 
 // extract {variable}
-export const getVar = (value: string) => {
-  return value.match(/\{.+\}/g)!;
+export const getVar = (val: any) => {
+  return val.match(/{[^{^}^\|]*}/gi)!;
 };
 
+// extract { var | json }
+export const getVarWPipe = (val: any) => {
+  return val.match(/\{[^{^}\n\r]*\|[^{^}\n\r]*\}/gi)
+}
 
 
 
@@ -40,5 +44,6 @@ export default {
   strip,
   addQuote,
   addQuoteItems,
-  getVar
+  getVar,
+  getVarWPipe
 };

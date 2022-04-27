@@ -1,11 +1,16 @@
 import { getVar, strip } from '../utils.js';
 import { settings } from '../enums.js';
 
-export const htmlVarParser = (self: any, element: HTMLElement) => {
+export const htmlParser = (self: any, element: HTMLElement) => {
   // replace with real value {username} > johnny,
-  element.innerHTML.split(' ').forEach(text => {
-    if (getVar(text)) {
-      const var1 = getVar(text)[0];
+  const allVars = element.textContent?.match(/{[^{^}^\|]*}/gi)!;
+  if (!allVars) {
+    return;
+  }
+  allVars.forEach( (text: any) => {
+    text = text.trim();
+    if (text) {
+      const var1 = text
       const cleanVar: string = strip(text, settings.VAR_PARSE.start, settings.VAR_PARSE.end);
       const cmpAttr: any = Array.from(self.attributes).find((e: any) => e.name === cleanVar);
       let result = null;

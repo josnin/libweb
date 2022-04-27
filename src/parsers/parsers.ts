@@ -1,14 +1,14 @@
-import { htmlVarParser } from './html-var.parser.js';
-import { attrEvtParser } from './attr-evt.parser.js';
+import { htmlParser } from './html.parser.js';
+import { attrParser } from './attr.parser.js';
 import { htmlVarReactive } from './html-var-r.parser.js';
 import { attrEvtReactive } from './attr-evt-r.parser.js';
-import { inputValReactive } from './input-val-r.parser.js';
+import { inputValReactive } from './inputr.parser.js';
 import { htmlPipeParser } from './html-pipe.parser.js';
 
 export class Parsers {
 
   args: any[];
-  once = [htmlVarParser, attrEvtParser, htmlPipeParser];
+  once = [htmlParser, attrParser, htmlPipeParser];
   reactive = [inputValReactive, htmlVarReactive, attrEvtReactive];
 
   constructor(...args: any[]) {
