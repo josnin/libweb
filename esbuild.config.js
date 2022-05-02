@@ -1,7 +1,7 @@
 const { build } = require('esbuild')
   
 build({
-  entryPoints: ['src/static/js/index.js'],
+  entryPoints: ['src/libweb.js'],
   outfile: 'dist/bundle.js',
   bundle: true,
   platform: 'node'

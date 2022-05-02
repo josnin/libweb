@@ -14,10 +14,10 @@ export class LibWeb {
     const allElements = this.self.shadowRoot.querySelectorAll('*');
     allElements.forEach( (el: any) => {
       const parser = new Parsers(this.self, el);
-      parser.applyOnce();
+      parser.apply();
 
       const directive = new Directives(this.self, el);
-      el = directive.applyOnce();
+      el = directive.apply();
 
     });
 
@@ -36,13 +36,14 @@ export class LibWeb {
         return varObj[prop] ;
       },
       set: (varObj: any, prop: string, value: string) => {
-        allElements.forEach((element: any) => {
-            // {username} > johny<!--{username}-->
-            const parser = new Parsers(this.self, element, prop, value);
-            parser.applyReactive();
+        allElements.forEach((el: any) => {
 
-            const directive = new Directives(this.self, element, prop, value);
-            element = directive.applyReactive();
+            // {username} > johny<!--{username}-->
+            const parser = new Parsers(this.self, el, prop, value);
+            parser.apply();
+
+            const directive = new Directives(this.self, el, prop, value);
+            el = directive.apply();
 
         });
         varObj[prop] = value;

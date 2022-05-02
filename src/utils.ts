@@ -37,6 +37,19 @@ export const getVarWPipe = (val: any) => {
   return val.match(/\{[^{^}\n\r]*\|[^{^}\n\r]*\}/gi)
 }
 
+export const getVal = (self: any, prop: any) => {
+  let res: any;
+  console.log(self.__reactive)
+  if (self[prop] != undefined) { // applies to shadow var only
+    res = self[prop];
+  } else if (self.__reactive[prop] != undefined) { // applies for reactive variable
+    res = self.__reactive[prop];
+  }  else {
+    res = prop;
+  }
+  return res;
+}
+
 
 
 export default {
@@ -45,5 +58,6 @@ export default {
   addQuote,
   addQuoteItems,
   getVar,
-  getVarWPipe
+  getVarWPipe,
+  getVal
 };

@@ -6,28 +6,20 @@ export class Directives {
 
   el: any;
   args: any[];
-  once = [ifDirective, bindDirective, eventDirective];
-  reactive = [ifDirective];
+  register = [ifDirective, bindDirective, eventDirective];
 
   constructor(...args: any[]) {
     this.args = args;
   }
 
-  applyOnce() {
+  apply() {
     const [self, el, prop, val] = this.args;
-    this.once.forEach(d => {
+    this.register.forEach(d => {
       this.el = d(self, el, prop, val);
     })
     return this.el;
   }
 
-  applyReactive() {
-    const [self, el, prop, val] = this.args;
-    this.reactive.forEach(d => {
-      this.el = d(self, el, prop, val);
-    })
-    return this.el;
-  }
 }
 
 export default {
