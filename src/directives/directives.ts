@@ -15,9 +15,8 @@ export class Directives {
   apply() {
     const [self, el, prop, val] = this.args;
     this.register.forEach(d => {
-      this.el = d(self, el, prop, val);
+      d(self, el, prop, val);
     })
-    return this.el;
   }
 
 }

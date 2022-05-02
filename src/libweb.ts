@@ -9,16 +9,17 @@ export class LibWeb {
   constructor(shadowDom: any, template: any) {
     this.self = shadowDom;
     this.self.attachShadow({mode: 'open'});
-    this.self.shadowRoot.innerHTML = template; // inject
+    this.self.shadowRoot.innerHTML = `<lw>${template}</lw>`; // inject
+    //this.self.shadowRoot.innerHTML = template;
 
-    const allElements = this.self.shadowRoot.querySelectorAll('*');
-    allElements.forEach( (el: any) => {
-      const parser = new Parsers(this.self, el);
-      parser.apply();
+    this.self.shadowRoot.querySelectorAll('*').forEach( (el: any) => {
+        const parser = new Parsers(this.self, el);
+        parser.apply();
+    });
 
+    this.self.shadowRoot.querySelectorAll('*').forEach( (el: any) => {
       const directive = new Directives(this.self, el);
-      el = directive.apply();
-
+      directive.apply();
     });
 
     this.self.__reactive = this.makeReactive(this.self.__reactive);

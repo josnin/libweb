@@ -1,8 +1,7 @@
 
 export const ifDirective = (self: any, el: any, prop: string, val: string) => {
-  const _If = el.getAttribute('_if');
-  if (_If && !self[_If] && !self.__reactive[_If]) {
+  const If = el.getAttribute('If');
+  if (If && !self[If] && !self.__reactive[If]) {
     el.style.display = 'none';
   }
-  return el;
 }

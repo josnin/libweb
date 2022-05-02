@@ -1,9 +1,9 @@
 import { getVar, strip, getVal } from '../utils.js';
 import { settings } from '../enums.js';
 
-export const htmlParser = (self: any, element: HTMLElement, prop: string, val: string) => {
+export const htmlParser = (self: any, el: HTMLElement, prop: string, val: string) => {
   // replace with real value {username} > johnny,
-  const allVars = element.textContent?.match(/{[^{^}^\|]*}/gi);
+  const allVars = el.textContent?.match(/{[^{^}^\|]*}/gi);
   if (!allVars) {
     return;
   }
@@ -13,9 +13,9 @@ export const htmlParser = (self: any, element: HTMLElement, prop: string, val: s
       const cleanVar: string = strip(text, settings.VAR_PARSE.start, settings.VAR_PARSE.end);
       const res = getVal(self, cleanVar);
       if (res) {
-        element.innerHTML = element.innerHTML.replaceAll(
+        el.innerHTML = el.innerHTML.replaceAll(
           text,
-          `<span data-var="${cleanVar}">${res}</span>`
+          `<lw data-var="${cleanVar}">${res}</lw>`
         );
       }
     }

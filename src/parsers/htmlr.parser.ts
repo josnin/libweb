@@ -19,4 +19,5 @@ export const htmlVarReactive = (
     el.textContent =  fVal; 
   }
 
+
 };
