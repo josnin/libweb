@@ -39,7 +39,6 @@ export const getVarWPipe = (val: any) => {
 
 export const getVal = (self: any, prop: any) => {
   let res: any;
-  console.log(self.__reactive)
   if (self[prop] != undefined) { // applies to shadow var only
     res = self[prop];
   } else if (self.__reactive[prop] != undefined) { // applies for reactive variable
