@@ -1,5 +1,5 @@
 
-export const attrParser = (
+export const attrParser = async (
     self: HTMLElement,
     el: HTMLElement,
     prop: string,

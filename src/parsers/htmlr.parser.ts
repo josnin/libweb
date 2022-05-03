@@ -1,6 +1,6 @@
 import { Pipes } from '../pipes/pipes.js';
 
-export const htmlVarReactive = (
+export const htmlVarReactive = async (
   self: any,
   el: HTMLElement,
   prop: string,
@@ -13,7 +13,7 @@ export const htmlVarReactive = (
     if (el.dataset.pipe) {
       const pipeName = el.dataset.pipe;
       const pipes = new Pipes(fVal, pipeName);
-      fVal = pipes.apply();
+      fVal = await pipes.apply();
     }
 
     el.textContent =  fVal; 

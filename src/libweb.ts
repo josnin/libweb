@@ -5,6 +5,7 @@ import { Parsers } from './parsers/parsers.js';
 class LibW extends HTMLElement { }
 customElements.define('lib-w', LibW);
 
+
 export class LibWeb {
 
   self: any;
@@ -13,19 +14,18 @@ export class LibWeb {
     this.self = shadowDom;
     this.self.attachShadow({mode: 'open'});
     this.self.shadowRoot.innerHTML = `<lib-w>${template}</lib-w>`; // inject
-    //this.self.shadowRoot.innerHTML = template;
-
-    this.self.shadowRoot.querySelectorAll('*').forEach( (el: any) => {
-        const parser = new Parsers(this.self, el);
-        parser.apply();
-    });
-
-    this.self.shadowRoot.querySelectorAll('*').forEach( (el: any) => {
-      const directive = new Directives(this.self, el);
-      directive.apply();
-    });
-
+    // this.self.shadowRoot.innerHTML = template;
+    this.runParserAndDirectives();
     this.self.__reactive = this.makeReactive(this.self.__reactive);
+  }
+
+  async runParserAndDirectives(prop: string = '', val: string = '')  {
+
+      const parsers = new Parsers(this.self, prop, val);
+      await parsers.apply();
+
+      const directives = new Directives(this.self, prop, val);
+      await directives.apply();
 
   }
 
@@ -34,22 +34,12 @@ export class LibWeb {
 
     // react when there is a changes in value
     // const allElements = self.shadowRoot.querySelectorAll('[data-bind]');
-    const allElements = this.self.shadowRoot.querySelectorAll('*');
     const handler = {
       get: (varObj: any, prop: string) => {
         return varObj[prop] ;
       },
       set: (varObj: any, prop: string, value: string) => {
-        allElements.forEach((el: any) => {
-
-            // {username} > johny<!--{username}-->
-            const parser = new Parsers(this.self, el, prop, value);
-            parser.apply();
-
-            const directive = new Directives(this.self, el, prop, value);
-            directive.apply();
-
-        });
+        this.runParserAndDirectives(prop, value);
         varObj[prop] = value;
         return true;
       }
@@ -82,4 +72,4 @@ export class LWElement extends HTMLElement {
 export default {
   LibWeb,
   LWElement
-}
+};

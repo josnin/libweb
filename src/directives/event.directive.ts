@@ -1,9 +1,9 @@
 import { getVal } from '../utils.js';
 
-export const eventDirective = (self: any, el: any) => {
+export const eventDirective = async (self: any, el: any) => {
 
   if (el.dataset.event) {
-    el[`on${el.dataset.event}`] = ($event: any) => {
+    el[`on${el.dataset.event}`] = async ($event: any) => {
       try {
         // exec normal func
         const fArgs: any = [];
@@ -15,10 +15,10 @@ export const eventDirective = (self: any, el: any) => {
           }
         });
         const fFn = `${el.dataset.fn}(${fArgs.join()})`;
-        Function(`this.self.${fFn.replaceAll('\'$event\'', 'this.$event')}`).call({self, $event});
+        await Function(`this.self.${fFn.replaceAll('\'$event\'', 'this.$event')}`).call({self, $event});
       } catch {
         // exec direct js, i.e alert(1)
-        Function(`${el.value.replaceAll('\'$event\'', 'this.$event')}`).call({$event});
+        await Function(`${el.value.replaceAll('\'$event\'', 'this.$event')}`).call({$event});
       }
 
     };

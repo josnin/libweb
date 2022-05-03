@@ -13,9 +13,11 @@ export class Directives {
   }
 
   apply() {
-    const [self, el, prop, val] = this.args;
+    const [self, prop, val] = this.args;
     this.register.forEach(d => {
-      d(self, el, prop, val);
+      self.shadowRoot.querySelectorAll('*').forEach(async (el: any) => {
+        await d(self, el, prop, val);
+      });
     })
   }
 

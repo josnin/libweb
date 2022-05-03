@@ -4,6 +4,7 @@ import { htmlVarReactive } from './htmlr.parser.js';
 import { inputValReactive } from './inputr.parser.js';
 import { htmlPipeParser } from './html-pipe.parser.js';
 
+
 export class Parsers {
 
   args: any[];
@@ -20,13 +21,15 @@ export class Parsers {
   }
 
   apply(): void {
-    const [self, el, prop, val] = this.args;
+    const [self, prop, val] = this.args;
     this.register.forEach(d => {
-      d(self, el, prop, val);
+      self.shadowRoot.querySelectorAll('*').forEach(async (el: any) => {
+        await d(self, el, prop, val);
+      });
     });
   }
 }
 
 export default {
-  Parsers
+  Parsers,
 };
