@@ -15,7 +15,7 @@ export const htmlParser = (self: any, el: HTMLElement, prop: string, val: string
       if (res) {
         el.innerHTML = el.innerHTML.replaceAll(
           text,
-          `<lw data-var="${cleanVar}">${res}</lw>`
+          `<lib-w data-var="${cleanVar}">${res}</lib-w>`
         );
       }
     }

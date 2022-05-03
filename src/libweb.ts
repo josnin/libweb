@@ -2,6 +2,9 @@
 import { Directives } from './directives/directives.js';
 import { Parsers } from './parsers/parsers.js';
 
+class LibW extends HTMLElement { }
+customElements.define('lib-w', LibW);
+
 export class LibWeb {
 
   self: any;
@@ -9,7 +12,7 @@ export class LibWeb {
   constructor(shadowDom: any, template: any) {
     this.self = shadowDom;
     this.self.attachShadow({mode: 'open'});
-    this.self.shadowRoot.innerHTML = `<lw>${template}</lw>`; // inject
+    this.self.shadowRoot.innerHTML = `<lib-w>${template}</lib-w>`; // inject
     //this.self.shadowRoot.innerHTML = template;
 
     this.self.shadowRoot.querySelectorAll('*').forEach( (el: any) => {
