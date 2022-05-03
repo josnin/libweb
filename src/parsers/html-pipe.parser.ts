@@ -24,7 +24,7 @@ export const htmlPipeParser = (self: any, el: HTMLElement, prop: string, val: st
 
         el.innerHTML = el.innerHTML.replaceAll(
           text,
-          `<span data-var="${cleanVar}" data-pipe=${pipeName}>${res}</span>`
+          `<lib-w data-var=${cleanVar} data-pipe=${pipeName}>${res}</lib-w>`
         );
       }
     }

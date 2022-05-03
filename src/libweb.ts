@@ -47,7 +47,7 @@ export class LibWeb {
             parser.apply();
 
             const directive = new Directives(this.self, el, prop, value);
-            el = directive.apply();
+            directive.apply();
 
         });
         varObj[prop] = value;

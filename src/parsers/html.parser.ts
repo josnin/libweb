@@ -1,4 +1,4 @@
-import { getVar, strip, getVal } from '../utils.js';
+import { strip, getVal } from '../utils.js';
 import { settings } from '../enums.js';
 
 export const htmlParser = (self: any, el: HTMLElement, prop: string, val: string) => {
@@ -15,7 +15,7 @@ export const htmlParser = (self: any, el: HTMLElement, prop: string, val: string
       if (res) {
         el.innerHTML = el.innerHTML.replaceAll(
           text,
-          `<lib-w data-var="${cleanVar}">${res}</lib-w>`
+          `<lib-w data-var=${cleanVar}>${res}</lib-w>`
         );
       }
     }
