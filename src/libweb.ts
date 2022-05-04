@@ -13,7 +13,7 @@ export class LibWeb {
   constructor(shadowDom: any, template: any) {
     this.self = shadowDom;
     this.self.attachShadow({mode: 'open'});
-    this.self.shadowRoot.innerHTML = `<lib-w>${template}</lib-w>`; // inject
+    this.self.shadowRoot.innerHTML = `<lib-w>${template} <slot></slot></lib-w>`; // inject
     // this.self.shadowRoot.innerHTML = template;
     this.runParserAndDirectives();
     this.self.__reactive = this.makeReactive(this.self.__reactive);

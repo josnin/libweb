@@ -7,7 +7,7 @@ export const eventDirective = async (self: any, el: any) => {
       try {
         // exec normal func
         const fArgs: any = [];
-        el.dataset.args.split(',').forEach((arg: any) => {
+        await el.dataset.args.split(',').forEach((arg: any) => {
           // args aka prop
           const res = getVal(self, arg.trim());
           if (res) {
@@ -15,10 +15,10 @@ export const eventDirective = async (self: any, el: any) => {
           }
         });
         const fFn = `${el.dataset.fn}(${fArgs.join()})`;
-        await Function(`this.self.${fFn.replaceAll('\'$event\'', 'this.$event')}`).call({self, $event});
+        Function(`this.self.${fFn.replaceAll('\'$event\'', 'this.$event')}`).call({self, $event});
       } catch {
         // exec direct js, i.e alert(1)
-        await Function(`${el.value.replaceAll('\'$event\'', 'this.$event')}`).call({$event});
+        Function(`${el.value.replaceAll('\'$event\'', 'this.$event')}`).call({$event});
       }
 
     };

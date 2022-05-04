@@ -11,7 +11,7 @@ export const htmlParser = async (self: any, el: HTMLElement) => {
     text = text.trim();
     if (text) {
       const cleanVar: string = strip(text, settings.VAR_PARSE.start, settings.VAR_PARSE.end);
-      const res = await getVal(self, cleanVar);
+      const res = getVal(self, cleanVar);
       if (res) {
         el.innerHTML = el.innerHTML.replaceAll(
           text,
