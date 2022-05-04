@@ -34,8 +34,12 @@ export class LibWeb {
 
     // react when there is a changes in value
     const handler = {
-      get: (varObj: any, prop: string) => {
-        return varObj[prop] ;
+      get: (varObj: any, prop: string): any => {
+        if (typeof varObj[prop] === 'object' && varObj[prop] !== null) {
+          return new Proxy(varObj[prop], handler);
+        } else {
+          return varObj[prop] ;
+        }
       },
       set: (varObj: any, prop: string, value: string) => {
         this.runParserAndDirectives(prop, value);
