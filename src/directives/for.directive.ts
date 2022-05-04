@@ -1,10 +1,18 @@
+import { getVal } from "../utils.js";
+
 // <div For="i in items"> {i.x} </div>
 export const forDirective = async (self: any, el: any, prop: string, val: string) => {
   const For = await el.getAttribute('*For');
   if (For) {
-    const [alias, items] = For.split('in');
-    const res = Function(`return this.self.${items.trim()}`).call({self});
+    let [alias, items] = For.split('in');
+    items = items.trim();
+    alias = alias.trim();
+    const res = getVal(self, items);
     // el.removeAttribute('*For');
+    el.dataset.uniq = 'l2rkqnta__'; // whatever?
+    const uniq = (+new Date).toString(36);
+
+    // refresh list?
     await res.forEach(async ( v: any, idx: number) => {
       const el2 = el.cloneNode(true);
       await el2.childNodes.forEach( (chld: any) => {
@@ -13,8 +21,17 @@ export const forDirective = async (self: any, el: any, prop: string, val: string
           chld.dataset.index = idx;
         }
       });
-      el.parentNode.insertBefore(el2, el2.nextSibling);
+      el2.dataset.uniq = uniq;
+      //el2.dataset.for = items;
+      //el2.dataset.alias = alias;
+      el.parentNode?.insertBefore(el2, el.nextSibling);
     });
-    el.remove();
+
+    // clear expired list
+    await el.parentNode?.childNodes.forEach( (e: any) => {
+      if (e.dataset?.uniq && e.dataset.uniq !== uniq) {
+        e.remove();
+      }
+    });
   }
 };

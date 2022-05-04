@@ -33,7 +33,6 @@ export class LibWeb {
   makeReactive = (varObj: any) => {
 
     // react when there is a changes in value
-    // const allElements = self.shadowRoot.querySelectorAll('[data-bind]');
     const handler = {
       get: (varObj: any, prop: string) => {
         return varObj[prop] ;
