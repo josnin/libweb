@@ -3,37 +3,38 @@
 * Template syntax
 * Data binding
 * Event handling
-* No Virtual DOM
 
 ## Use directly in browser
 
 ```html 
 
-<!-- latest version -->
-<script src="https://josnin.sgp1.digitaloceanspaces.com/libweb/dist/libweb.js"></script>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>libweb sample</title> 
+</head>
+<body>
+    <app-root></app-root>
+
+   <script type="module">
+     import { LWElement } from 'https://josnin.sgp1.digitaloceanspaces.com/libweb/dist/libweb.js';
+     class BindingComponent extends LWElement { 
+         __reactive = { username: 'darling' };
+         __template = `<input data-bind="username" type="text"          
+                  {username}`;
+     }
+                              
+      customElements.define('app-root', BindingComponent);
+
+   </script> 
+</body>
+</html>
 
 ```
 
-## Data Binding
-### JS
-```js
-import { LWElement } from 'libweb.js';
 
-class BindingComponent extends LWElement { 
-
-  __reactive = { username: 'darling' };
-  __template = `<input data-bind="username" type="text" />
-              <div>Hello {username}</div>`
-
-}
-
-customElements.define('sample-binding', BindingComponent);
-
-```
-### index.html
-```html
-<sample-binding></sample-binding>
-```
 
 ## Create Events
 ```js
@@ -66,6 +67,7 @@ npm install
 ## How to run development server? 
 ```
 cd ~/Documents/libweb/
+npm run build
 npm start
 ```
 
