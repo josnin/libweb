@@ -10,25 +10,20 @@
 
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>libweb sample</title> 
+<head>       
+    <script src="https://josnin.sgp1.digitaloceanspaces.com/libweb/dist/libweb.js"></script>
 </head>
 <body>
-    <app-root></app-root>
-
-   <script type="module">
-     import { LWElement } from 'https://josnin.sgp1.digitaloceanspaces.com/libweb/dist/libweb.js';
+   <app-root></app-root>
+    
+   <script type="module">     
      class BindingComponent extends LWElement { 
          __reactive = { username: 'darling' };
-         __template = `<input data-bind="username" type="text"          
-                  {username}`;
+         __template = `<input data-bind="username" type="text"/>  {username}`;
      }
-                              
-      customElements.define('app-root', BindingComponent);
-
+     customElements.define('app-root', BindingComponent);
    </script> 
+    
 </body>
 </html>
 
