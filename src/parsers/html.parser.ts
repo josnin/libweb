@@ -7,7 +7,7 @@ export const htmlParser = async (self: any, el: HTMLElement) => {
   if (!allVars) {
     return;
   }
-  await allVars.forEach(async (text: any) => {
+  allVars.forEach((text: any) => {
     text = text.trim();
     if (text) {
       const cleanVar: string = strip(text, settings.VAR_PARSE.start, settings.VAR_PARSE.end);

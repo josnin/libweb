@@ -13,7 +13,7 @@ const tagBeginEnd = (...args: any[]) => {
 
 };
 
-const refreshList = async (...args: any[]) => {
+const refreshList =  (...args: any[]) => {
   const [self, el, items, alias, uniq] = args;
   const wBegin = false;
   const wEnd = false;
@@ -21,30 +21,28 @@ const refreshList = async (...args: any[]) => {
   el.dataset.for = items;
   el.dataset.alias = alias;
   // el.dataset.index ?
-  await res.forEach(async (v: any , idx: any) => {
+  res.forEach((v: any , idx: any) => {
     const el2 = el.cloneNode(true);
     let obj = {} as any;
-    await el2.childNodes.forEach( (chld: any) => {
+    el2.childNodes.forEach( (chld: any) => {
       if (chld.dataset?.var) {
         const [itemVar, itemVal] = chld.dataset.var.split('.');
         if (alias === itemVar) {
           obj[alias] = v;
           chld.textContent = obj[alias][itemVal];
           chld.dataset.index = idx;
-        } else {
-          console.warn(`*For directives alias ${alias} not match w. {${chld.dataset.var}}`)
         }
       }
     });
     el2.dataset.uniq = uniq;
     tagBeginEnd(res, el2, idx, wBegin, wEnd);
 
-    await el.parentNode?.insertBefore(el2, el);
+    el.parentNode?.insertBefore(el2, el);
 
   });
 };
 
-const clearExpired = async (...args: any[]) => {
+const clearExpired = (...args: any[]) => {
   const [el, uniq, items, alias] = args;
   if (el.parentNode?.childNodes) {
     Array.from(el.parentNode.childNodes).map( (e: any) => {
@@ -62,7 +60,7 @@ const clearExpired = async (...args: any[]) => {
 
 // <div For="i in items"> {i.x} </div>
 export const forDirective = async (self: any, el: any, prop: string, val: string) => {
-  const For = await el.getAttribute('*For');
+  const For = el.getAttribute('*For');
   if (For) {
     const uniq = (+new Date).toString(36);
     let [alias, items] = For.split('in');
@@ -71,8 +69,8 @@ export const forDirective = async (self: any, el: any, prop: string, val: string
     el.dataset.uniq = 'l2rkqnta__'; // (+new Date).toString(36);
     el.removeAttribute('*For');
 
-    await refreshList(self, el, items, alias, uniq);
-    await clearExpired(el, uniq, items, alias);
+    refreshList(self, el, items, alias, uniq);
+    clearExpired(el, uniq, items, alias);
   } else if (el.dataset?.for && el.dataset?.begin && el.dataset.for === prop) {
     const uniq = (+new Date).toString(36);
     const items = el.dataset.for;
@@ -80,8 +78,8 @@ export const forDirective = async (self: any, el: any, prop: string, val: string
     delete el.dataset.begin; // set to expired
     delete el.dataset.end;
 
-    await refreshList(self, el, items, alias, uniq);
-    await clearExpired(el, uniq, items, alias);
+    refreshList(self, el, items, alias, uniq);
+    clearExpired(el, uniq, items, alias);
 
   }
 };
