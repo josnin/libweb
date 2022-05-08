@@ -13,7 +13,6 @@ const tagBeginEnd = (...args: any[]) => {
 
 };
 
-
 const refreshList = async (...args: any[]) => {
   const [self, el, items, alias, uniq] = args;
   const wBegin = false;
@@ -22,12 +21,19 @@ const refreshList = async (...args: any[]) => {
   el.dataset.for = items;
   el.dataset.alias = alias;
   // el.dataset.index ?
-  await res.forEach(async ( v: any, idx: number) => {
+  await res.forEach(async (v: any , idx: any) => {
     const el2 = el.cloneNode(true);
+    let obj = {} as any;
     await el2.childNodes.forEach( (chld: any) => {
       if (chld.dataset?.var) {
-        chld.textContent = v[chld.dataset.var.split('.')[1]];
-        chld.dataset.index = idx;
+        const [itemVar, itemVal] = chld.dataset.var.split('.');
+        if (alias === itemVar) {
+          obj[alias] = v;
+          chld.textContent = obj[alias][itemVal];
+          chld.dataset.index = idx;
+        } else {
+          console.warn(`*For directives alias ${alias} not match w. {${chld.dataset.var}}`)
+        }
       }
     });
     el2.dataset.uniq = uniq;
