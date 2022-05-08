@@ -2,6 +2,10 @@
 import { Directives } from './directives/directives.js';
 import { Parsers } from './parsers/parsers.js';
 
+declare global {
+  var LWElement: any;
+}
+
 class LibW extends HTMLElement { }
 customElements.define('lib-w', LibW);
 
@@ -71,8 +75,5 @@ export class LWElement extends HTMLElement {
 
 }
 
+globalThis.LWElement = LWElement;
 
-export default {
-  LibWeb,
-  LWElement
-};
