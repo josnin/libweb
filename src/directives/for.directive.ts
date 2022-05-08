@@ -1,10 +1,27 @@
 import { getVal } from '../utils.js';
 
+const tagBeginEnd = (...args: any[]) => {
+    // tag begin / end
+  let [res, el2, idx, wBegin, wEnd] = args;
+  if (idx === 0 && !wBegin) {
+    el2.dataset.begin = true;
+    wBegin = el2.dataset.begin;
+  } else if (res.length - 1 === idx && !wEnd) {
+    el2.dataset.end = true;
+    wEnd = el2.dataset.end;
+  }
+
+};
+
+
 const refreshList = async (...args: any[]) => {
   const [self, el, items, alias, uniq] = args;
-  let wBegin = false;
-  let wEnd = false;
+  const wBegin = false;
+  const wEnd = false;
   const res = getVal(self, items);
+  el.dataset.for = items;
+  el.dataset.alias = alias;
+  // el.dataset.index ?
   await res.forEach(async ( v: any, idx: number) => {
     const el2 = el.cloneNode(true);
     await el2.childNodes.forEach( (chld: any) => {
@@ -13,35 +30,25 @@ const refreshList = async (...args: any[]) => {
         chld.dataset.index = idx;
       }
     });
-
-    // always reset
-    delete el2.dataset.begin;
-    delete el2.dataset.end;
-
-    // tag begin / end
-    if (idx === 0 && !wBegin) {
-      el2.dataset.begin = true;
-      wBegin = el2.dataset.begin;
-    } else if (res.length - 1 === idx && !wEnd) {
-      el2.dataset.end = true;
-      wEnd = el2.dataset.end;
-    }
-
     el2.dataset.uniq = uniq;
-    el2.dataset.for = items;
-    el2.dataset.alias = alias;
-    // el2.dataset.index ?
+    tagBeginEnd(res, el2, idx, wBegin, wEnd);
+
     await el.parentNode?.insertBefore(el2, el);
 
   });
 };
 
 const clearExpired = async (...args: any[]) => {
-  const [el, uniq] = args;
+  const [el, uniq, items, alias] = args;
   if (el.parentNode?.childNodes) {
     Array.from(el.parentNode.childNodes).map( (e: any) => {
-      if (e.dataset?.uniq && e.dataset.uniq !== uniq) {
-        e.remove(); // map has no implication removing while looping compared to forEach?
+      // check dataset begin to make sure wont clea unrelated items
+      if (e.dataset?.begin) { return; }
+
+      // map has no implication removing while looping compared to forEach?
+      if (e.dataset?.uniq && e.dataset.uniq !== uniq &&
+        e.dataset?.for && e.dataset.for === items && e.dataset.alias === alias) {
+        e.remove();
       }
     });
   }
@@ -59,14 +66,16 @@ export const forDirective = async (self: any, el: any, prop: string, val: string
     el.removeAttribute('*For');
 
     await refreshList(self, el, items, alias, uniq);
-    await clearExpired(el, uniq);
-  } else if (el.dataset?.for && el.dataset?.begin) {
+    await clearExpired(el, uniq, items, alias);
+  } else if (el.dataset?.for && el.dataset?.begin && el.dataset.for === prop) {
     const uniq = (+new Date).toString(36);
     const items = el.dataset.for;
     const alias = el.dataset.alias;
+    delete el.dataset.begin; // set to expired
+    delete el.dataset.end;
 
     await refreshList(self, el, items, alias, uniq);
-    await clearExpired(el, uniq);
+    await clearExpired(el, uniq, items, alias);
 
   }
 };
