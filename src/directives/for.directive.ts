@@ -3,7 +3,7 @@ import { getVal } from '../utils.js';
 const tagBeginEnd = (...args: any[]) => {
     // tag begin / end
   let [res, el2, idx, wBegin, wEnd] = args;
-  if (idx === 0 && !wBegin) {
+  if (idx == 0 && !wBegin) { // for...of index return string???
     el2.dataset.begin = true;
     wBegin = el2.dataset.begin;
   } else if (res.length - 1 === idx && !wEnd) {
@@ -21,10 +21,10 @@ const refreshList =  (...args: any[]) => {
   el.dataset.for = items;
   el.dataset.alias = alias;
   // el.dataset.index ?
-  res.forEach((v: any , idx: any) => {
+  for (const [idx, v] of Object.entries(res)) { // for..of index returns string?
     const el2 = el.cloneNode(true);
-    let obj = {} as any;
-    el2.childNodes.forEach( (chld: any) => {
+    const obj = {} as any;
+    for (const chld of el2.childNodes) {
       if (chld.dataset?.var) {
         const [itemVar, itemVal] = chld.dataset.var.split('.');
         if (alias === itemVar) {
@@ -33,13 +33,13 @@ const refreshList =  (...args: any[]) => {
           chld.dataset.index = idx;
         }
       }
-    });
+    }
     el2.dataset.uniq = uniq;
     tagBeginEnd(res, el2, idx, wBegin, wEnd);
 
     el.parentNode?.insertBefore(el2, el);
 
-  });
+  }
 };
 
 const clearExpired = (...args: any[]) => {

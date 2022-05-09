@@ -9,10 +9,10 @@ export class Parsers {
 
   args: any[];
   register = [
-    htmlParser, 
-    htmlPipeParser, 
-    attrParser, 
-    inputValReactive, 
+    htmlParser,
+    htmlPipeParser,
+    attrParser,
+    inputValReactive,
     htmlVarReactive
   ];
 
@@ -22,11 +22,11 @@ export class Parsers {
 
   apply(): void {
     const [self, prop, val] = this.args;
-    this.register.forEach(d => {
-      self.shadowRoot.querySelectorAll('*').forEach((el: any) => {
+    for (const d of this.register) {
+      for (const el of self.shadowRoot.querySelectorAll('*')) {
         d(self, el, prop, val);
-      });
-    });
+      }
+    }
   }
 }
 

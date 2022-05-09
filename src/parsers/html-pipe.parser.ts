@@ -9,7 +9,7 @@ export const htmlPipeParser = async (self: any, el: HTMLElement) => {
     return;
   }
 
-  varWPipe.forEach( async (text: any) => {
+  for (let text of varWPipe) {
     text = text.trim();
     if (text) {
       const tmp = strip(text, settings.VAR_PARSE.start, settings.VAR_PARSE.end);

@@ -8,8 +8,8 @@ export class Directives {
   el: any;
   args: any[];
   register = [
-    ifDirective, 
-    bindDirective, 
+    ifDirective,
+    bindDirective,
     eventDirective,
     forDirective
   ];
@@ -18,17 +18,17 @@ export class Directives {
     this.args = args;
   }
 
-  apply() {
+  apply(): void {
     const [self, prop, val] = this.args;
-    this.register.forEach(d => {
-      self.shadowRoot.querySelectorAll('*').forEach((el: any) => {
+    for (const d of this.register) {
+      for ( const el of self.shadowRoot.querySelectorAll('*') ) {
         d(self, el, prop, val);
-      });
-    })
+      }
+    }
   }
 
 }
 
 export default {
   Directives
-}
+};
