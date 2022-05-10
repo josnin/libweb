@@ -29,5 +29,5 @@ export const htmlPipeParser = async (self: any, el: HTMLElement) => {
         );
       }
     }
-  });
+  }
 };

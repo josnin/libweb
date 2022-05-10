@@ -1,7 +1,7 @@
 import { ifDirective } from './if.directive.js';
 import { bindDirective } from './bind.directive.js';
 import { eventDirective } from './event.directive.js';
-import { forDirective } from './for.directive.js';
+import { forOfDirective } from './forOf.directive.js';
 
 export class Directives {
 
@@ -11,7 +11,7 @@ export class Directives {
     ifDirective,
     bindDirective,
     eventDirective,
-    forDirective
+    forOfDirective
   ];
 
   constructor(...args: any[]) {

@@ -14,9 +14,9 @@ export class Pipes {
     let res : any;
     if (name) {
       res = val;
-      this.register.forEach(d => {
+      for (const d of this.register) {
         res = d(res, name);
-      })
+      }
     }
     return res;
   }

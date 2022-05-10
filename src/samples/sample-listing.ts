@@ -6,7 +6,7 @@ class ListingComponent extends LWElement {
     { name: "Elsa", age: 1},
     { name : "Anna", age: 33},
   ]
-  __template: any = `<ul><li *For='i in items'>name: {i.name}  age:{i.age}</li>`;
+  __template: any = `<ul><li *For='(idx, val) of items'>index:{idx} name: {val.name}  age:{val.age}</li>`;
 }
   
 customElements.define('sample-listing', ListingComponent);
