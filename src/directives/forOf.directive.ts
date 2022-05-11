@@ -47,11 +47,11 @@ const refreshList =  (...args: any[]) => {
           if (alias === itemVar) {
             obj[alias] = v;
             if (obj[alias][itemVal]) {  chld.textContent = obj[alias][itemVal]; }
-            chld.dataset.index = idx;
           }
+        } else if (alias === chld.dataset.var) {
+            if (v) { chld.textContent = v };
         } else if (index === chld.dataset.var) {
-            obj[index] = idx;
-            chld.textContent = obj[index];
+            if (idx) { chld.textContent = idx };
         }
       }
     }
