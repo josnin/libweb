@@ -1,8 +1,8 @@
 import { getVal, stripParenthesis } from '../utils.js';
 
 const getAliasItemsIndex = (...args: any[]) => {
-  const [For] = args;
-  let [tmp, items] = For.split('of');
+  const [forOf] = args;
+  let [tmp, items] = forOf.split('of');
   let alias, index;
 
   if (tmp.match(/\(.+\)/)?.length > 0) {
@@ -32,13 +32,11 @@ const tagBeginEnd = (...args: any[]) => {
 };
 
 const refreshList =  (...args: any[]) => {
-  const [self, el, items, alias, uniq, index] = args;
+  const [self, el, uniq] = args;
+  const { alias, index, for: items } = el.dataset;
   const wBegin = false;
   const wEnd = false;
   const res = getVal(self, items);
-  el.dataset.for = items;
-  el.dataset.alias = alias;
-  el.dataset.index = index;
   for (const [idx, v] of Object.entries(res)) { // for..of index returns string?
     const el2 = el.cloneNode(true);
     const obj = {} as any;
@@ -51,9 +49,9 @@ const refreshList =  (...args: any[]) => {
             if (obj[alias][itemVal]) {  chld.textContent = obj[alias][itemVal]; }
             chld.dataset.index = idx;
           }
-        } else if (el.dataset.index === chld.dataset.var) {
-            obj[el.dataset.index] = idx;
-            chld.textContent = obj[el.dataset.index];
+        } else if (index === chld.dataset.var) {
+            obj[index] = idx;
+            chld.textContent = obj[index];
         }
       }
     }
@@ -66,7 +64,8 @@ const refreshList =  (...args: any[]) => {
 };
 
 const clearExpired = (...args: any[]) => {
-  const [el, uniq, items, alias] = args;
+  const [el, uniq] = args;
+  const { for: items, alias } = el.dataset;
   if (el.parentNode?.childNodes) {
     Array.from(el.parentNode.childNodes).map( (e: any) => {
       // check dataset begin to make sure wont clea unrelated items
@@ -83,25 +82,26 @@ const clearExpired = (...args: any[]) => {
 
 // <div For="i in items"> {i.x} </div>
 export const forOfDirective = async (self: any, el: any, prop: string, val: string) => {
-  const For = el.getAttribute('*For');
-  if (For) {
+  const forOf = el.getAttribute('*For');
+  if (forOf) {
     const uniq = (+new Date).toString(36);
-    const { index, alias, items} = getAliasItemsIndex(For);
+    const { index, alias, items} = getAliasItemsIndex(forOf);
     el.dataset.uniq = 'l2rkqnta__'; // (+new Date).toString(36);
+    el.dataset.for = items;
+    el.dataset.alias = alias;
+    el.dataset.index = index;
     el.removeAttribute('*For');
 
-    refreshList(self, el, items, alias, uniq, index);
+    refreshList(self, el, uniq);
     clearExpired(el, uniq, items, alias);
   } else if (el.dataset?.for && el.dataset?.begin && el.dataset.for === prop) {
     const uniq = (+new Date).toString(36);
-    const items = el.dataset.for;
-    const alias = el.dataset.alias;
-    const index = el.dataset.index;
     delete el.dataset.begin; // set to expired
     delete el.dataset.end;
 
-    refreshList(self, el, items, alias, uniq, index);
-    clearExpired(el, uniq, items, alias);
+    refreshList(self, el, uniq);
+    clearExpired(el, uniq);
 
   }
 };
+
