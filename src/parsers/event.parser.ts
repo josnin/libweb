@@ -7,6 +7,7 @@ export const eventParser = async (...args: HTMLElement[]) => {
       el.dataset.event = attr.name.split('@')[1];
       el.dataset.fn = attr.value.split('(')[0];
       el.dataset.args = attr.value.split('(')[1].split(')')[0];
+      el.dataset.js = attr.value;
       el.removeAttribute(attr.name);
     }
   }

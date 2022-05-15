@@ -18,7 +18,7 @@ export const eventDirective = async (self: any, el: any) => {
         Function(`this.self.${fFn.replaceAll('\'$event\'', 'this.$event')}`).call({self, $event});
       } catch {
         // exec direct js, i.e alert(1)
-        Function(`${el.value.replaceAll('\'$event\'', 'this.$event')}`).call({$event});
+        Function(`${el.dataset.js.replaceAll('\'$event\'', 'this.$event')}`).call({$event});
       }
 
     };
