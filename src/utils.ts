@@ -43,6 +43,8 @@ export const getVal = (self: any, prop: any) => {
     res = self[prop];
   } else if (self.__reactive[prop] != undefined) { // applies for reactive variable
     res = self.__reactive[prop];
+  } else if (self.getAttribute(prop)) {
+    res = self.getAttribute(prop);
   }  else {
     res = prop;
   }
