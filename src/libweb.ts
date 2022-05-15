@@ -18,7 +18,7 @@ export class LibWeb {
   constructor(shadowDom: any, template: any) {
     this.self = shadowDom;
     this.self.attachShadow({mode: 'open'});
-    this.createFragment(template);
+    this.createTplFragment(template);
     this.runParserAndDirectives();
     this.self.__reactive = this.makeReactive(this.self.__reactive);
   }
@@ -29,7 +29,7 @@ export class LibWeb {
     this.fragment.prepend(style)
   }
 
-  createFragment = (template: string) => {
+  createTplFragment = (template: string) => {
     this.fragment = new DocumentFragment;
     const libw = document.createElement('lib-w');
     const tpl = document.createElement('template');
