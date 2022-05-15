@@ -15,27 +15,31 @@ export class LibWeb {
   self: any;
   fragment: any;
 
-  constructor(shadowDom: any, template: any) {
+  constructor(shadowDom: any) {
     this.self = shadowDom;
     this.self.attachShadow({mode: 'open'});
-    this.createTplFragment(template);
+    this.createTplFragment(this.self.__template);
     this.runParserAndDirectives();
     this.self.__reactive = this.makeReactive(this.self.__reactive);
   }
 
   prependStyle = () => {
-    const style = document.createElement('style');
-    style.textContent = this.self.__styles;
-    this.fragment.prepend(style)
+    if (this.self.__styles) {
+      const style = document.createElement('style');
+      style.textContent = this.self.__styles;
+      this.fragment.prepend(style)
+    }
   }
 
   createTplFragment = (template: string) => {
-    this.fragment = new DocumentFragment;
-    const libw = document.createElement('lib-w');
-    const tpl = document.createElement('template');
-    tpl.innerHTML = template;
-    this.fragment.appendChild(libw); 
-    this.fragment.querySelector('lib-w')?.appendChild(tpl.content.cloneNode(true));
+      this.fragment = new DocumentFragment;
+      const libw = document.createElement('lib-w');
+      this.fragment.appendChild(libw); 
+      if (this.self.__template) {
+        const tpl = document.createElement('template');
+        tpl.innerHTML = template;
+        this.fragment.querySelector('lib-w')?.appendChild(tpl.content.cloneNode(true));
+      }
   }
 
   runParserAndDirectives = async () =>  {
@@ -44,6 +48,8 @@ export class LibWeb {
 
     // @todo not related to parser & directives?
     this.prependStyle();
+    const slot = document.createElement('slot');
+    this.fragment.appendChild(slot);
     this.self.shadowRoot.appendChild(this.fragment);
 
     const directives = new Directives(this.self, '', '');
@@ -87,7 +93,7 @@ export class LWElement extends HTMLElement {
   }
 
   connectedCallback() {
-    const lw = new LibWeb(this, this.__template);
+    const lw = new LibWeb(this);
   }
 
 }
