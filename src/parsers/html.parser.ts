@@ -1,7 +1,8 @@
 import { strip, getVal } from '../utils.js';
 import { settings } from '../enums.js';
 
-export const htmlParser = async (self: any, el: HTMLElement) => {
+export const htmlParser = async (...args: any[]) => {
+  const [self, el] = args;
   // replace with real value {username} > johnny,
   const allVars = el.textContent?.match(/{[^{^}^\|]*}/gi);
   if (!allVars) {

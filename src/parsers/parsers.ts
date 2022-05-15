@@ -1,8 +1,6 @@
 import { htmlParser } from './html.parser.js';
-import { attrParser } from './attr.parser.js';
-import { htmlVarReactive } from './htmlr.parser.js';
-import { inputValReactive } from './inputr.parser.js';
 import { htmlPipeParser } from './html-pipe.parser.js';
+import { eventParser } from './event.parser.js';
 
 
 export class Parsers {
@@ -11,20 +9,18 @@ export class Parsers {
   register = [
     htmlParser,
     htmlPipeParser,
-    attrParser,
-    inputValReactive,
-    htmlVarReactive
+    eventParser
   ];
 
   constructor(...args: any[]) {
     this.args = args;
   }
 
-  apply(): void {
-    const [self, prop, val] = this.args;
+  async apply(): Promise<void> {
+    const [self] = this.args;
     for (const d of this.register) {
       for (const el of self.shadowRoot.querySelectorAll('*')) {
-        d(self, el, prop, val);
+        await d(self, el);
       }
     }
   }

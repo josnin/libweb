@@ -3,12 +3,14 @@ import { bindDirective } from './bind.directive.js';
 import { eventDirective } from './event.directive.js';
 import { forOfDirective } from './forOf.directive.js';
 import { noBindDirective } from './noBind.directive.js';
+import { varDirective } from './var.directive.js';
 
 export class Directives {
 
   el: any;
   args: any[];
   register = [
+    varDirective,
     ifDirective,
     bindDirective,
     eventDirective,
@@ -20,11 +22,11 @@ export class Directives {
     this.args = args;
   }
 
-  apply(): void {
+  async apply(): Promise<void> {
     const [self, prop, val] = this.args;
     for (const d of this.register) {
       for ( const el of self.shadowRoot.querySelectorAll('*') ) {
-        d(self, el, prop, val);
+        await d(self, el, prop, val);
       }
     }
   }

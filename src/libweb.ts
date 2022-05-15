@@ -23,16 +23,13 @@ export class LibWeb {
     this.self.__reactive = this.makeReactive(this.self.__reactive);
   }
 
-  async runParserAndDirectives(prop: string = '', val: string = '')  {
+  async runParserAndDirectives()  {
+    const parsers = new Parsers(this.self);
+    await parsers.apply();
 
-      const parsers = new Parsers(this.self, prop, val);
-      await parsers.apply();
-
-      const directives = new Directives(this.self, prop, val);
-      await directives.apply();
-
+    const directives = new Directives(this.self, '', '');
+    await directives.apply();
   }
-
 
   makeReactive = (varObj: any) => {
 
@@ -45,9 +42,10 @@ export class LibWeb {
           return varObj[prop] ;
         }
       },
-      set: (varObj: any, prop: string, value: string) => {
-        this.runParserAndDirectives(prop, value);
-        varObj[prop] = value;
+      set: (varObj: any, prop: string, val: string) => {
+        const directives = new Directives(this.self, prop, val);
+        directives.apply();
+        varObj[prop] = val;
         return true;
       }
     };

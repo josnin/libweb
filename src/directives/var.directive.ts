@@ -1,11 +1,7 @@
 import { Pipes } from '../pipes/pipes.js';
 
-export const htmlVarReactive = async (
-  self: any,
-  el: HTMLElement,
-  prop: string,
-  val: string
-) => {
+export const varDirective = async (...args: any[]) => {
+  const [self, el, prop, val] = args;
 
   if (el.dataset.var !== undefined && el.dataset.var === prop) {
     let fVal = val;
@@ -18,6 +14,5 @@ export const htmlVarReactive = async (
 
     el.textContent =  fVal; 
   }
-
 
 };

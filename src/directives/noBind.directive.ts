@@ -1,3 +1,15 @@
+const updateContent = (...args: any[]) => {
+  const [el] = args;
+  for (const chld of el.childNodes) {
+    if (chld.dataset?.var) {
+      if (chld.dataset?.pipe) {
+        chld.textContent =  `{${chld.dataset.var} | ${chld.dataset.pipe}}`;
+      } else {
+        chld.textContent =  `{${chld.dataset.var}}`;
+      }
+    }
+  }
+}
 
 export const noBindDirective = async (...args: any[]) => {
   const [self, el, prop, val] = args;
@@ -5,15 +17,8 @@ export const noBindDirective = async (...args: any[]) => {
   if (noBind != null) {
     el.removeAttribute('nobind');
     el.dataset.nobind = '';
-
-    for (const chld of el.childNodes) {
-      if (chld.dataset?.var) {
-        if (chld.dataset?.pipe) {
-          chld.textContent =  `{${chld.dataset.var} | ${chld.dataset.pipe}}`;
-        } else {
-          chld.textContent =  `{${chld.dataset.var}}`;
-        }
-      }
-    }
+    updateContent(el)
+  } else if(el.dataset?.nobind != null) {
+    updateContent(el)
   }
 };

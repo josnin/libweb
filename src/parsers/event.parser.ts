@@ -1,10 +1,6 @@
 
-export const attrParser = async (
-    self: HTMLElement,
-    el: HTMLElement,
-    prop: string,
-    val: string
-) => {
+export const eventParser = async (...args: HTMLElement[]) => {
+  const [self, el] = args;
   for (const [_, attr] of Object.entries(el.attributes)) {
 
     if (attr.name.startsWith('@')) {
