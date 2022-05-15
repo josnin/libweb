@@ -17,9 +17,9 @@ export class Parsers {
   }
 
   async apply(): Promise<void> {
-    const [self] = this.args;
+    const [self, fragment] = this.args;
     for (const d of this.register) {
-      for (const el of self.shadowRoot.querySelectorAll('*')) {
+      for (const el of fragment.querySelectorAll('*')) {
         await d(self, el);
       }
     }

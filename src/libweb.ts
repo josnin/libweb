@@ -13,19 +13,38 @@ customElements.define('lib-w', LibW);
 export class LibWeb {
 
   self: any;
+  fragment: any;
 
   constructor(shadowDom: any, template: any) {
     this.self = shadowDom;
     this.self.attachShadow({mode: 'open'});
-    this.self.shadowRoot.innerHTML = `<lib-w>${template} <slot></slot></lib-w>`; // inject
-    // this.self.shadowRoot.innerHTML = template;
+    this.createFragment(template);
     this.runParserAndDirectives();
     this.self.__reactive = this.makeReactive(this.self.__reactive);
   }
 
-  async runParserAndDirectives()  {
-    const parsers = new Parsers(this.self);
+  prependStyle = () => {
+    const style = document.createElement('style');
+    style.textContent = this.self.__styles;
+    this.fragment.prepend(style)
+  }
+
+  createFragment = (template: string) => {
+    this.fragment = new DocumentFragment;
+    const libw = document.createElement('lib-w');
+    const tpl = document.createElement('template');
+    tpl.innerHTML = template;
+    this.fragment.appendChild(libw); 
+    this.fragment.querySelector('lib-w')?.appendChild(tpl.content.cloneNode(true));
+  }
+
+  runParserAndDirectives = async () =>  {
+    const parsers = new Parsers(this.self, this.fragment);
     await parsers.apply();
+
+    // @todo not related to parser & directives?
+    this.prependStyle();
+    this.self.shadowRoot.appendChild(this.fragment);
 
     const directives = new Directives(this.self, '', '');
     await directives.apply();
