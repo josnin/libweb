@@ -1,4 +1,4 @@
-import { getVal, isFn } from "../utils.js";
+import { getVal, isFn, getFnVal } from "../utils.js";
 
 export const attrParser = async (self: any, el: HTMLElement) => {
   //const [self, el] = args; // @todo handling self any el HTML element??
@@ -11,14 +11,17 @@ export const attrParser = async (self: any, el: HTMLElement) => {
       const { res, get } = getVal(self, attr.value); 
       if (get && res && typeof(res) === 'string') { // string
         el.setAttribute(fName, res); 
+
       } else if (!get && !isFn(res)) {  // boolean
         // inline js, not found in the variable
         const fVal = Function(`return ${res}`)();
         if (fVal && typeof(fVal) === 'boolean') { el.setAttribute(fName, ''); }
+
       } else if (!get && isFn(res)){ // function
-        const fVal = Function(`return this.self.${res}`).call({self});
-        el.setAttribute(fName, fVal)
+        const { fnVal } = getFnVal(self, el, res);
+        el.setAttribute(fName, fnVal)
       }
+
       el.removeAttribute(attr.name)
       attrObj[fName] = attr.value
     }

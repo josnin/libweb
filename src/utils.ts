@@ -59,19 +59,49 @@ export const getVal = (self: any, prop: any) => {
 }
 
 export const updateFnArgs = (...args: any[]) => {
-  const [el, fn, args2] = args;
+  const [el, fn, fnArgs] = args;
   const fArgs: any = [];
-  args2.split(',').forEach((arg: any) => {
-    // args aka prop
-    const { res, get } = getVal(self, arg.trim());
-    if (res) {  fArgs.push(`'${res}'`); }
-  });
-  const fFn = `${fn}(${fArgs.join()})`;
+  let fFn;
+
+  if (fnArgs.length > 0 ) {
+    fnArgs.split(',').forEach((arg: any) => {
+      // args aka prop
+      const { res, get } = getVal(self, arg.trim());
+      if (res) {  fArgs.push(`'${res}'`); }
+    });
+  }
+
+  if (fArgs.length > 0 ) {
+    fFn = `${fn}(${fArgs.join()})`;
+  } else {
+    fFn = `${fn}()`;
+  }
+
   return { fFn }
+}
+
+export const getFnArgs = (val: any) => {
+  const fn = val.split('(')[0];
+  const fnArgs = val.split('(')[1].split(')')[0];
+
+  return { fn, fnArgs }
+
 }
 
 export const isFn = (val: any) => {
 
   //console.log(val.match(/\(.+\)/));
   return val.match(/\(/)?.length > 0;
+}
+
+export const getFnVal = (...args: any[]) => {
+  const [self, el, val] = args;
+  const { fn, fnArgs } = getFnArgs(val);
+  const { fFn } = updateFnArgs(el, fn, fnArgs);
+  const fnVal = Function(`return this.self.${fFn}`).call({self});
+
+  return {
+    fnVal
+  }
+  
 }
