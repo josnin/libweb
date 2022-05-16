@@ -1,10 +1,12 @@
 import { ifDirective } from './if.directive.js';
 import { bindDirective } from './bind.directive.js';
 import { eventDirective } from './event.directive.js';
-import { forOfDirective } from './forOf.directive.js';
-import { noBindDirective } from './noBind.directive.js';
+import { forOfDirective } from './for-of.directive.js';
+import { noBindDirective } from './no-bind.directive.js';
 import { varDirective } from './var.directive.js';
-import { attrDirective  } from './attr.directive.js';
+import { strAttrDirective  } from './string-attr.directive.js';
+import { boolAttrDirective } from './boolean-attr.directive.js';
+import { fnAttrDirective } from './function-attr.directive.js';
 
 export class Directives {
 
@@ -12,7 +14,9 @@ export class Directives {
   args: any[];
   register = [
     varDirective,
-    attrDirective,
+    strAttrDirective,
+    boolAttrDirective,
+    fnAttrDirective,
     ifDirective,
     bindDirective,
     eventDirective,

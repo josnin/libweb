@@ -1,21 +1,13 @@
-import { getVal } from '../utils.js';
+import { updateFnArgs } from '../utils.js';
 
-export const eventDirective = async (self: any, el: any) => {
-
+export const eventDirective = async (...args: any[]) => {
+  const [self, el] = args;
   if (el.dataset.event) {
     el[`on${el.dataset.event}`] = async ($event: any) => {
       try {
-        // exec normal func
-        const fArgs: any = [];
-        await el.dataset.args.split(',').forEach((arg: any) => {
-          // args aka prop
-          const { res, get } = getVal(self, arg.trim());
-          if (res) {
-            fArgs.push(`'${res}'`);
-          }
-        });
-        const fFn = `${el.dataset.fn}(${fArgs.join()})`;
-        Function(`this.self.${fFn.replaceAll('\'$event\'', 'this.$event')}`).call({self, $event});
+      // exec normal func
+      const { fFn } = updateFnArgs(el, el.dataset.fn, el.dataset.args);
+      Function(`this.self.${fFn.replaceAll('\'$event\'', 'this.$event')}`).call({self, $event});
       } catch {
         // exec direct js, i.e alert(1)
         Function(`${el.dataset.js.replaceAll('$event', 'this.$event')}`).call({$event});

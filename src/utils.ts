@@ -40,7 +40,10 @@ export const getVarWPipe = (val: any) => {
 export const getVal = (self: any, prop: any) => {
   let res: any;
   let get: boolean = false;
-  if (self[prop] != undefined) { // applies to shadow var only
+  if (prop === '$event') {
+    res = prop;
+    get = true;
+  } else if (self[prop] != undefined) { // applies to shadow var only
     res = self[prop];
     get = true;
   } else if (self.__reactive[prop] != undefined) { // applies for reactive variable
@@ -55,17 +58,20 @@ export const getVal = (self: any, prop: any) => {
   return { res, get };
 }
 
-const setTitleCase = (s: string) => {
-  return `${s.charAt(0)}${s.slice(1)}`;
+export const updateFnArgs = (...args: any[]) => {
+  const [el, fn, args2] = args;
+  const fArgs: any = [];
+  args2.split(',').forEach((arg: any) => {
+    // args aka prop
+    const { res, get } = getVal(self, arg.trim());
+    if (res) {  fArgs.push(`'${res}'`); }
+  });
+  const fFn = `${fn}(${fArgs.join()})`;
+  return { fFn }
 }
 
-export default {
-  stripParenthesis,
-  strip,
-  addQuote,
-  addQuoteItems,
-  getVar,
-  getVarWPipe,
-  getVal,
-  setTitleCase
-};
+export const isFn = (val: any) => {
+
+  //console.log(val.match(/\(.+\)/));
+  return val.match(/\(/)?.length > 0;
+}
