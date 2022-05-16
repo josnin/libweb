@@ -9,7 +9,7 @@ export const eventDirective = async (self: any, el: any) => {
         const fArgs: any = [];
         await el.dataset.args.split(',').forEach((arg: any) => {
           // args aka prop
-          const res = getVal(self, arg.trim());
+          const { res, get } = getVal(self, arg.trim());
           if (res) {
             fArgs.push(`'${res}'`);
           }

@@ -39,19 +39,25 @@ export const getVarWPipe = (val: any) => {
 
 export const getVal = (self: any, prop: any) => {
   let res: any;
+  let get: boolean = false;
   if (self[prop] != undefined) { // applies to shadow var only
     res = self[prop];
+    get = true;
   } else if (self.__reactive[prop] != undefined) { // applies for reactive variable
     res = self.__reactive[prop];
+    get = true;
   } else if (self.getAttribute(prop)) {
     res = self.getAttribute(prop);
+    get = true;
   }  else {
     res = prop;
   }
-  return res;
+  return { res, get };
 }
 
-
+const setTitleCase = (s: string) => {
+  return `${s.charAt(0)}${s.slice(1)}`;
+}
 
 export default {
   stripParenthesis,
@@ -60,5 +66,6 @@ export default {
   addQuoteItems,
   getVar,
   getVarWPipe,
-  getVal
+  getVal,
+  setTitleCase
 };

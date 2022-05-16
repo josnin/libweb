@@ -16,7 +16,7 @@ export const htmlPipeParser = async (...args: any[]) => {
       const tmp = strip(text, settings.VAR_PARSE.start, settings.VAR_PARSE.end);
       const wPipe = tmp.split('|').length > 1;
       const cleanVar = tmp.split('|')[0].trim();
-      let res = getVal(self, cleanVar);
+      let { res, get } = getVal(self, cleanVar);
 
       if (res && wPipe) {
 

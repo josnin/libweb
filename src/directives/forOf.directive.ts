@@ -36,7 +36,7 @@ const refreshList =  (...args: any[]) => {
   const { alias, index, for: items } = el.dataset;
   const wBegin = false;
   const wEnd = false;
-  const res = getVal(self, items);
+  const { res, get } = getVal(self, items);
   for (const [idx, v] of Object.entries(res)) { // for..of index returns string?
     const el2 = el.cloneNode(true);
     const obj = {} as any;

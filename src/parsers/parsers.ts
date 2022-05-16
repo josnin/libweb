@@ -1,6 +1,7 @@
 import { htmlParser } from './html.parser.js';
 import { htmlPipeParser } from './html-pipe.parser.js';
 import { eventParser } from './event.parser.js';
+import { attrParser } from './attr.parser.js';
 
 
 export class Parsers {
@@ -9,7 +10,8 @@ export class Parsers {
   register = [
     htmlParser,
     htmlPipeParser,
-    eventParser
+    eventParser,
+    attrParser
   ];
 
   constructor(...args: any[]) {

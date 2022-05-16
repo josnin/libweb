@@ -4,6 +4,7 @@ import { eventDirective } from './event.directive.js';
 import { forOfDirective } from './forOf.directive.js';
 import { noBindDirective } from './noBind.directive.js';
 import { varDirective } from './var.directive.js';
+import { attrDirective  } from './attr.directive.js';
 
 export class Directives {
 
@@ -11,6 +12,7 @@ export class Directives {
   args: any[];
   register = [
     varDirective,
+    attrDirective,
     ifDirective,
     bindDirective,
     eventDirective,

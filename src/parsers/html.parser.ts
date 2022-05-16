@@ -12,7 +12,7 @@ export const htmlParser = async (...args: any[]) => {
     text = text.trim();
     if (text) {
       const cleanVar: string = strip(text, settings.VAR_PARSE.start, settings.VAR_PARSE.end);
-      const res = getVal(self, cleanVar);
+      const { res, get } = getVal(self, cleanVar);
       if (res) {
         el.innerHTML = el.innerHTML.replaceAll(
           text,
