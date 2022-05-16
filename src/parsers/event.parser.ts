@@ -1,3 +1,4 @@
+import { getFnArgs } from "../utils.js";
 
 export const eventParser = async (...args: HTMLElement[]) => {
   const [self, el] = args;
@@ -5,8 +6,9 @@ export const eventParser = async (...args: HTMLElement[]) => {
 
     if (attr.name.startsWith('@')) {
       el.dataset.event = attr.name.split('@')[1];
-      el.dataset.fn = attr.value.split('(')[0];
-      el.dataset.args = attr.value.split('(')[1].split(')')[0];
+      const { fn, fnArgs } = getFnArgs(attr.value);
+      el.dataset.fn = fn;
+      el.dataset.args = fnArgs;
       el.dataset.js = attr.value;
       el.removeAttribute(attr.name);
     }

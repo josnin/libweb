@@ -1,8 +1,9 @@
-import { htmlParser } from './html.parser.js';
-import { htmlPipeParser } from './html-pipe.parser.js';
-import { eventParser } from './event.parser.js';
-import { attrParser } from './attr.parser.js';
-
+import { 
+  htmlParser,
+  htmlPipeParser,
+  eventParser,
+  attrParser
+} from '../parsers/index.js';
 
 export class Parsers {
 
