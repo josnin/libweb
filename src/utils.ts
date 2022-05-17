@@ -6,7 +6,7 @@ export const stripParenthesis = (value: string) => {
 
 // {variable} -> variable
 export const strip = (val: string, start: string, end: string) => {
-  return val.replace(start,'').replace(end,'').trim();
+  return val.replace(start, '').replace(end, '').trim();
 };
 
 
@@ -34,19 +34,19 @@ export const getVar = (val: any) => {
 
 // extract { var | json }
 export const getVarWPipe = (val: any) => {
-  return val.match(/\{[^{^}\n\r]*\|[^{^}\n\r]*\}/gi)
-}
+  return val.match(/\{[^{^}\n\r]*\|[^{^}\n\r]*\}/gi);
+};
 
 export const getVal = (self: any, prop: any) => {
   let res: any;
-  let get: boolean = false;
+  let get = false;
   if (prop === '$event') {
     res = prop;
     get = true;
-  } else if (self[prop] != undefined) { // applies to shadow var only
+  } else if (self[prop] !== undefined) { // applies to shadow var only
     res = self[prop];
     get = true;
-  } else if (self.__reactive[prop] != undefined) { // applies for reactive variable
+  } else if (self.__reactive[prop] !== undefined) { // applies for reactive variable
     res = self.__reactive[prop];
     get = true;
   } else if (self.getAttribute(prop)) {
@@ -56,20 +56,21 @@ export const getVal = (self: any, prop: any) => {
     res = prop;
   }
   return { res, get };
-}
+};
 
 export const updateFnArgs = (...args: any[]) => {
-  const [el, fn, fnArgs] = args;
+  const [self, el, fn, fnArgs] = args;
   const fArgs: any = [];
   let fFn;
 
-  if (fnArgs.length > 0 ) {
-    fnArgs.split(',').forEach((arg: any) => {
+  fnArgs.split(',').forEach((arg: any) => {
+    if (arg) {
+      arg = arg.trim();
       // args aka prop
-      const { res, get } = getVal(self, arg.trim());
-      if (res) {  fArgs.push(`'${res}'`); }
-    });
-  }
+      const { res, get } = getVal(self, arg);
+      if (res) {  fArgs.push(`${addQuote(res)}`); }
+    }
+  });
 
   if (fArgs.length > 0 ) {
     fFn = `${fn}(${fArgs.join()})`;
@@ -77,31 +78,31 @@ export const updateFnArgs = (...args: any[]) => {
     fFn = `${fn}()`;
   }
 
-  return { fFn }
-}
+  return { fFn };
+};
 
 export const getFnArgs = (val: any) => {
   const fn = val.split('(')[0];
   const fnArgs = val.split('(')[1].split(')')[0];
 
-  return { fn, fnArgs }
+  return { fn, fnArgs };
 
-}
+};
 
 export const isFn = (val: any) => {
 
-  //console.log(val.match(/\(.+\)/));
+  // console.log(val.match(/\(.+\)/));
   return val.match(/\(/)?.length > 0;
-}
+};
 
 export const getFnVal = (...args: any[]) => {
   const [self, el, val] = args;
   const { fn, fnArgs } = getFnArgs(val);
-  const { fFn } = updateFnArgs(el, fn, fnArgs);
+  const { fFn } = updateFnArgs(self, el, fn, fnArgs);
   const fnVal = Function(`return this.self.${fFn}`).call({self});
 
   return {
     fnVal
-  }
-  
-}
+  };
+
+};
