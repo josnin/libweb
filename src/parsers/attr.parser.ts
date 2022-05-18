@@ -5,8 +5,8 @@ export const attrParser = async (self: any, el: HTMLElement) => {
   const attrObj: any = {};
   for (const [_, attr] of Object.entries(el.attributes)) {
 
-    if (attr.name.startsWith(':')) {
-      const fName = attr.name.split(':')[1];
+    if (attr.name.startsWith('__')) {
+      const fName = attr.name.split('__')[1];
 
       const { res, get } = getVal(self, attr.value);
       if (get && res && ['string', 'number'].includes(typeof(res))) { // string, numeric

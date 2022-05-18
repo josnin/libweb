@@ -2,7 +2,8 @@ import {
   htmlParser,
   htmlPipeParser,
   eventParser,
-  attrParser
+  attrParser,
+  bindParser
 } from '../parsers/index.js';
 
 export class Parsers {
@@ -12,7 +13,8 @@ export class Parsers {
     htmlParser,
     htmlPipeParser,
     eventParser,
-    attrParser
+    attrParser,
+    bindParser
   ];
 
   constructor(...args: any[]) {
