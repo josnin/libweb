@@ -68,9 +68,10 @@ export const updateFnArgs = (...args: any[]) => {
       arg = arg.trim();
       // args aka prop
       const { res, get } = getVal(self, arg);
-      if (res) {  fArgs.push(`${addQuote(res)}`); }
+      if (res !== '') {  fArgs.push(`${addQuote(res)}`); } // !== '' to handle 0 val?
     }
   });
+
 
   if (fArgs.length > 0 ) {
     fFn = `${fn}(${fArgs.join()})`;

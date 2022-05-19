@@ -8,7 +8,7 @@ export const fnAttrDirective = async (...args: any[]) => {
     // data-attr="{"style":"resize(hw)"}"
     const obj = JSON.parse(el.dataset.attr);
     for (const key in obj) {
-      if (obj[key] && typeof(obj[key]) === 'string' && isFn(obj[key])) {
+      if (typeof(obj[key]) === 'string' && isFn(obj[key])) {
         const { fnArgs } = getFnArgs(obj[key]);
         if (fnArgs.split(',').includes(prop)) {
           const { fnVal } = getFnVal(self, el, obj[key]);

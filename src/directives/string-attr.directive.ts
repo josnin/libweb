@@ -7,7 +7,7 @@ export const strAttrDirective = async (...args: any[]) => {
     const obj = JSON.parse(el.dataset.attr);
     for (const key in obj) {
       if (obj[key] === prop) {
-        if (val && (typeof(val) === 'string' && !isFn(val)) 
+        if (typeof(val) === 'string' && !isFn(val)
         || (typeof(val) === 'number')) {
           el.setAttribute(key, val); 
         }

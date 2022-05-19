@@ -13,7 +13,7 @@ export const htmlParser = async (...args: any[]) => {
     if (text) {
       const cleanVar: string = strip(text, settings.VAR_PARSE.start, settings.VAR_PARSE.end);
       const { res, get } = getVal(self, cleanVar);
-      if (res) {
+      if (res !== '') {
         el.innerHTML = el.innerHTML.replaceAll(
           text,
           `<lib-w data-var=${cleanVar}>${res}</lib-w>`
