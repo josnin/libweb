@@ -7,12 +7,13 @@ export const varDirective = async (...args: any[]) => {
     let fVal = val;
 
     if (el.dataset.pipe) {
-      const pipeName = el.dataset.pipe;
-      const pipes = new Pipes(fVal, pipeName);
-      fVal = await pipes.apply();
+      for (const pipeName of el.dataset.pipe.split('|')) {
+        const pipes = new Pipes(fVal, pipeName);
+        fVal = await pipes.apply();
+      }
     }
 
-    el.textContent =  fVal; 
+    el.textContent =  fVal;
   }
 
 };

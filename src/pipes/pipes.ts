@@ -1,21 +1,24 @@
-import { jsonPipe } from './json.pipe.js';
+import { titlePipe, jsonPipe } from '../pipes/index.js';
 
 export class Pipes {
 
   args: any[];
-  register = [jsonPipe]
+  register = [
+    jsonPipe,
+    titlePipe
+  ];
 
   constructor(...args: any[]) {
     this.args = args;
   }
 
-  apply() {
+  async apply() {
     const [val, name] = this.args;
-    let res : any;
+    let res: any;
     if (name) {
       res = val;
       for (const d of this.register) {
-        res = d(res, name);
+        res = await d(res, name);
       }
     }
     return res;
