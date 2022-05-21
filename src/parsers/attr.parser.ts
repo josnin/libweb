@@ -11,11 +11,11 @@ export const attrParser = async (self: any, el: HTMLElement) => {
       const { res, get } = getVal(self, attr.value);
       if (get && res !== '' && ['string', 'number'].includes(typeof(res))) { // string, numeric
         el.setAttribute(fName, res);
-      } if (get && res !== '' && typeof(res) === 'boolean') { // boolean
+      } if (get && res === true && typeof(res) === 'boolean') { // boolean
         el.setAttribute(fName, '');
       } else if (!get && !isFn(res)) {  // boolean inline js
         const fVal = Function(`return ${res}`)();
-        if (fVal && typeof(fVal) === 'boolean') { el.setAttribute(fName, ''); }
+        if (fVal === true && typeof(fVal) === 'boolean') { el.setAttribute(fName, ''); }
       } else if (!get && isFn(res)){ // function
         const { fnVal } = getFnVal(self, el, res);
         el.setAttribute(fName, fnVal);
