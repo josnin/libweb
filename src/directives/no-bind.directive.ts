@@ -13,6 +13,8 @@ const updateContent = (...args: any[]) => {
 
 export const noBindDirective = async (...args: any[]) => {
   const [self, el, prop, val] = args;
+  const wTxtComnt = [3, 8].includes(el.nodeType);
+  if (wTxtComnt) { return }
   const noBind = el.getAttribute('nobind');
   if (noBind != null) {
     el.removeAttribute('nobind');

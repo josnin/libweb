@@ -82,6 +82,8 @@ const clearExpired = (...args: any[]) => {
 
 // <div For="i in items"> {i.x} </div>
 export const forOfDirective = async (self: any, el: any, prop: string, val: string) => {
+  const wTxtComnt = [3, 8].includes(el.nodeType);
+  if (wTxtComnt) { return }
   const forOf = el.getAttribute('*For');
   if (forOf) {
     const uniq = (+new Date).toString(36);

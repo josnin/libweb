@@ -2,7 +2,7 @@ import { updateFnArgs, getFnArgs } from '../utils.js';
 
 export const eventDirective = async (...args: any[]) => {
   const [self, el] = args;
-  if (el.dataset.event) {
+  if (el.dataset?.event) {
     el[`on${el.dataset.event}`] = async ($event: any) => {
       try {
         // exec normal func

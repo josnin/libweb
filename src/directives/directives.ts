@@ -15,15 +15,15 @@ export class Directives {
   el: any;
   args: any[];
   register = [
-    varDirective,
-    strAttrDirective,
-    boolAttrDirective,
-    fnAttrDirective,
     ifDirective,
     bindDirective,
+    varDirective,
     eventDirective,
     forOfDirective,
-    noBindDirective
+    noBindDirective,
+    strAttrDirective,
+    boolAttrDirective,
+    fnAttrDirective
   ];
 
   constructor(...args: any[]) {
@@ -33,8 +33,10 @@ export class Directives {
   async apply(): Promise<void> {
     const [self, prop, val] = this.args;
     for (const d of this.register) {
-      for ( const el of self.shadowRoot.querySelectorAll('*') ) {
-        await d(self, el, prop, val);
+      for (const el1 of self.shadowRoot.querySelectorAll('*')) {
+        for ( const el of el1.childNodes) {
+          await d(self, el, prop, val);
+        }
       }
     }
   }
