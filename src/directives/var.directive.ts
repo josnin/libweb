@@ -1,4 +1,3 @@
-import { Pipes } from '../pipes/pipes.js';
 import { strip, getVal } from '../utils.js';
 import { settings } from '../enums.js';
 
@@ -50,6 +49,6 @@ export const varDirective = async (...args: any[]) => {
   } else if (wComment && el.data.includes('__var__')) {
     const node = globalThis.__var__[el.data.split('=')[1]].cloneNode(true);
     const { updated, newEl  } = updateContent(self, node);
-    el.nextSibling.textContent = newEl.textContent;
+    if (updated) {  el.nextSibling.textContent = newEl.textContent; }
   }
 };

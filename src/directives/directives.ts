@@ -5,9 +5,10 @@ import {
   forOfDirective,
   noBindDirective,
   varDirective,
+  varWPipeDirective,
   strAttrDirective,
   boolAttrDirective,
-  fnAttrDirective
+  fnAttrDirective,
 } from '../directives/index.js';
 
 export class Directives {
@@ -18,6 +19,7 @@ export class Directives {
     ifDirective,
     bindDirective,
     varDirective,
+    varWPipeDirective,
     eventDirective,
     forOfDirective,
     noBindDirective,
