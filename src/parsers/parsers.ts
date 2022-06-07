@@ -10,9 +10,7 @@ export class Parsers {
 
   args: any[];
   register = [
-    htmlParser,
-    htmlPipeParser,
-    eventParser,
+    bindParser,
     attrParser,
     bindParser
   ];
