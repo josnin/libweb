@@ -1,5 +1,4 @@
 export * from './var.directive.js';
-export * from './var-pipe.directive.js'
 export * from './event.directive.js';
 export * from './bind.directive.js';
 export * from './for-of.directive.js';
