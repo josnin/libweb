@@ -49,8 +49,8 @@ const updateContent = (...args: any[]) => {
 const createContent = async (...args: any[]) => {
   const [self, el] = args;
   const allVars = el.textContent?.match(/{[^{^}^\|]*}|\{[^{^}\n\r]*\|[^{^}\n\r]*\}/gi);
-  let wContent = false;
-  if (!allVars) {   return { wContent };  }
+  let created = false;
+  if (!allVars) {   return { created };  }
   for (let text of allVars) {
     text = text.trim();
     if (text) {
@@ -64,28 +64,29 @@ const createContent = async (...args: any[]) => {
       } if (res !== '') {
         el.textContent = el.textContent.replaceAll(text, res);
       }
-      wContent = true;
+      created = true;
     }
   }
   const newEl = el;
-  return { wContent, newEl };
+  return { created, newEl };
 };
 
 export const varDirective = async (...args: any[]) => {
   let [self, el, prop, val] = args;
   const wComment = el.nodeType === 8;
+  const wVar = el.data.includes('__var__');
 
   if (el.nodeName === '#text') {
     const clonedEl = el.cloneNode(true);
-    const { wContent  } = await createContent(self, el);
-    if (wContent) {  createComment(el, clonedEl);  }
-  } else if (wComment && el.data.includes('__var__')) {
+    const { created  } = await createContent(self, el);
+    if (created) {  createComment(el, clonedEl);  }
+  } else if (wComment && wVar) {
     // use comment as reference
     const ref = el.data.split('=')[1];
     const clonedEl = globalThis.__var__[ref]?.cloneNode(true);
     if (clonedEl) {
-      const { wContent, newEl  } = await createContent(self, clonedEl);
-      if (wContent) {  updateContent(el, newEl); }
+      const { created, newEl  } = await createContent(self, clonedEl);
+      if (created) {  updateContent(el, newEl); }
     }
   }
 };
