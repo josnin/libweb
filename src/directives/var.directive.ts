@@ -6,6 +6,7 @@ declare global {
   var __var__: any;
 }
 
+
 const runPipes = async (tmp: any, fRes: any) => {
   const fPipes: string[] = [];
   for (let pipeName of tmp.split('|').slice(1)) {
@@ -19,48 +20,55 @@ const runPipes = async (tmp: any, fRes: any) => {
 
 };
 
-const genComment = (...args: any[]) => {
+const createComment = (...args: any[]) => {
   const [el, clonedEl] = args;
   // const clonedNode = el.cloneNode(true);
-  const uniq = Math.floor(Math.random() * 1297234234795);
+  const ref = Math.floor(Math.random() * 1297234234795);
   globalThis.__var__ = {
     ...globalThis.__var__,
-    [uniq] : clonedEl
+    [ref] : clonedEl
   };
-  const comment = document.createComment(`__var__=${uniq}`);
+  const comment = document.createComment(`__var__=${ref}`);
   el.parentNode.insertBefore(comment, el);
 };
 
 
-const updateContent = async (...args: any[]) => {
+const updateContent = (...args: any[]) => {
+  let [el, newEl] = args;
+  const wComment = el.nextSibling !== 8;
+  do {
+    if (wComment) {
+      el.nextSibling.textContent = newEl.textContent;
+      break;
+    }
+   } while (el = el.nextSibling); // not comment
+
+}
+
+
+const createContent = async (...args: any[]) => {
   const [self, el] = args;
   const allVars = el.textContent?.match(/{[^{^}^\|]*}|\{[^{^}\n\r]*\|[^{^}\n\r]*\}/gi);
-  let updated = false;
-  console.log(allVars);
-  if (!allVars) {   return { updated };  }
+  let wContent = false;
+  if (!allVars) {   return { wContent };  }
   for (let text of allVars) {
     text = text.trim();
     if (text) {
       const tmp = strip(text, settings.VAR_PARSE.start, settings.VAR_PARSE.end);
       const wPipe = tmp.split('|').length > 1;
-      if (wPipe) {
-        const cleanVar = tmp.split('|')[0].trim();
-        const { res, get } = getVal(self, cleanVar);
-        if (res !== '') {
-          const { fRes, fPipes } = await runPipes(tmp, res);
-          el.textContent = el.textContent.replaceAll(text, fRes);
-        }
-      } else {
-        const { res, get } = getVal(self, tmp);
-        if (res !== '') {
-          el.textContent = el.textContent.replaceAll(text, res);
-        }
+      const cleanVar = tmp.split('|')[0].trim();
+      const { res, get } = getVal(self, cleanVar);
+      if (wPipe && res !== '') {
+        const { fRes, fPipes } = await runPipes(tmp, res);
+        el.textContent = el.textContent.replaceAll(text, fRes);
+      } if (res !== '') {
+        el.textContent = el.textContent.replaceAll(text, res);
       }
-      updated = true;
+      wContent = true;
     }
   }
   const newEl = el;
-  return { updated, newEl };
+  return { wContent, newEl };
 };
 
 export const varDirective = async (...args: any[]) => {
@@ -69,20 +77,15 @@ export const varDirective = async (...args: any[]) => {
 
   if (el.nodeName === '#text') {
     const clonedEl = el.cloneNode(true);
-    const { updated  } = await updateContent(self, el);
-    if (updated) {  genComment(el, clonedEl);  }
+    const { wContent  } = await createContent(self, el);
+    if (wContent) {  createComment(el, clonedEl);  }
   } else if (wComment && el.data.includes('__var__')) {
-    const clonedEl = globalThis.__var__[el.data.split('=')[1]]?.cloneNode(true);
+    // use comment as reference
+    const ref = el.data.split('=')[1];
+    const clonedEl = globalThis.__var__[ref]?.cloneNode(true);
     if (clonedEl) {
-      const { updated, newEl  } = await updateContent(self, clonedEl);
-      if (updated) {
-        do {
-          if (el.nextSibling.nodeType !== 8) {
-            el.nextSibling.textContent = newEl.textContent;
-            break;
-          }
-        } while (el = el.nextSibling); // not comment
-      }
+      const { wContent, newEl  } = await createContent(self, clonedEl);
+      if (wContent) {  updateContent(el, newEl); }
     }
   }
 };
