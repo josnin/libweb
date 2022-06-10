@@ -9,14 +9,18 @@ export const attrParser = async (self: any, el: HTMLElement) => {
       const fName = attr.name.split('__')[1];
 
       const { res, get } = getVal(self, attr.value);
-      if (get && res !== '' && ['string', 'number'].includes(typeof(res))) { // string, numeric
+      const isStrNum = (get && res !== '' && ['string', 'number'].includes(typeof(res)));
+      const isBoolean = (get && res === true && typeof(res) === 'boolean');
+      const isInlineJs = (!get && !isFn(res)); // boolean inline js
+      const isFunc = (!get && isFn(res));
+      if (isStrNum) {
         el.setAttribute(fName, res);
-      } if (get && res === true && typeof(res) === 'boolean') { // boolean
+      } if (isBoolean) { // boolean
         el.setAttribute(fName, '');
-      } else if (!get && !isFn(res)) {  // boolean inline js
+      } else if (isInlineJs) {
         const fVal = Function(`return ${res}`)();
         if (fVal === true && typeof(fVal) === 'boolean') { el.setAttribute(fName, ''); }
-      } else if (!get && isFn(res)){ // function
+      } else if (isFunc){
         const { fnVal } = getFnVal(self, el, res);
         el.setAttribute(fName, fnVal);
       }
