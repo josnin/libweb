@@ -74,7 +74,7 @@ const createContent = async (...args: any[]) => {
 export const varDirective = async (...args: any[]) => {
   let [self, el, prop, val] = args;
   const wComment = el.nodeType === 8;
-  const wVar = el.data.includes('__var__');
+  const wVar = el.data?.includes('__var__');
 
   if (el.nodeName === '#text') {
     const clonedEl = el.cloneNode(true);

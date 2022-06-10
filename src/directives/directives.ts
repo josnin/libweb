@@ -5,9 +5,7 @@ import {
   forOfDirective,
   noBindDirective,
   varDirective,
-  strAttrDirective,
-  boolAttrDirective,
-  fnAttrDirective,
+  attrDirective
 } from '../directives/index.js';
 
 export class Directives {
@@ -21,9 +19,7 @@ export class Directives {
     eventDirective,
     forOfDirective,
     noBindDirective,
-    strAttrDirective,
-    boolAttrDirective,
-    fnAttrDirective
+    attrDirective
   ];
 
   constructor(...args: any[]) {
