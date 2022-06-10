@@ -3,7 +3,7 @@ import { settings } from '../enums.js';
 import { Pipes } from '../pipes/pipes.js';
 
 declare global {
-  var __var__: any;
+  var _v: any;
 }
 
 
@@ -23,12 +23,12 @@ const runPipes = async (tmp: any, fRes: any) => {
 const createComment = (...args: any[]) => {
   const [el, clonedEl] = args;
   // const clonedNode = el.cloneNode(true);
-  const ref = Math.floor(Math.random() * 1297234234795);
-  globalThis.__var__ = {
-    ...globalThis.__var__,
+  const ref = Math.floor(Math.random() * 1297234);
+  globalThis._v = {
+    ...globalThis._v,
     [ref] : clonedEl
   };
-  const comment = document.createComment(`__var__=${ref}`);
+  const comment = document.createComment(`_v=${ref}`);
   el.parentNode.insertBefore(comment, el);
 };
 
@@ -58,10 +58,11 @@ const createContent = async (...args: any[]) => {
       const wPipe = tmp.split('|').length > 1;
       const cleanVar = tmp.split('|')[0].trim();
       const { res, get } = getVal(self, cleanVar);
-      if (wPipe && res !== '') {
+      const wRes = res !== '';
+      if (wPipe && wRes) {
         const { fRes, fPipes } = await runPipes(tmp, res);
         el.textContent = el.textContent.replaceAll(text, fRes);
-      } if (res !== '') {
+      } if (wRes) {
         el.textContent = el.textContent.replaceAll(text, res);
       }
       created = true;
@@ -74,7 +75,7 @@ const createContent = async (...args: any[]) => {
 export const varDirective = async (...args: any[]) => {
   let [self, el, prop, val] = args;
   const wComment = el.nodeType === 8;
-  const wVar = el.data?.includes('__var__');
+  const wVar = el.data?.includes('_v');
 
   if (el.nodeName === '#text') {
     const clonedEl = el.cloneNode(true);
@@ -83,7 +84,7 @@ export const varDirective = async (...args: any[]) => {
   } else if (wComment && wVar) {
     // use comment as reference
     const ref = el.data.split('=')[1];
-    const clonedEl = globalThis.__var__[ref]?.cloneNode(true);
+    const clonedEl = globalThis._v[ref]?.cloneNode(true);
     if (clonedEl) {
       const { created, newEl  } = await createContent(self, clonedEl);
       if (created) {  updateContent(el, newEl); }

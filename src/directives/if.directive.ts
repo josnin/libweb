@@ -1,26 +1,26 @@
 
 declare global {
-  var __if__: any;
+  var _i: any;
 }
 
 const hideEl = (el: any) => {
   const clonedNode = el.cloneNode(true);
-  const ref = Math.floor(Math.random() * 897234234795);
-  globalThis.__if__ = {
-    ...globalThis.__if__,
+  const ref = Math.floor(Math.random() * 8972342);
+  globalThis._i = {
+    ...globalThis._i,
     [ref] : clonedNode
   };
-  const comment = document.createComment(`__if__=${ref}`);
+  const comment = document.createComment(`_i=${ref}`);
   el.parentNode.insertBefore(comment, el);
   el.remove();
 };
 
 const showEl = (...args: any[]) => {
   const [el, prop, val] = args;
-  const wIf = el.data.includes('__if__');
+  const wIf = el.data.includes('_i');
   if (wIf) {
     const ref = el.data.split('=')[1];
-    const clonedEl = globalThis.__if__[ref];
+    const clonedEl = globalThis._i[ref];
     if (clonedEl.dataset.if === prop && val === true) {
       el.parentNode.insertBefore(clonedEl, el);
       el.remove();
