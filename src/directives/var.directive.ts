@@ -20,13 +20,13 @@ const runPipes = async (tmp: any, fRes: any) => {
 
 };
 
-const createComment = (...args: any[]) => {
-  const [el, clonedEl] = args;
+const genRef = (...args: any[]) => {
+  const [el, refEl] = args;
   // const clonedNode = el.cloneNode(true);
   const ref = Math.floor(Math.random() * 1297234);
   globalThis._v = {
     ...globalThis._v,
-    [ref] : clonedEl
+    [ref] : refEl
   };
   const comment = document.createComment(`_v=${ref}`);
   el.parentNode.insertBefore(comment, el);
@@ -34,6 +34,7 @@ const createComment = (...args: any[]) => {
 
 
 const updateContent = (...args: any[]) => {
+  // apply var replacment
   let [el, newEl] = args;
   const wComment = el.nextSibling !== 8;
   do {
@@ -43,14 +44,16 @@ const updateContent = (...args: any[]) => {
     }
    } while (el = el.nextSibling); // not comment
 
-}
+};
 
 
-const createContent = async (...args: any[]) => {
+const repVar = async (...args: any[]) => {
+  // replace {var}
   const [self, el] = args;
+  // extract {var} or {var | json}
   const allVars = el.textContent?.match(/{[^{^}^\|]*}|\{[^{^}\n\r]*\|[^{^}\n\r]*\}/gi);
-  let created = false;
-  if (!allVars) {   return { created };  }
+  let rep = false;
+  if (!allVars) {   return { rep };  }
   for (let text of allVars) {
     text = text.trim();
     if (text) {
@@ -62,32 +65,34 @@ const createContent = async (...args: any[]) => {
       if (wPipe && wRes) {
         const { fRes, fPipes } = await runPipes(tmp, res);
         el.textContent = el.textContent.replaceAll(text, fRes);
+        rep = true;
       } if (wRes) {
         el.textContent = el.textContent.replaceAll(text, res);
+        rep = true;
       }
-      created = true;
     }
   }
   const newEl = el;
-  return { created, newEl };
+  return { rep, newEl };
 };
 
 export const varDirective = async (...args: any[]) => {
-  let [self, el, prop, val] = args;
+  const [self, el] = args;
   const wComment = el.nodeType === 8;
   const wVar = el.data?.includes('_v');
+  const wText = el.nodeName === '#text';
 
-  if (el.nodeName === '#text') {
-    const clonedEl = el.cloneNode(true);
-    const { created  } = await createContent(self, el);
-    if (created) {  createComment(el, clonedEl);  }
+  if (wText) {
+    const refEl = el.cloneNode(true);
+    const { rep  } = await repVar(self, el);
+    if (rep) {  genRef(el, refEl);  }
   } else if (wComment && wVar) {
     // use comment as reference
     const ref = el.data.split('=')[1];
-    const clonedEl = globalThis._v[ref]?.cloneNode(true);
-    if (clonedEl) {
-      const { created, newEl  } = await createContent(self, clonedEl);
-      if (created) {  updateContent(el, newEl); }
+    const refEl = globalThis._v[ref]?.cloneNode(true);
+    if (refEl) {
+      const { rep, newEl  } = await repVar(self, refEl);
+      if (rep) {  updateContent(el, newEl); }
     }
   }
 };
