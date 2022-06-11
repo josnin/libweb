@@ -53,7 +53,7 @@ const repVar = async (...args: any[]) => {
   // extract {var} or {var | json}
   const allVars = el.textContent?.match(/{[^{^}^\|]*}|\{[^{^}\n\r]*\|[^{^}\n\r]*\}/gi);
   let rep = false;
-  if (!allVars) {   return { rep };  }
+  if (!allVars) return { rep }; 
   for (let text of allVars) {
     text = text.trim();
     if (text) {
@@ -85,14 +85,14 @@ export const varDirective = async (...args: any[]) => {
   if (wText) {
     const refEl = el.cloneNode(true);
     const { rep  } = await repVar(self, el);
-    if (rep) {  genRef(el, refEl);  }
+    if (rep) genRef(el, refEl); 
   } else if (wComment && wVar) {
     // use comment as reference
     const ref = el.data.split('=')[1];
     const refEl = globalThis._v[ref]?.cloneNode(true);
     if (refEl) {
       const { rep, newEl  } = await repVar(self, refEl);
-      if (rep) {  updateContent(el, newEl); }
+      if (rep) updateContent(el, newEl);
     }
   }
 };

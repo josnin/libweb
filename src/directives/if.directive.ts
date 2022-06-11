@@ -43,7 +43,7 @@ export const ifDirective = async (...args: any[]) => {
     const If = el.getAttribute(ifAttr);
     el.dataset.if = If;
     el.removeAttribute(ifAttr);
-    if (self[If] === false || self.__reactive[If] == false) { hideEl(el); }
+    if (self[If] === false || self.__reactive[If] == false) hideEl(el); 
   } else if (el.dataset?.if && el.dataset.if === prop && val === false) {
     hideEl(el);
   } else if (wComment) {
