@@ -1,31 +1,26 @@
 
+import { 
+  genRef
+} from '../common.js';
+
+const gVar = '_i';
 declare global {
   var _i: any;
 }
 
-const genRef = (...args: any[]) => {
-  const [el, refEl] = args;
-  const ref = Math.floor(Math.random() * 1297234);
-  globalThis._i = {
-    ...globalThis._i,
-    [ref] : refEl
-  };
-  const comment = document.createComment(`_i=${ref}`);
-  el.parentNode.insertBefore(comment, el);
-};
 
 const hideEl = (el: any) => {
   const refEl = el.cloneNode(true);
-  genRef(el, refEl);
+  genRef(el, refEl, gVar);
   el.remove();
 };
 
 const showEl = (...args: any[]) => {
   const [el, prop, val] = args;
-  const wIf = el.data?.includes('_i');
+  const wIf = el.data?.includes(gVar);
   if (wIf) {
     const ref = el.data.split('=')[1];
-    const refEl = globalThis._i[ref];
+    const refEl = globalThis[gVar][ref];
     if (refEl.dataset.if === prop && val === true) {
       el.parentNode.insertBefore(refEl, el);
       el.remove();
