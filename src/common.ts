@@ -16,15 +16,15 @@ export const runPipes = async (tmp: any, fRes: any) => {
 };
 
 export const genRef = (...args: any[]) => {
-  const [el, refEl] = args;
-  // const clonedNode = el.cloneNode(true);
+  const [el, refEl, refVar] = args;
   const ref = Math.floor(Math.random() * 1297234);
-  // @TODO how to handle dynamic key?
-  globalThis._v = {
-    ...globalThis._v,
+  // @ts-ignore: dynamic index?
+  globalThis[refVar] = {
+    // @ts-ignore: dynamic index?
+    ...globalThis[refVar],
     [ref] : refEl
   };
-  const comment = document.createComment(`_v=${ref}`);
+  const comment = document.createComment(`${refVar}=${ref}`);
   el.parentNode.insertBefore(comment, el);
 };
 
