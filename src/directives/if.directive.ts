@@ -1,9 +1,8 @@
 
-import { 
-  genRef
-} from '../common.js';
+import {genRef} from '../common.js';
 
-const gVar = '_i';
+const IF_ATTR = '*if';
+const COMMENT_VAR = '_i';
 declare global {
   var _i: any;
 }
@@ -11,16 +10,16 @@ declare global {
 
 const hideEl = (el: any) => {
   const refEl = el.cloneNode(true);
-  genRef(el, refEl, gVar);
+  genRef(el, refEl, COMMENT_VAR);
   el.remove();
 };
 
 const showEl = (...args: any[]) => {
   const [el, prop, val] = args;
-  const wIf = el.data?.includes(gVar);
+  const wIf = el.data?.includes(COMMENT_VAR);
   if (wIf) {
     const ref = el.data.split('=')[1];
-    const refEl = globalThis[gVar][ref];
+    const refEl = globalThis[COMMENT_VAR][ref];
     if (refEl.dataset.if === prop && val === true) {
       el.parentNode.insertBefore(refEl, el);
       el.remove();
@@ -31,13 +30,12 @@ const showEl = (...args: any[]) => {
 
 export const ifDirective = async (...args: any[]) => {
   const [self, el, prop, val] = args;
-  const wAttr = [3, 8].includes(el.nodeType) === false;
-  const wComment = el.nodeType === 8;
-  const ifAttr = '*if';
-  if (wAttr && el.getAttribute(ifAttr)) {
-    const If = el.getAttribute(ifAttr);
+  const wAttr = el.nodeType === Node.ELEMENT_NODE;
+  const wComment = el.nodeType === Node.COMMENT_NODE;
+  if (wAttr && el.getAttribute(IF_ATTR)) {
+    const If = el.getAttribute(IF_ATTR);
     el.dataset.if = If;
-    el.removeAttribute(ifAttr);
+    el.removeAttribute(IF_ATTR);
     if (self[If] === false || self.__reactive[If] == false) hideEl(el); 
   } else if (el.dataset?.if && el.dataset.if === prop && val === false) {
     hideEl(el);
