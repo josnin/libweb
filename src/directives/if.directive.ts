@@ -30,9 +30,9 @@ const showEl = (...args: any[]) => {
 
 export const ifDirective = async (...args: any[]) => {
   const [self, el, prop, val] = args;
-  const wAttr = el.nodeType === Node.ELEMENT_NODE;
+  const wAttr = el.nodeType === Node.ELEMENT_NODE && el.getAttribute(IF_ATTR);
   const wComment = el.nodeType === Node.COMMENT_NODE;
-  if (wAttr && el.getAttribute(IF_ATTR)) {
+  if (wAttr) {
     const If = el.getAttribute(IF_ATTR);
     el.dataset.if = If;
     el.removeAttribute(IF_ATTR);

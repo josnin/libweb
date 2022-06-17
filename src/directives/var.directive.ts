@@ -12,14 +12,14 @@ export const varDirective = async (...args: any[]) => {
 
   if (wText) {
     const refEl = el.cloneNode(true);
-    const { rep  } = await repVar(self, el);
+    const {rep} = await repVar(self, el);
     if (rep) genRef(el, refEl, COMMENT_VAR); 
   } else if (wComment) {
     // use comment as reference
     const ref = el.data.split('=')[1];
     const refEl = globalThis[COMMENT_VAR][ref]?.cloneNode(true);
     if (refEl) {
-      const { rep, newEl  } = await repVar(self, refEl);
+      const {rep, newEl} = await repVar(self, refEl);
       if (rep) updateContent(el, newEl);
     }
   }
