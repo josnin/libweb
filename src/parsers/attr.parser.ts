@@ -1,4 +1,4 @@
-import { getVal, isFn, getFnVal } from '../utils.js';
+import {getVal, isFn, getFnVal} from '../common.js';
 
 export const attrParser = async (self: any, el: HTMLElement) => {
   // const [self, el] = args; // @todo handling self any el HTML element??
@@ -8,7 +8,7 @@ export const attrParser = async (self: any, el: HTMLElement) => {
     if (attr.name.startsWith('__')) {
       const fName = attr.name.split('__')[1];
 
-      const { res, get } = getVal(self, attr.value);
+      const {res, get} = getVal(self, attr.value);
       const isStrNum = (get && res !== '' && ['string', 'number'].includes(typeof(res)));
       const isBoolean = (get && res === true && typeof(res) === 'boolean');
       const isInlineJs = (!get && !isFn(res)); // boolean inline js
@@ -21,7 +21,7 @@ export const attrParser = async (self: any, el: HTMLElement) => {
         const fVal = Function(`return ${res}`)();
         if (fVal === true && typeof(fVal) === 'boolean') { el.setAttribute(fName, ''); }
       } else if (isFunc){
-        const { fnVal } = getFnVal(self, el, res);
+        const {fnVal} = getFnVal(self, el, res);
         el.setAttribute(fName, fnVal);
       }
 

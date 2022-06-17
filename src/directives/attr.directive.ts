@@ -1,4 +1,4 @@
-import { isFn, getFnVal, getFnArgs } from '../utils.js';
+import {isFn, getFnVal, getFnArgs} from '../common.js';
 
 export const attrDirective = async (...args: any[]) => {
   const [self, el, prop, val] = args;
