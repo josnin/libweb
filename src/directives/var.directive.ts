@@ -21,7 +21,7 @@ const fnReplacer = async (...args: any[]) => {
 };
 
 export const varDirective = async (...args: any[]) => {
-  const [self, el] = args;
+  const [self, el, prop, val] = args;
   const wComment = el.nodeType === Node.COMMENT_NODE && el.data?.includes(COMMENT_VAR);
   const wText = el.nodeType === Node.TEXT_NODE;
 
@@ -34,7 +34,7 @@ export const varDirective = async (...args: any[]) => {
     // use comment as reference
     const ref = el.data.split('=')[1];
     const refEl = globalThis[COMMENT_VAR][ref]?.cloneNode(true);
-    if (refEl) {
+    if (refEl && refEl.textContent.includes(prop)) { // @todo not good way of checking prop
       const varRep = new VarReplacer(self, refEl, fnReplacer);
       const {rep, newEl} = await varRep.apply();
       if (rep) { updateContent(el, newEl); }
