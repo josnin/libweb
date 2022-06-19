@@ -1,9 +1,24 @@
-import {genRef, updateContent, repVar} from '../common.js';
+import {genRef, getVal, runPipes, updateContent, VarReplacer} from '../common.js';
 
 const COMMENT_VAR = '_v';
 declare global {
   var _v: any;
 }
+
+const fnReplacer = async (...args: any[]) => {
+  const [self, el, text, cleanVar, wPipe, tmp] = args;
+  const {res, get} = getVal(self, cleanVar);
+  const wRes = res !== '';
+  if (wPipe && wRes) {
+    const {fRes, fPipes} = await runPipes(tmp, res);
+    el.textContent = el.textContent.replaceAll(text, fRes);
+    return true;
+  } if (wRes) {
+    el.textContent = el.textContent.replaceAll(text, res);
+    return true;
+  }
+  return false;
+};
 
 export const varDirective = async (...args: any[]) => {
   const [self, el] = args;
@@ -12,15 +27,17 @@ export const varDirective = async (...args: any[]) => {
 
   if (wText) {
     const refEl = el.cloneNode(true);
-    const {rep} = await repVar(self, el);
-    if (rep) genRef(el, refEl, COMMENT_VAR); 
+    const varRep = new VarReplacer(self, el, fnReplacer);
+    const {rep} = await varRep.apply();
+    if (rep) { genRef(el, refEl, COMMENT_VAR); }
   } else if (wComment) {
     // use comment as reference
     const ref = el.data.split('=')[1];
     const refEl = globalThis[COMMENT_VAR][ref]?.cloneNode(true);
     if (refEl) {
-      const {rep, newEl} = await repVar(self, refEl);
-      if (rep) updateContent(el, newEl);
+      const varRep = new VarReplacer(self, refEl, fnReplacer);
+      const {rep, newEl} = await varRep.apply();
+      if (rep) { updateContent(el, newEl); }
     }
   }
 };

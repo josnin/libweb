@@ -62,34 +62,38 @@ export const updateContent = (...args: any[]) => {
 
 };
 
-export const repVar = async (...args: any[]) => {
-  // replace {var}
-  const [self, el] = args;
-  // extract {var} or {var | json}
-  const allVars = el.textContent?.match(VAR_OR_W_PIPE_REGEX);
-  let rep = false;
-  if (!allVars) return { rep }; 
-  for (let text of allVars) {
-    text = text.trim();
-    if (text) {
-      const tmp = strip(text, settings.VAR_PARSE.start, settings.VAR_PARSE.end);
-      const wPipe = tmp.split('|').length > 1;
-      const cleanVar = tmp.split('|')[0].trim();
-      const {res, get} = getVal(self, cleanVar);
-      const wRes = res !== '';
-      if (wPipe && wRes) {
-        const {fRes, fPipes} = await runPipes(tmp, res);
-        el.textContent = el.textContent.replaceAll(text, fRes);
-        rep = true;
-      } if (wRes) {
-        el.textContent = el.textContent.replaceAll(text, res);
-        rep = true;
+export class VarReplacer {
+
+  args: any[];
+  forObj!: { alias: any; index: any; obj: any; idx: string; v: unknown; };
+
+  constructor(...args: any[]) {
+    this.args = args;
+  }
+
+  apply = async () => {
+    // replace {var}
+    const [self, el, fn] = this.args;
+    // extract {var} or {var | json}
+    const allVars = el.textContent?.match(VAR_OR_W_PIPE_REGEX);
+    let rep = false;
+    if (!allVars) return {rep}; 
+    for (let text of allVars) {
+      text = text.trim();
+      if (text) {
+        const tmp = strip(text, settings.VAR_PARSE.start, settings.VAR_PARSE.end);
+        const wPipe = tmp.split('|').length > 1;
+        const cleanVar = tmp.split('|')[0].trim();
+        rep = await fn(self, el, text, cleanVar, wPipe, tmp, this.forObj);
       }
     }
+    const newEl = el;
+    return {rep, newEl};
+
   }
-  const newEl = el;
-  return {rep, newEl};
-};
+
+}
+
 
 export const getVal = (self: any, prop: any) => {
   let res: any;
