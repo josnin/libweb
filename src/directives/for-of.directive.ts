@@ -50,27 +50,33 @@ const getAliasItemsIndex = (...args: any[]) => {
 // tag begin / end
 const tag = (...args: any[]) => {
   let [res, el2, idx, wBegin, wEnd] = args;
-  if (idx == 0 && !wBegin) { // for...of index return string???
+  if (parseInt(idx) === 0 && !wBegin) { // for...of index return string???
     el2.dataset.begin = true;
     wBegin = el2.dataset.begin;
-  } else if (res.length - 1 === idx && !wEnd) {
+  } else if (res.length - 1 === parseInt(idx) && !wEnd) {
     el2.dataset.end = true;
     wEnd = el2.dataset.end;
   }
+  return {wBegin1: wBegin, wEnd1: wEnd}
 
 };
 
 // refresh list
 const refreshEl =  async (...args: any[]) => {
-  const [self, el, ref] = args;
+  const [self, el, ref, prop] = args;
   const {alias, index, for: items} = el.dataset;
-  const wBegin = false;
-  const wEnd = false;
+
+  let wBegin = false;
+  let wEnd = false;
+
   const { res, get } = getVal(self, items);
+
   for (const [idx, v] of Object.entries(res)) { // for..of index returns string?
     const el2 = el.cloneNode(true);
     const obj = {} as any;
+
     for (const chld of el2.childNodes) {
+
       const wComment = chld.nodeType === Node.COMMENT_NODE && chld.data?.includes('_v');
       if (wComment) {
         const ref = chld.data.split('=')[1];
@@ -78,35 +84,43 @@ const refreshEl =  async (...args: any[]) => {
         if (refEl) {
           const varRep = new VarReplacer(self, refEl, setReplacer);
           varRep.forObj = {
-            alias, index, obj, idx, v
+            alias, 
+            index, 
+            obj, 
+            idx, 
+            v
           };
-          const {rep, newEl} = await varRep.apply();
+          var {rep, newEl} = await varRep.apply();
           if (rep) { updateContent(chld, newEl); }
         }
       }
     }
     el2.dataset.ref1 = ref;
-    tag(res, el2, idx, wBegin, wEnd);
+
+    const {wBegin1, wEnd1} = tag(res, el2, idx, wBegin, wEnd)
+    wBegin = wBegin1;
+    wEnd = wEnd1;
 
     el.parentNode?.insertBefore(el2, el);
 
   }
+  clearEl(el, ref);
 };
 
 // clear expired list
 const clearEl = (...args: any[]) => {
   const [el, ref] = args;
   const {for: items, alias} = el.dataset;
+
   if (el.parentNode?.childNodes) {
     Array.from(el.parentNode.childNodes).map( (e: any) => {
       // check dataset begin to make sure wont clea unrelated items
       if (e.dataset?.begin) { return; }
 
-      // map has no implication removing while looping compared to forEach?
-      if (e.dataset?.ref1 && e.dataset.ref1 !== ref &&
+      //// map has no implication removing while looping compared to forEach?
+      if (e.dataset?.ref1 && e.dataset.ref1 !== String(ref) &&
         e.dataset?.for && e.dataset.for === items && e.dataset.alias === alias) {
-        e.innerHTML = '';
-        // e.remove(); // @todo this remove all nodes?
+        e.remove(); 
       }
     });
   }
@@ -120,22 +134,19 @@ export const forOfDirective = async (self: any, el: any, prop: string, val: stri
   if (forOf) {
     const ref = Math.floor(Math.random() * 8972342);
     const { index, alias, items} = getAliasItemsIndex(forOf);
-    el.dataset.ref1 = 'l2rkqnta__';
+    el.dataset.ref1 = Math.floor(Math.random()*9843425)
     el.dataset.for = items;
     el.dataset.alias = alias;
     el.dataset.index = index;
     el.removeAttribute(FOR_ATTR);
 
-    refreshEl(self, el, ref);
-    clearEl(el, ref);
-    // clearEl(el, ref, items, alias);
+    refreshEl(self, el, ref, prop);
   } else if (el.dataset?.for && el.dataset?.begin && el.dataset.for === prop) {
     const ref = Math.floor(Math.random() * 8972342);
     delete el.dataset.begin; // set to expired
     delete el.dataset.end;
 
-    refreshEl(self, el, ref);
-    clearEl(el, ref);
+    refreshEl(self, el, ref, prop);
 
   }
 };
