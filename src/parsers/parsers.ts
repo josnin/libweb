@@ -8,7 +8,7 @@ export class Parsers {
 
   args: any[];
   register = [
-    bindParser,
+    eventParser,
     attrParser,
     bindParser
   ];
